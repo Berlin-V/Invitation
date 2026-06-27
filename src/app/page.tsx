@@ -6,6 +6,7 @@ import IntroOverlay from "@/components/IntroOverlay";
 import CountdownTimer from "@/components/CountdownTimer";
 import CelebrationParticles from "@/components/CelebrationParticles";
 import Link from "next/link";
+import { COUPLE, WEDDING_DATE, VIDEO, EVENTS } from "@/lib/config";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -85,7 +86,7 @@ export default function HomePage() {
               className="font-script leading-none mb-1"
               style={{ fontSize: "clamp(3.5rem, 14vw, 8rem)", background: OG,
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-              Berlin
+              {COUPLE.groom}
             </motion.h1>
 
             <motion.div variants={fadeUp} className="flex items-center gap-3 my-1">
@@ -98,12 +99,12 @@ export default function HomePage() {
               className="font-script leading-none mb-6"
               style={{ fontSize: "clamp(2.8rem, 11vw, 6.5rem)", background: OG,
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-              Jerlin Ashika
+              {COUPLE.bride}
             </motion.h1>
 
             <motion.p variants={fadeUp}
               className="font-sans-custom text-[10px] sm:text-xs tracking-[0.3em] uppercase text-white/55">
-              December 10, 2026 · Tamil Nadu, India
+              {WEDDING_DATE.display} · {COUPLE.location}
             </motion.p>
 
             <motion.div variants={fadeUp} className="mt-8 flex gap-3 flex-wrap justify-center">
@@ -153,15 +154,15 @@ export default function HomePage() {
               <h2 className="font-script mb-3"
                 style={{ fontSize: "clamp(2.2rem,7vw,3.5rem)", background: OG,
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-                December 10, 2026
+                {WEDDING_DATE.display}
               </h2>
               <p className="font-serif text-base sm:text-lg text-white/50 italic">A day of love, joy, and new beginnings</p>
             </motion.div>
 
             <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
               {[
-                { icon: "⛪", title: "Bride Side Ceremony", time: "9:00 AM – 2:00 PM", detail: "Church Wedding & Celebrations", link: "/venue#bride" },
-                { icon: "🎉", title: "Groom Side Reception", time: "5:30 PM – 9:00 PM", detail: "Evening Reception & Grand Celebration", link: "/venue#groom" },
+                { icon: "⛪", title: "Bride Side Ceremony", time: EVENTS.brideSide.timeRange, detail: "Church Wedding & Celebrations", link: "/venue#bride" },
+                { icon: "🎉", title: "Groom Side Reception", time: EVENTS.groomSide.timeRange, detail: "Evening Reception & Grand Celebration", link: "/venue#groom" },
               ].map((ev, i) => (
                 <motion.div key={i}
                   initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }}
@@ -219,9 +220,9 @@ export default function HomePage() {
           <p className="font-script mb-1.5"
             style={{ fontSize: "clamp(1.6rem,5vw,2rem)", background: OG,
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-            Berlin & Jerlin Ashika
+            {COUPLE.groom} & {COUPLE.bride}
           </p>
-          <p className="font-sans-custom text-[9px] tracking-widest uppercase text-white/25">December 10, 2026 · With Love</p>
+          <p className="font-sans-custom text-[9px] tracking-widest uppercase text-white/25">{WEDDING_DATE.display} · With Love</p>
         </footer>
       </div>
     </>

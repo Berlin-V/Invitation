@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Heart, LogOut, Send, ChevronDown } from "lucide-react";
+import { COUPLE } from "@/lib/config";
 import Image from "next/image";
 
 interface Wish {
@@ -189,7 +190,7 @@ export default function WishesPage() {
             Wishes Wall
           </h1>
           <p className="font-serif text-base sm:text-lg text-white/50 italic max-w-sm mx-auto">
-            Leave your heartfelt blessings for Berlin & Jerlin Ashika
+            Leave your heartfelt blessings for {COUPLE.groom} & {COUPLE.bride}
           </p>
         </motion.div>
       </section>

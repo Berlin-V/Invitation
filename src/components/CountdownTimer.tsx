@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { WEDDING_DATE } from "@/lib/config";
 
 const WEDDING_ISO = "2026-12-10T09:00:00+05:30";
 const WEDDING_DISPLAY = "December 10, 2026";
