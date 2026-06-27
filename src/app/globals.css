@@ -1,98 +1,117 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap');
-
 @import "tailwindcss";
 
-:root {
-  --orange: #F97316;
-  --orange-bright: #FF6D00;
-  --orange-light: #FED7AA;
-  --orange-dark: #C2410C;
-  --amber: #FBBF24;
-  --black: #080503;
-  --surface: #120906;
-  --surface2: #1C1008;
-  --text: #FAF5EE;
+@theme {
+  --font-family-heading: var(--font-cormorant), "Georgia", serif;
+  --font-family-body: var(--font-inter), -apple-system, sans-serif;
+  --font-family-names: var(--font-allura), cursive;
+
+  --color-bg: #FFFDF9;
+  --color-bg-secondary: #F8F4EF;
+  --color-surface: #F2ECE4;
+  --color-text: #4A403A;
+  --color-muted: #8A7C73;
+  --color-gold: #C9A56D;
+  --color-gold-light: #E8D5B0;
+  --color-gold-dark: #A8854A;
+  --color-border: #E8E0D5;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+*,
+*::before,
+*::after { box-sizing: border-box; }
 
-body {
-  background-color: var(--black);
-  color: var(--text);
-  font-family: 'Cormorant Garamond', serif;
+html {
+  scroll-behavior: smooth;
   overflow-x: hidden;
 }
 
-.font-script  { font-family: 'Great Vibes', cursive; }
-.font-sans-custom { font-family: 'Montserrat', sans-serif; }
+body {
+  background-color: #FFFDF9;
+  color: #4A403A;
+  font-family: var(--font-inter), -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
 
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: var(--black); }
-::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 3px; }
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #F8F4EF; }
+::-webkit-scrollbar-thumb { background: #C9A56D; border-radius: 2px; }
 
-/* Orange gradient text */
-.text-orange-gradient {
-  background: linear-gradient(135deg, #F97316, #FED7AA, #FB923C);
+/* ── Font utilities ── */
+.font-heading { font-family: var(--font-cormorant), "Georgia", serif; }
+.font-body    { font-family: var(--font-inter), sans-serif; }
+.font-names   { font-family: var(--font-allura), cursive; }
+
+/* ── Selection ── */
+::selection { background: rgba(201,165,109,0.18); color: #4A403A; }
+
+/* ── Glass card ── */
+.glass {
+  background: rgba(255,253,249,0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(201,165,109,0.22);
+}
+
+.glass-dark {
+  background: rgba(74,64,58,0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(201,165,109,0.18);
+}
+
+/* ── Dividers ── */
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #C9A56D55, #C9A56D, #C9A56D55, transparent);
+}
+
+.divider-thin {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #E8E0D5, transparent);
+}
+
+/* ── Section spacing ── */
+.section-pad {
+  padding-top: 8rem;
+  padding-bottom: 8rem;
+}
+
+@media (max-width: 768px) {
+  .section-pad { padding-top: 5rem; padding-bottom: 5rem; }
+}
+
+/* ── Tracking utilities ── */
+.tracking-editorial { letter-spacing: 0.38em; }
+.tracking-widest-xl { letter-spacing: 0.28em; }
+
+/* ── Image reveal ── */
+.img-reveal { overflow: hidden; }
+
+/* ── Animations ── */
+@keyframes petal-fall {
+  0%   { transform: translateY(-10px) rotate(0deg) translateX(0); opacity: 1; }
+  100% { transform: translateY(110vh)  rotate(720deg) translateX(60px); opacity: 0; }
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.animate-float   { animation: float-gentle 4s ease-in-out infinite; }
+.shimmer-text {
+  background: linear-gradient(90deg, #C9A56D 0%, #E8D5B0 40%, #C9A56D 60%, #A8854A 100%);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: shimmer 3s linear infinite;
 }
-
-/* Glass card */
-.glass-card {
-  background: rgba(249, 115, 22, 0.04);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(249, 115, 22, 0.14);
-  border-radius: 16px;
-}
-
-/* Divider */
-.divider-orange {
-  background: linear-gradient(90deg, transparent, #F97316, transparent);
-  height: 1px;
-}
-
-/* Nav */
-.nav-glass {
-  background: rgba(8, 5, 3, 0.92);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(249, 115, 22, 0.12);
-}
-
-/* Intro bg */
-.intro-bg {
-  background: radial-gradient(ellipse at 50% 60%, #200D04 0%, #0D0602 50%, #050301 100%);
-}
-
-.chatbot-bubble { animation: floatAnim 4s ease-in-out infinite; }
-
-/* Animations */
-@keyframes floatAnim {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-}
-
-@keyframes sparkleAnim {
-  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1) rotate(180deg); }
-}
-
-@keyframes particleRise {
-  0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0.8; }
-  100% { transform: translateY(-120px) translateX(var(--drift)) scale(0); opacity: 0; }
-}
-
-@keyframes drawCircle {
-  from { stroke-dashoffset: 1200; }
-  to   { stroke-dashoffset: 0; }
-}
-
-@keyframes glowPulse {
-  0%, 100% { filter: drop-shadow(0 0 6px #F97316); }
-  50% { filter: drop-shadow(0 0 20px #F97316) drop-shadow(0 0 40px #FF6D00); }
-}
-
-.animate-float    { animation: floatAnim 6s ease-in-out infinite; }
-.animate-sparkle  { animation: sparkleAnim 2s ease-in-out infinite; }
-.animate-glow     { animation: glowPulse 2s ease-in-out infinite; }
