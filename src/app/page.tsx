@@ -50,11 +50,12 @@ export default function HomePage() {
             style={{
               top: "50%", left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "calc(100% + 4px)",
-              height: "calc(100% + 4px)",
+              // Maintain 16:9 and always cover the viewport in both orientations
+              width: "max(100vw, calc(177.78vh))",
+              height: "max(100vh, calc(56.25vw))",
               border: "none",
             }}
-            allow="autoplay"
+            allow="autoplay; fullscreen"
             title="Wedding video"
           />
           {/* dark gradient overlay */}
