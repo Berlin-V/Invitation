@@ -49,10 +49,11 @@ export default function HomePage() {
           }} />
 
           {/*
-            Mount the iframe only AFTER the user clicks "Open Invitation".
-            This guarantees it loads inside a user-gesture context,
-            which is the only reliable way to get Drive autoplay past
-            Chrome's autoplay policy without requiring muted video.
+            Drive iframe — only mount after the user clicks "Open Invitation"
+            so it loads inside a user-gesture context (required for autoplay).
+            Extra 200px height keeps the iframe centered but pushes the Drive
+            player control bar 100px below the section's overflow-hidden edge,
+            making it invisible.  The section clips anything outside h-screen.
           */}
           {entered && (
             <iframe
@@ -62,7 +63,9 @@ export default function HomePage() {
                 top: "50%", left: "50%",
                 transform: "translate(-50%, -50%)",
                 width: "max(100vw, calc(177.78vh))",
-                height: "max(100vh, calc(56.25vw))",
+                // +200px: iframe extends 100px beyond viewport top AND bottom;
+                // overflow-hidden clips both, hiding the Drive control bar.
+                height: "calc(max(100vh, calc(56.25vw)) + 200px)",
                 border: "none",
               }}
               allow="autoplay; fullscreen; encrypted-media"
