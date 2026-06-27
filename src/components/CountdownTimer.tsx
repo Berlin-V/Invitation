@@ -4,22 +4,23 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { WEDDING_DATE } from "@/lib/config";
 
-const WEDDING = new Date(WEDDING_DATE.iso);
-
-function pad(n: number) { return String(n).padStart(2, "0"); }
+const WEDDING_ISO = "2026-12-10T09:00:00+05:30";
+const WEDDING_DISPLAY = "December 10, 2026";
 
 interface TimeLeft { days: number; hours: number; minutes: number; seconds: number; }
 
 function getTimeLeft(): TimeLeft {
-  const diff = WEDDING.getTime() - Date.now();
+  const diff = new Date(WEDDING_ISO).getTime() - Date.now();
   if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
   return {
-    days: Math.floor(diff / 86400000),
-    hours: Math.floor((diff % 86400000) / 3600000),
-    minutes: Math.floor((diff % 3600000) / 60000),
-    seconds: Math.floor((diff % 60000) / 1000),
+    days:    Math.floor(diff / 86400000),
+    hours:   Math.floor((diff % 86400000) / 3600000),
+    minutes: Math.floor((diff % 3600000)  / 60000),
+    seconds: Math.floor((diff % 60000)    / 1000),
   };
 }
+
+function pad(n: number) { return String(n).padStart(2, "0"); }
 
 function Unit({ value, label }: { value: number; label: string }) {
   const display = pad(value);
@@ -51,7 +52,9 @@ function Unit({ value, label }: { value: number; label: string }) {
           </AnimatePresence>
         </div>
       </div>
-      <span className="font-sans-custom text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-orange-400/60">{label}</span>
+      <span className="font-sans-custom text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-orange-400/60">
+        {label}
+      </span>
     </div>
   );
 }
