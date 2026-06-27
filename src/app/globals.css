@@ -1,26 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap');
+
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --gold: #C9A84C;
+  --gold-light: #E8D5A3;
+  --rose: #8B1A4A;
+  --rose-light: #D4547A;
+  --cream: #FFF8F0;
+  --dark: #1A0A0F;
+  --forest: #1A2A1A;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--dark);
+  color: var(--cream);
+  font-family: 'Cormorant Garamond', serif;
+  overflow-x: hidden;
+}
+
+.font-script {
+  font-family: 'Great Vibes', cursive;
+}
+
+.font-sans-custom {
+  font-family: 'Montserrat', sans-serif;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--dark); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, #C9A84C, #E8D5A3, #C9A84C);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass-card {
+  background: rgba(255, 248, 240, 0.04);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 16px;
+}
+
+@keyframes petalFall {
+  0% { transform: translateY(-10vh) rotate(0deg) translateX(0px); opacity: 0; }
+  10% { opacity: 0.9; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(110vh) rotate(720deg) translateX(80px); opacity: 0; }
+}
+
+@keyframes floatAnim {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(3deg); }
+}
+
+@keyframes sparkleAnim {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+@keyframes ringPulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes shimmerAnim {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes envelopeOpen {
+  0% { transform: scaleY(1); }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+@keyframes fadeSlideUp {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-float { animation: floatAnim 6s ease-in-out infinite; }
+.animate-sparkle { animation: sparkleAnim 2s ease-in-out infinite; }
+
+.nav-glass {
+  background: rgba(26, 10, 15, 0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+.divider-gold {
+  background: linear-gradient(90deg, transparent, #C9A84C, transparent);
+  height: 1px;
+}
+
+.invitation-bg {
+  background: radial-gradient(ellipse at 50% 40%, #3D0A1A 0%, #1A0A0F 55%, #080510 100%);
+}
+
+.chatbot-bubble {
+  animation: floatAnim 4s ease-in-out infinite;
 }
