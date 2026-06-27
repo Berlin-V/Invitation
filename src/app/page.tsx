@@ -42,18 +42,24 @@ export default function HomePage() {
 
         {/* ── VIDEO HERO ── */}
         <section className="relative h-screen overflow-hidden">
-          {/* Google Drive video embed — scaled up to fill screen, controls hidden under overlay */}
+          {/* Fallback gradient shown while/if Drive video doesn't load */}
+          <div className="absolute inset-0" style={{
+            background: "radial-gradient(ellipse at 40% 50%, #2A1208 0%, #120804 50%, #080503 100%)"
+          }} />
+
+          {/* Google Drive embed — ?autoplay=1 starts playback; overlays hide the player UI */}
           <iframe
-            src="https://drive.google.com/file/d/1_2p9GXY1ivlw6KpjEmVl63wABOgRHtdo/preview"
+            src="https://drive.google.com/file/d/1_2p9GXY1ivlw6KpjEmVl63wABOgRHtdo/preview?autoplay=1"
             className="absolute pointer-events-none"
             style={{
               top: "50%", left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "calc(100% + 4px)",
+              width: "calc(177.78vh)",   /* maintain 16:9 while filling height */
+              minWidth: "100%",
               height: "calc(100% + 4px)",
               border: "none",
             }}
-            allow="autoplay"
+            allow="autoplay; fullscreen"
             title="Wedding video"
           />
           {/* dark gradient overlay */}
