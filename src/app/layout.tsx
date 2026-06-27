@@ -3,10 +3,11 @@ import "./globals.css";
 import Navigation from "@/components/Navigation";
 import ChatBot from "@/components/ChatBot";
 import Providers from "@/components/Providers";
+import { SITE } from "@/lib/config";
 
 export const metadata: Metadata = {
-  title: "Berlin & Jerlin Ashika | Wedding — December 10, 2026",
-  description: "Join us for the wedding celebration of Berlin & Jerlin Ashika on December 10, 2026.",
+  title: SITE.title,
+  description: SITE.description,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

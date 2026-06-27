@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { COUPLE, WEDDING_DATE } from "@/lib/config";
 
 const milestones = [
   {
@@ -25,7 +26,7 @@ const milestones = [
     side: "left",
   },
   {
-    year: "December 10, 2026",
+    year: WEDDING_DATE.display,
     title: "Forever Begins",
     text: "On this sacred day, surrounded by family and friends who have witnessed their love story, Berlin and Jerlin Ashika will begin their greatest adventure yet — forever, together.",
     icon: "🕊️",

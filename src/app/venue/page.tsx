@@ -2,52 +2,19 @@
 
 import { motion } from "framer-motion";
 import { MapPin, Clock, ArrowUpRight } from "lucide-react";
+import { EVENTS, COUPLE, WEDDING_DATE } from "@/lib/config";
 
-const brideEvents = [
-  {
-    id: "bride-house",
-    title: "Bride's Home",
-    subtitle: "Starting Point",
-    time: "9:00 AM",
-    description: "The celebration begins at the bride's family home with traditional ceremonies.",
-    mapUrl: "https://goo.gl/maps/guaUbk5yJWDivrP28?g_st=aw",
-    embedQuery: "Bride House Wedding Venue Tamil Nadu",
-    icon: "🏡",
-  },
-  {
-    id: "church",
-    title: "Wedding Church",
-    subtitle: "Sacred Ceremony",
-    time: "~10:00 AM",
-    description: "The holy matrimony ceremony takes place at the church, uniting Berlin & Jerlin Ashika.",
-    mapUrl: "https://maps.app.goo.gl/doWzsv87nDVK18Sc6",
-    embedQuery: "Church Wedding Ceremony Tamil Nadu",
-    icon: "⛪",
-  },
-];
+const brideEvents = EVENTS.brideSide.items.map((item, i) => ({
+  id: ["bride-house", "church"][i],
+  subtitle: ["Starting Point", "Sacred Ceremony"][i],
+  ...item,
+}));
 
-const groomEvents = [
-  {
-    id: "groom-house",
-    title: "Groom's Home",
-    subtitle: "Welcome to the Family",
-    time: "5:30 PM",
-    description: "The groom's side celebration begins at the family home with a warm welcome.",
-    mapUrl: "https://maps.app.goo.gl/ToyHtFCFGUwNSDzM9",
-    embedQuery: "Groom House Wedding Venue Tamil Nadu",
-    icon: "🏠",
-  },
-  {
-    id: "reception",
-    title: "Reception Hall",
-    subtitle: "Grand Celebration",
-    time: "~6:00 PM",
-    description: "The evening reception is a grand celebration of love, family, and new beginnings.",
-    mapUrl: "https://maps.app.goo.gl/m1ACjjsAbfHrSUjY8",
-    embedQuery: "Reception Hall Wedding Tamil Nadu",
-    icon: "🎊",
-  },
-];
+const groomEvents = EVENTS.groomSide.items.map((item, i) => ({
+  id: ["groom-house", "reception"][i],
+  subtitle: ["Welcome to the Family", "Grand Celebration"][i],
+  ...item,
+}));
 
 function VenueCard({ event, index }: { event: typeof brideEvents[0]; index: number }) {
   return (
@@ -136,7 +103,7 @@ export default function VenuePage() {
           <p className="font-sans-custom text-[11px] tracking-[0.5em] uppercase text-[var(--orange)] mb-4">Venue & Directions</p>
           <h1 className="font-script text-6xl md:text-7xl text-orange-gradient mb-4">Find Your Way</h1>
           <p className="font-serif text-lg text-[#FAF5EE]/60 italic max-w-md mx-auto">
-            Two families, one celebration — here&apos;s how to join us on December 10, 2026
+            Two families, one celebration — here&apos;s how to join us on {WEDDING_DATE.display}
           </p>
         </motion.div>
       </section>
@@ -157,7 +124,7 @@ export default function VenuePage() {
             <span className="font-sans-custom text-[11px] tracking-widest uppercase text-[#FB923C]">Bride&apos;s Side</span>
           </div>
           <h2 className="font-serif text-3xl text-[#FAF5EE] mb-2">Morning Celebrations</h2>
-          <p className="font-sans-custom text-sm text-[#FAF5EE]/50">9:00 AM – 2:00 PM · December 10, 2026</p>
+          <p className="font-sans-custom text-sm text-[#FAF5EE]/50">{EVENTS.brideSide.timeRange} · {WEDDING_DATE.display}</p>
         </motion.div>
         <EventTimeline events={brideEvents} side="bride" />
       </section>
@@ -178,7 +145,7 @@ export default function VenuePage() {
             <span className="font-sans-custom text-[11px] tracking-widest uppercase text-[var(--orange)]">Groom&apos;s Side</span>
           </div>
           <h2 className="font-serif text-3xl text-[#FAF5EE] mb-2">Evening Reception</h2>
-          <p className="font-sans-custom text-sm text-[#FAF5EE]/50">5:30 PM – 9:00 PM · December 10, 2026</p>
+          <p className="font-sans-custom text-sm text-[#FAF5EE]/50">{EVENTS.groomSide.timeRange} · {WEDDING_DATE.display}</p>
         </motion.div>
         <EventTimeline events={groomEvents} side="groom" />
       </section>
@@ -192,7 +159,7 @@ export default function VenuePage() {
           className="max-w-2xl mx-auto glass-card p-8 text-center"
           style={{ border: "1px solid rgba(201,168,76,0.25)" }}
         >
-          <p className="font-script text-4xl text-orange-gradient mb-6">December 10, 2026</p>
+          <p className="font-script text-4xl text-orange-gradient mb-6">{WEDDING_DATE.display}</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             {[
               { time: "9 AM", event: "Bride's Home" },

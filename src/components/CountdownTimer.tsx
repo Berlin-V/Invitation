@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { WEDDING_DATE } from "@/lib/config";
 
-const WEDDING = new Date("2026-12-10T09:00:00+05:30");
+const WEDDING = new Date(WEDDING_DATE.iso);
 
 function pad(n: number) { return String(n).padStart(2, "0"); }
 
@@ -80,7 +81,7 @@ export default function CountdownTimer() {
         background: "linear-gradient(135deg,#F97316,#FED7AA,#FB923C)",
         WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
       }}>
-        December 10, 2026
+        {WEDDING_DATE.display}
       </p>
       <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-6 flex-wrap">
         <Unit value={time.days} label="Days" />
