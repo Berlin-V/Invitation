@@ -65,6 +65,29 @@ export const EVENTS = {
   },
 };
 
+// ─── Dress code ───────────────────────────────
+export const DRESS_CODE = {
+  bride: { label: "Bride", color: "#FFFFFF", name: "White" },
+  groom: { label: "Groom", color: "#E8DCC8", name: "Beige" },
+  ladies: {
+    label: "Ladies",
+    colors: [
+      { hex: "#Fac2bc", name: "Blush" },
+      { hex: "#Faa38b", name: "Peach" },
+      { hex: "#Ee7863", name: "Coral" },
+      { hex: "#F58893", name: "Rose" },
+      { hex: "#F2772f", name: "Amber Rose" },
+    ],
+    note: "Any of these shades — gowns, sarees, or lehengas",
+  },
+  gents: {
+    label: "Gents",
+    color: "#1A1A1A",
+    name: "Black",
+    note: "Black suit or black pants, tie/pocket square in any ladies palette colour",
+  },
+};
+
 // ─── Site metadata ────────────────────────────
 export const SITE = {
   title: `${COUPLE.groom} & ${COUPLE.bride} | Wedding — ${WEDDING_DATE.display}`,
