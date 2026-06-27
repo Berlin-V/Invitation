@@ -42,8 +42,20 @@ export default function HomePage() {
 
         {/* ── VIDEO HERO ── */}
         <section className="relative h-screen overflow-hidden">
-          <video className="absolute inset-0 w-full h-full object-cover" src="/wedding-video.mov"
-            autoPlay muted loop playsInline />
+          {/* Google Drive video embed — scaled up to fill screen, controls hidden under overlay */}
+          <iframe
+            src="https://drive.google.com/file/d/1_2p9GXY1ivlw6KpjEmVl63wABOgRHtdo/preview"
+            className="absolute pointer-events-none"
+            style={{
+              top: "50%", left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "calc(100% + 4px)",
+              height: "calc(100% + 4px)",
+              border: "none",
+            }}
+            allow="autoplay"
+            title="Wedding video"
+          />
           {/* dark gradient overlay */}
           <div className="absolute inset-0"
             style={{ background: "linear-gradient(to bottom, rgba(8,5,3,0.55) 0%, rgba(8,5,3,0.3) 45%, rgba(8,5,3,0.88) 100%)" }} />
