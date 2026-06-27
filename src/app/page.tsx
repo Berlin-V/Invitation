@@ -6,7 +6,7 @@ import IntroOverlay from "@/components/IntroOverlay";
 import CountdownTimer from "@/components/CountdownTimer";
 import CelebrationParticles from "@/components/CelebrationParticles";
 import Link from "next/link";
-import { COUPLE, WEDDING_DATE, VIDEO, EVENTS } from "@/lib/config";
+import { COUPLE, WEDDING_DATE, VIDEO, EVENTS, DRESS_CODE } from "@/lib/config";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -43,26 +43,32 @@ export default function HomePage() {
 
         {/* ── VIDEO HERO ── */}
         <section className="relative h-screen overflow-hidden">
-          {/* Fallback gradient shown while/if Drive video doesn't load */}
+          {/* Fallback gradient — always visible, video layers on top */}
           <div className="absolute inset-0" style={{
             background: "radial-gradient(ellipse at 40% 50%, #2A1208 0%, #120804 50%, #080503 100%)"
           }} />
 
-          {/* Google Drive embed — ?autoplay=1 starts playback; overlays hide the player UI */}
-          <iframe
-            src="https://drive.google.com/file/d/1_2p9GXY1ivlw6KpjEmVl63wABOgRHtdo/preview?autoplay=1"
-            className="absolute pointer-events-none"
-            style={{
-              top: "50%", left: "50%",
-              transform: "translate(-50%, -50%)",
-              // Maintain 16:9 and always cover the viewport in both orientations
-              width: "max(100vw, calc(177.78vh))",
-              height: "max(100vh, calc(56.25vw))",
-              border: "none",
-            }}
-            allow="autoplay; fullscreen"
-            title="Wedding video"
-          />
+          {/*
+            Mount the iframe only AFTER the user clicks "Open Invitation".
+            This guarantees it loads inside a user-gesture context,
+            which is the only reliable way to get Drive autoplay past
+            Chrome's autoplay policy without requiring muted video.
+          */}
+          {entered && (
+            <iframe
+              src={VIDEO.embedUrl}
+              className="absolute pointer-events-none"
+              style={{
+                top: "50%", left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "max(100vw, calc(177.78vh))",
+                height: "max(100vh, calc(56.25vw))",
+                border: "none",
+              }}
+              allow="autoplay; fullscreen; encrypted-media"
+              title="Wedding video"
+            />
+          )}
           {/* dark gradient overlay */}
           <div className="absolute inset-0"
             style={{ background: "linear-gradient(to bottom, rgba(8,5,3,0.55) 0%, rgba(8,5,3,0.3) 45%, rgba(8,5,3,0.88) 100%)" }} />
@@ -178,6 +184,93 @@ export default function HomePage() {
                   </Link>
                 </motion.div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        <div className="divider-orange max-w-sm mx-auto" />
+
+        {/* ── DRESS CODE ── */}
+        <section className="py-16 sm:py-24 px-4 sm:px-6"
+          style={{ background: "linear-gradient(180deg,#100907 0%,#0D0804 100%)" }}>
+          <div className="max-w-5xl mx-auto">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} className="text-center mb-10 sm:mb-14">
+              <p className="font-sans-custom text-[10px] tracking-[0.45em] uppercase text-orange-400 mb-3">What to Wear</p>
+              <h2 className="font-script mb-3"
+                style={{ fontSize: "clamp(2.2rem,7vw,3.5rem)", background: OG,
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+                Dress Code
+              </h2>
+              <p className="font-serif text-base text-white/45 italic">Come dressed to celebrate — and to be remembered</p>
+            </motion.div>
+
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+
+              {/* Bride & Groom row */}
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: 0.05 }}
+                className="glass-card p-6 sm:p-8 flex items-center gap-5">
+                <div className="w-14 h-14 rounded-full shrink-0 border-2 border-white/20 shadow-lg"
+                  style={{ background: DRESS_CODE.bride.color }} />
+                <div>
+                  <p className="font-sans-custom text-[10px] tracking-[0.35em] uppercase text-orange-400 mb-1">Bride</p>
+                  <p className="font-serif text-xl text-white">{DRESS_CODE.bride.name}</p>
+                  <p className="font-sans-custom text-xs text-white/40 mt-1">Wedding gown / bridal white</p>
+                </div>
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: 0.1 }}
+                className="glass-card p-6 sm:p-8 flex items-center gap-5">
+                <div className="w-14 h-14 rounded-full shrink-0 border-2 border-white/20 shadow-lg"
+                  style={{ background: DRESS_CODE.groom.color }} />
+                <div>
+                  <p className="font-sans-custom text-[10px] tracking-[0.35em] uppercase text-orange-400 mb-1">Groom</p>
+                  <p className="font-serif text-xl text-white">{DRESS_CODE.groom.name}</p>
+                  <p className="font-sans-custom text-xs text-white/40 mt-1">Beige suit / sherwanis</p>
+                </div>
+              </motion.div>
+
+              {/* Ladies */}
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: 0.15 }}
+                className="glass-card p-6 sm:p-8">
+                <p className="font-sans-custom text-[10px] tracking-[0.35em] uppercase text-orange-400 mb-3">Ladies</p>
+                <div className="flex gap-3 mb-4 flex-wrap">
+                  {DRESS_CODE.ladies.colors.map((c) => (
+                    <div key={c.hex} className="flex flex-col items-center gap-1.5">
+                      <div className="w-10 h-10 rounded-full border border-white/15 shadow-md"
+                        style={{ background: c.hex }} />
+                      <span className="font-sans-custom text-[8px] tracking-wide uppercase text-white/40">{c.name}</span>
+                    </div>
+                  ))}
+                </div>
+                <p className="font-sans-custom text-xs text-white/45">{DRESS_CODE.ladies.note}</p>
+              </motion.div>
+
+              {/* Gents */}
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: 0.2 }}
+                className="glass-card p-6 sm:p-8 flex items-start gap-5">
+                <div className="w-14 h-14 rounded-full shrink-0 border border-white/10 shadow-lg flex items-center justify-center"
+                  style={{ background: DRESS_CODE.gents.color }}>
+                  <span className="text-xl">🤵</span>
+                </div>
+                <div>
+                  <p className="font-sans-custom text-[10px] tracking-[0.35em] uppercase text-orange-400 mb-1">Gents</p>
+                  <p className="font-serif text-xl text-white">{DRESS_CODE.gents.name} Suit</p>
+                  <p className="font-sans-custom text-xs text-white/40 mt-1 leading-relaxed">{DRESS_CODE.gents.note}</p>
+                  {/* Small colour swatches as tie accent reference */}
+                  <div className="flex gap-1.5 mt-3">
+                    {DRESS_CODE.ladies.colors.map((c) => (
+                      <div key={c.hex} className="w-5 h-5 rounded-full border border-white/10"
+                        style={{ background: c.hex }} />
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+
             </div>
           </div>
         </section>
