@@ -22,7 +22,7 @@ export const VIDEO = {
   // Google Drive file ID (from the share link)
   driveFileId: "1_2p9GXY1ivlw6KpjEmVl63wABOgRHtdo",
   get embedUrl() {
-    return `https://drive.google.com/file/d/${this.driveFileId}/preview`;
+    return `https://drive.google.com/file/d/${this.driveFileId}/preview?autoplay=1`;
   },
 };
 

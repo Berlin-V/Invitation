@@ -36,9 +36,6 @@ function Unit({ value, label }: { value: number; label: string }) {
           className="absolute inset-0 rounded-xl flex items-center justify-center overflow-hidden"
           style={{ background: "rgba(249,115,22,0.07)", border: "1px solid rgba(249,115,22,0.25)" }}
         >
-          {/* AnimatePresence with key on display flips the digit — but we
-              suppress hydration warning so the first server/client mismatch
-              on seconds doesn't crash the tree. */}
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.span
               key={display}
@@ -47,7 +44,7 @@ function Unit({ value, label }: { value: number; label: string }) {
               exit={{   y:  20, opacity: 0 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
               className="font-serif font-light text-orange-100 tabular-nums"
-              style={{ fontSize: "clamp(1.4rem, 4vw, 2rem)" }}
+              style={{ fontSize: "clamp(1.4rem,4vw,2rem)" }}
               suppressHydrationWarning
             >
               {display}
@@ -72,36 +69,30 @@ function Sep() {
   );
 }
 
+const OG = "linear-gradient(135deg,#F97316,#FED7AA,#FB923C)";
+
 export default function CountdownTimer() {
-  // Start null so SSR renders nothing — avoids server/client second mismatch.
+  // null on server → no SSR value → no server/client seconds mismatch
   const [time, setTime] = useState<TimeLeft | null>(null);
 
   useEffect(() => {
-    // Immediately populate on mount, then tick every second.
     setTime(getTimeLeft());
     const id = setInterval(() => setTime(getTimeLeft()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  const OG = "linear-gradient(135deg,#F97316,#FED7AA,#FB923C)";
-
   if (!time) {
-    // Skeleton shown during SSR — same structure, no live values.
+    // Invisible skeleton — keeps layout height stable during SSR
     return (
-      <div className="text-center space-y-5 opacity-0 select-none" aria-hidden>
-        <p className="font-sans-custom text-[10px] tracking-[0.45em] uppercase text-orange-400/60">
-          Counting down to
-        </p>
-        <p className="font-script" style={{ fontSize: "clamp(2rem,6vw,3rem)", background: OG,
-          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-          {WEDDING_DISPLAY}
-        </p>
+      <div className="text-center space-y-5 opacity-0 pointer-events-none select-none" aria-hidden>
+        <p className="font-sans-custom text-[10px] tracking-[0.45em] uppercase">Counting down to</p>
+        <p className="font-script" style={{ fontSize: "clamp(2rem,6vw,3rem)" }}>{WEDDING_DATE.display}</p>
         <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-6">
           {["Days","Hours","Mins","Secs"].map((l) => (
             <div key={l} className="flex flex-col items-center gap-2">
               <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl"
                 style={{ background: "rgba(249,115,22,0.07)", border: "1px solid rgba(249,115,22,0.25)" }} />
-              <span className="font-sans-custom text-[9px] tracking-[0.3em] uppercase text-orange-400/60">{l}</span>
+              <span className="font-sans-custom text-[9px] tracking-[0.3em] uppercase">{l}</span>
             </div>
           ))}
         </div>
@@ -120,12 +111,10 @@ export default function CountdownTimer() {
 
   return (
     <div className="text-center space-y-5">
-      <p className="font-sans-custom text-[10px] tracking-[0.45em] uppercase text-orange-400/60">
-        Counting down to
-      </p>
+      <p className="font-sans-custom text-[10px] tracking-[0.45em] uppercase text-orange-400/60">Counting down to</p>
       <p className="font-script" style={{ fontSize: "clamp(2rem,6vw,3rem)", background: OG,
         WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-        {WEDDING_DISPLAY}
+        {WEDDING_DATE.display}
       </p>
       <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-6 flex-wrap">
         <Unit value={time.days}    label="Days"  />

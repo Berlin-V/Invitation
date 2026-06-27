@@ -55,9 +55,9 @@ export default function HomePage() {
             style={{
               top: "50%", left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "calc(177.78vh)",   /* maintain 16:9 while filling height */
-              minWidth: "100%",
-              height: "calc(100% + 4px)",
+              // Maintain 16:9 and always cover the viewport in both orientations
+              width: "max(100vw, calc(177.78vh))",
+              height: "max(100vh, calc(56.25vw))",
               border: "none",
             }}
             allow="autoplay; fullscreen"
