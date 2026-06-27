@@ -48,21 +48,30 @@ export default function HomePage() {
             background: "radial-gradient(ellipse at 40% 50%, #2A1208 0%, #120804 50%, #080503 100%)"
           }} />
 
-          {/* Google Drive embed — ?autoplay=1 starts playback; overlays hide the player UI */}
-          <iframe
-            src="https://drive.google.com/file/d/1_2p9GXY1ivlw6KpjEmVl63wABOgRHtdo/preview?autoplay=1"
-            className="absolute pointer-events-none"
-            style={{
-              top: "50%", left: "50%",
-              transform: "translate(-50%, -50%)",
-              // Maintain 16:9 and always cover the viewport in both orientations
-              width: "max(100vw, calc(177.78vh))",
-              height: "max(100vh, calc(56.25vw))",
-              border: "none",
-            }}
-            allow="autoplay; fullscreen"
-            title="Wedding video"
-          />
+          {/*
+            Drive iframe — only mount after the user clicks "Open Invitation"
+            so it loads inside a user-gesture context (required for autoplay).
+            Extra 200px height keeps the iframe centered but pushes the Drive
+            player control bar 100px below the section's overflow-hidden edge,
+            making it invisible.  The section clips anything outside h-screen.
+          */}
+          {entered && (
+            <iframe
+              src={VIDEO.embedUrl}
+              className="absolute pointer-events-none"
+              style={{
+                top: "50%", left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "max(100vw, calc(177.78vh))",
+                // +200px: iframe extends 100px beyond viewport top AND bottom;
+                // overflow-hidden clips both, hiding the Drive control bar.
+                height: "calc(max(100vh, calc(56.25vw)) + 200px)",
+                border: "none",
+              }}
+              allow="autoplay; fullscreen; encrypted-media"
+              title="Wedding video"
+            />
+          )}
           {/* dark gradient overlay */}
           <div className="absolute inset-0"
             style={{ background: "linear-gradient(to bottom, rgba(8,5,3,0.55) 0%, rgba(8,5,3,0.3) 45%, rgba(8,5,3,0.88) 100%)" }} />
