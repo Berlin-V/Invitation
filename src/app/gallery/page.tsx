@@ -5,13 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ExternalLink } from "lucide-react";
 import Image from "next/image";
 
-const ENGAGEMENT_DRIVE = "https://drive.google.com/drive/folders/1w_xCWzBJuUtID3Mq9Qype3kO4TzNONxW?usp=sharing";
+import { DRIVE, COUPLE, WEDDING_DATE } from "@/lib/config";
+const ENGAGEMENT_DRIVE = DRIVE.engagementAlbum;
 
 // Placeholder engagement photos — replace with actual Drive photo URLs
 const engagementPhotos = Array.from({ length: 9 }, (_, i) => ({
   id: i + 1,
   src: `https://picsum.photos/seed/engagement${i + 1}/600/800`,
-  alt: `Berlin & Jerlin Ashika - Engagement ${i + 1}`,
+  alt: `${COUPLE.groom} & ${COUPLE.bride} - Engagement ${i + 1}`,
   aspect: i % 3 === 0 ? "tall" : i % 3 === 1 ? "wide" : "square",
 }));
 
@@ -35,7 +36,7 @@ const albums = [
   {
     id: "wedding",
     title: "Wedding Day",
-    subtitle: "December 10, 2026",
+    subtitle: WEDDING_DATE.display,
     emoji: "🕊️",
     photos: [],
     available: false,

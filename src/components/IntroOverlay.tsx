@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { COUPLE, WEDDING_DATE } from "@/lib/config";
 
 /* ── floating ember particles ── */
 function Embers() {
@@ -180,7 +181,7 @@ export default function IntroOverlay({ onEnter }: { onEnter: () => void }) {
                     transition={{ delay: 0.1 }}
                     className="font-sans-custom text-[10px] tracking-[0.45em] uppercase text-orange-400/70"
                   >
-                    December 10 · 2026
+                    {WEDDING_DATE.display}
                   </motion.p>
 
                   {/* Divider line */}
@@ -205,7 +206,7 @@ export default function IntroOverlay({ onEnter }: { onEnter: () => void }) {
                       backgroundClip: "text",
                     }}
                   >
-                    Berlin
+                    {COUPLE.groom}
                   </motion.h1>
 
                   <motion.span
@@ -230,7 +231,7 @@ export default function IntroOverlay({ onEnter }: { onEnter: () => void }) {
                       backgroundClip: "text",
                     }}
                   >
-                    Jerlin Ashika
+                    {COUPLE.bride}
                   </motion.h1>
 
                   {/* Divider line */}
