@@ -8,83 +8,95 @@ import CelebrationParticles from "@/components/CelebrationParticles";
 import Link from "next/link";
 
 const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 40 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.75 } },
 };
 
 const stagger: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.18 } },
+  show: { transition: { staggerChildren: 0.15 } },
 };
+
+const OG = "linear-gradient(135deg,#F97316,#FED7AA,#FB923C)";
 
 export default function HomePage() {
   const [entered, setEntered] = useState(false);
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
-    const visited = sessionStorage.getItem("wedding_visited");
-    if (visited) { setEntered(true); setShowContent(true); }
+    if (sessionStorage.getItem("w_v")) { setEntered(true); setShowContent(true); }
   }, []);
 
   const handleEnter = () => {
-    sessionStorage.setItem("wedding_visited", "1");
+    sessionStorage.setItem("w_v", "1");
     setEntered(true);
-    setTimeout(() => setShowContent(true), 800);
+    setTimeout(() => setShowContent(true), 700);
   };
 
   return (
     <>
       {!entered && <IntroOverlay onEnter={handleEnter} />}
-      {showContent && <CelebrationParticles count={16} />}
+      {showContent && <CelebrationParticles count={14} />}
 
       <div className="relative min-h-screen">
-        {/* Video Hero */}
+
+        {/* ── VIDEO HERO ── */}
         <section className="relative h-screen overflow-hidden">
-          <video
-            className="absolute inset-0 w-full h-full object-cover"
-            src="/wedding-video.mov"
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
-          <div className="absolute inset-0" style={{
-            background: "linear-gradient(to bottom, rgba(26,10,15,0.55) 0%, rgba(26,10,15,0.35) 50%, rgba(26,10,15,0.85) 100%)"
-          }} />
-          <div className="absolute inset-0" style={{
-            background: "radial-gradient(ellipse at center, transparent 30%, rgba(26,10,15,0.6) 100%)"
-          }} />
+          <video className="absolute inset-0 w-full h-full object-cover" src="/wedding-video.mov"
+            autoPlay muted loop playsInline />
+          {/* dark gradient overlay */}
+          <div className="absolute inset-0"
+            style={{ background: "linear-gradient(to bottom, rgba(8,5,3,0.55) 0%, rgba(8,5,3,0.3) 45%, rgba(8,5,3,0.88) 100%)" }} />
+          {/* radial vignette */}
+          <div className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse at center, transparent 25%, rgba(8,5,3,0.65) 100%)" }} />
+          {/* orange ember glow at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
+            style={{ background: "linear-gradient(to top, rgba(194,65,12,0.18), transparent)" }} />
 
           <motion.div
-            className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
-            initial="hidden"
-            animate={showContent ? "show" : "hidden"}
-            variants={stagger}
+            className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 sm:px-6"
+            initial="hidden" animate={showContent ? "show" : "hidden"} variants={stagger}
           >
-            <motion.p variants={fadeUp} className="font-sans-custom text-[11px] tracking-[0.5em] uppercase text-[#C9A84C] mb-4">
+            <motion.p variants={fadeUp}
+              className="font-sans-custom text-[9px] sm:text-[10px] tracking-[0.45em] uppercase text-orange-400 mb-3">
               Together Forever
             </motion.p>
-            <motion.h1 variants={fadeUp} className="font-script text-7xl md:text-9xl leading-tight mb-2">
-              <span className="text-gold-gradient">Berlin</span>
+
+            <motion.h1 variants={fadeUp}
+              className="font-script leading-none mb-1"
+              style={{ fontSize: "clamp(3.5rem, 14vw, 8rem)", background: OG,
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+              Berlin
             </motion.h1>
-            <motion.div variants={fadeUp} className="flex items-center gap-4 my-2">
-              <div className="divider-gold w-20" />
-              <span className="font-sans-custom text-xs tracking-widest text-[#C9A84C]/70">&amp;</span>
-              <div className="divider-gold w-20" />
+
+            <motion.div variants={fadeUp} className="flex items-center gap-3 my-1">
+              <div className="divider-orange w-12 sm:w-20" />
+              <span className="text-orange-500 text-base">♥</span>
+              <div className="divider-orange w-12 sm:w-20" />
             </motion.div>
-            <motion.h1 variants={fadeUp} className="font-script text-7xl md:text-9xl leading-tight mb-8">
-              <span className="text-gold-gradient">Jerlin Ashika</span>
+
+            <motion.h1 variants={fadeUp}
+              className="font-script leading-none mb-6"
+              style={{ fontSize: "clamp(2.8rem, 11vw, 6.5rem)", background: OG,
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+              Jerlin Ashika
             </motion.h1>
-            <motion.p variants={fadeUp} className="font-sans-custom text-sm tracking-[0.3em] uppercase text-[#FFF8F0]/70">
+
+            <motion.p variants={fadeUp}
+              className="font-sans-custom text-[10px] sm:text-xs tracking-[0.3em] uppercase text-white/55">
               December 10, 2026 · Tamil Nadu, India
             </motion.p>
-            <motion.div variants={fadeUp} className="mt-10 flex gap-4 flex-wrap justify-center">
+
+            <motion.div variants={fadeUp} className="mt-8 flex gap-3 flex-wrap justify-center">
               <Link href="/venue"
-                className="px-8 py-3 border border-[#C9A84C]/60 font-sans-custom text-xs tracking-[0.3em] uppercase text-[#C9A84C] hover:bg-[#C9A84C]/10 transition-all duration-300 rounded">
+                className="px-5 sm:px-7 py-2.5 font-sans-custom text-[10px] sm:text-xs tracking-[0.3em] uppercase text-orange-300 rounded transition-all duration-300 hover:bg-orange-500/10"
+                style={{ border: "1px solid rgba(249,115,22,0.45)" }}>
                 Venue & Events
               </Link>
               <Link href="/wishes"
-                className="px-8 py-3 bg-[#8B1A4A]/70 border border-[#8B1A4A] font-sans-custom text-xs tracking-[0.3em] uppercase text-[#FFF8F0] hover:bg-[#8B1A4A] transition-all duration-300 rounded">
+                className="px-5 sm:px-7 py-2.5 font-sans-custom text-[10px] sm:text-xs tracking-[0.3em] uppercase text-white rounded transition-all duration-300 hover:opacity-90"
+                style={{ background: "linear-gradient(135deg,#C2410C,#F97316)" }}>
                 Leave a Wish
               </Link>
             </motion.div>
@@ -92,66 +104,57 @@ export default function HomePage() {
 
           {showContent && (
             <motion.div
-              className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-            >
-              <div className="w-px h-12 bg-gradient-to-b from-transparent to-[#C9A84C]/60" />
-              <span className="font-sans-custom text-[9px] tracking-widest uppercase text-[#C9A84C]/50">Scroll</span>
+              className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
+              animate={{ y: [0, 9, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
+              <div className="w-px h-10 sm:h-12 bg-gradient-to-b from-transparent to-orange-500/50" />
+              <span className="font-sans-custom text-[8px] tracking-widest uppercase text-orange-400/40">Scroll</span>
             </motion.div>
           )}
         </section>
 
-        {/* Countdown */}
-        <section className="relative py-24 px-6" style={{ background: "linear-gradient(180deg, #1A0A0F 0%, #0D0508 100%)" }}>
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
+        {/* ── COUNTDOWN ── */}
+        <section className="relative py-16 sm:py-24 px-4 sm:px-6"
+          style={{ background: "linear-gradient(180deg,#080503 0%,#0D0804 100%)" }}>
+          <div className="max-w-4xl mx-auto">
+            <motion.div initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} transition={{ duration: 0.8 }}>
               <CountdownTimer />
             </motion.div>
           </div>
         </section>
 
-        <div className="divider-gold mx-auto max-w-sm" />
+        <div className="divider-orange max-w-sm mx-auto" />
 
-        {/* Events */}
-        <section className="py-24 px-6" style={{ background: "linear-gradient(180deg, #0D0508 0%, #100A12 100%)" }}>
+        {/* ── EVENTS ── */}
+        <section className="py-16 sm:py-24 px-4 sm:px-6"
+          style={{ background: "linear-gradient(180deg,#0D0804 0%,#100907 100%)" }}>
           <div className="max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1 }}
-              className="text-center mb-16"
-            >
-              <p className="font-sans-custom text-[11px] tracking-[0.5em] uppercase text-[#C9A84C] mb-3">Save the Date</p>
-              <h2 className="font-script text-5xl md:text-6xl text-gold-gradient mb-4">December 10, 2026</h2>
-              <p className="font-serif text-lg text-[#FFF8F0]/60 italic">A day of love, joy, and new beginnings</p>
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
+              viewport={{ once: true }} className="text-center mb-10 sm:mb-16">
+              <p className="font-sans-custom text-[10px] tracking-[0.45em] uppercase text-orange-400 mb-3">Save the Date</p>
+              <h2 className="font-script mb-3"
+                style={{ fontSize: "clamp(2.2rem,7vw,3.5rem)", background: OG,
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+                December 10, 2026
+              </h2>
+              <p className="font-serif text-base sm:text-lg text-white/50 italic">A day of love, joy, and new beginnings</p>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
               {[
-                { icon: "⛪", title: "Bride Side Ceremony", time: "9:00 AM – 2:00 PM", detail: "Church Wedding & Family Celebrations", link: "/venue#bride" },
+                { icon: "⛪", title: "Bride Side Ceremony", time: "9:00 AM – 2:00 PM", detail: "Church Wedding & Celebrations", link: "/venue#bride" },
                 { icon: "🎉", title: "Groom Side Reception", time: "5:30 PM – 9:00 PM", detail: "Evening Reception & Grand Celebration", link: "/venue#groom" },
               ].map((ev, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.7, delay: i * 0.2 }}
-                  className="glass-card p-8 text-center group hover:border-[#C9A84C]/40 transition-all duration-500"
-                >
-                  <div className="text-4xl mb-4">{ev.icon}</div>
-                  <p className="font-sans-custom text-[11px] tracking-[0.3em] uppercase text-[#C9A84C] mb-2">{ev.time}</p>
-                  <h3 className="font-serif text-2xl text-[#FFF8F0] mb-2">{ev.title}</h3>
-                  <p className="font-sans-custom text-sm text-[#FFF8F0]/50 mb-5">{ev.detail}</p>
+                <motion.div key={i}
+                  initial={{ opacity: 0, y: 25 }} whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.18 }}
+                  className="glass-card p-6 sm:p-8 text-center group hover:border-orange-500/35 transition-all duration-500">
+                  <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">{ev.icon}</div>
+                  <p className="font-sans-custom text-[10px] tracking-[0.3em] uppercase text-orange-400 mb-2">{ev.time}</p>
+                  <h3 className="font-serif text-xl sm:text-2xl text-white mb-2">{ev.title}</h3>
+                  <p className="font-sans-custom text-xs sm:text-sm text-white/45 mb-4 sm:mb-5">{ev.detail}</p>
                   <Link href={ev.link}
-                    className="font-sans-custom text-xs tracking-widest uppercase text-[#C9A84C] border-b border-[#C9A84C]/30 pb-0.5 hover:border-[#C9A84C] transition-colors">
+                    className="font-sans-custom text-[11px] tracking-widest uppercase text-orange-400 border-b border-orange-500/30 pb-0.5 hover:border-orange-500 transition-colors">
                     View Directions →
                   </Link>
                 </motion.div>
@@ -160,37 +163,32 @@ export default function HomePage() {
           </div>
         </section>
 
-        <div className="divider-gold mx-auto max-w-sm" />
+        <div className="divider-orange max-w-sm mx-auto" />
 
-        {/* Explore */}
-        <section className="py-20 px-6" style={{ background: "linear-gradient(180deg, #100A12 0%, #1A0A0F 100%)" }}>
+        {/* ── EXPLORE ── */}
+        <section className="py-16 sm:py-20 px-4 sm:px-6"
+          style={{ background: "linear-gradient(180deg,#100907 0%,#080503 100%)" }}>
           <div className="max-w-4xl mx-auto text-center">
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="font-script text-4xl text-gold-gradient mb-12"
-            >
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+              className="font-script mb-8 sm:mb-12"
+              style={{ fontSize: "clamp(2rem,6vw,3rem)", background: OG,
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
               Explore Our Journey
             </motion.p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
               {[
                 { href: "/story", emoji: "📖", label: "Our Story" },
                 { href: "/gallery", emoji: "📸", label: "Gallery" },
                 { href: "/venue", emoji: "📍", label: "Venue" },
                 { href: "/wishes", emoji: "💌", label: "Wishes" },
               ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                >
+                <motion.div key={i}
+                  initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
                   <Link href={item.href}
-                    className="glass-card flex flex-col items-center gap-3 py-8 px-4 hover:border-[#C9A84C]/50 transition-all duration-300 group block">
-                    <span className="text-3xl group-hover:scale-110 transition-transform duration-300">{item.emoji}</span>
-                    <span className="font-sans-custom text-xs tracking-widest uppercase text-[#FFF8F0]/70">{item.label}</span>
+                    className="glass-card flex flex-col items-center gap-2.5 py-6 sm:py-8 px-3 sm:px-4 hover:border-orange-500/40 transition-all duration-300 group block">
+                    <span className="text-2xl sm:text-3xl group-hover:scale-110 transition-transform duration-300">{item.emoji}</span>
+                    <span className="font-sans-custom text-[9px] sm:text-[10px] tracking-widest uppercase text-white/60">{item.label}</span>
                   </Link>
                 </motion.div>
               ))}
@@ -198,9 +196,14 @@ export default function HomePage() {
           </div>
         </section>
 
-        <footer className="py-10 text-center border-t border-[#C9A84C]/10">
-          <p className="font-script text-3xl text-gold-gradient mb-2">Berlin & Jerlin Ashika</p>
-          <p className="font-sans-custom text-[10px] tracking-widest uppercase text-[#FFF8F0]/30">December 10, 2026 · With Love</p>
+        {/* ── FOOTER ── */}
+        <footer className="py-8 sm:py-10 text-center border-t border-orange-500/10">
+          <p className="font-script mb-1.5"
+            style={{ fontSize: "clamp(1.6rem,5vw,2rem)", background: OG,
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+            Berlin & Jerlin Ashika
+          </p>
+          <p className="font-sans-custom text-[9px] tracking-widest uppercase text-white/25">December 10, 2026 · With Love</p>
         </footer>
       </div>
     </>

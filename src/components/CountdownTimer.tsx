@@ -1,22 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
-const WEDDING = new Date("2026-12-10T09:00:00+05:30"); // IST
+const WEDDING = new Date("2026-12-10T09:00:00+05:30");
 
 function pad(n: number) { return String(n).padStart(2, "0"); }
 
-interface TimeLeft {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-}
+interface TimeLeft { days: number; hours: number; minutes: number; seconds: number; }
 
 function getTimeLeft(): TimeLeft {
-  const now = new Date();
-  const diff = WEDDING.getTime() - now.getTime();
+  const diff = WEDDING.getTime() - Date.now();
   if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
   return {
     days: Math.floor(diff / 86400000),
@@ -27,20 +21,36 @@ function getTimeLeft(): TimeLeft {
 }
 
 function Unit({ value, label }: { value: number; label: string }) {
+  const display = pad(value);
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="relative w-20 h-20 md:w-24 md:h-24">
-        {/* Pulsing ring */}
+      <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24">
+        {/* glow ring */}
         <motion.div
-          className="absolute inset-0 rounded-full border border-[#C9A84C]/30"
-          animate={{ scale: [1, 1.15], opacity: [0.4, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+          className="absolute inset-0 rounded-xl"
+          animate={{ boxShadow: ["0 0 8px rgba(249,115,22,0.2)", "0 0 22px rgba(249,115,22,0.5)", "0 0 8px rgba(249,115,22,0.2)"] }}
+          transition={{ duration: 2, repeat: Infinity }}
         />
-        <div className="absolute inset-0 rounded-full border border-[#C9A84C]/50 glass-card flex items-center justify-center">
-          <span className="font-serif text-3xl md:text-4xl text-[#E8D5A3] font-light">{pad(value)}</span>
+        <div
+          className="absolute inset-0 rounded-xl flex items-center justify-center"
+          style={{ background: "rgba(249,115,22,0.07)", border: "1px solid rgba(249,115,22,0.25)" }}
+        >
+          <AnimatePresence mode="popLayout">
+            <motion.span
+              key={display}
+              initial={{ y: -14, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 14, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="font-serif font-light text-orange-100"
+              style={{ fontSize: "clamp(1.4rem,4vw,2rem)" }}
+            >
+              {display}
+            </motion.span>
+          </AnimatePresence>
         </div>
       </div>
-      <span className="font-sans-custom text-[10px] tracking-[0.3em] uppercase text-[#C9A84C]/70">{label}</span>
+      <span className="font-sans-custom text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-orange-400/60">{label}</span>
     </div>
   );
 }
@@ -53,39 +63,44 @@ export default function CountdownTimer() {
     return () => clearInterval(id);
   }, []);
 
-  if (time.days === 0 && time.hours === 0 && time.minutes === 0 && time.seconds === 0) {
+  if (!time.days && !time.hours && !time.minutes && !time.seconds) {
     return (
-      <div className="text-center">
-        <p className="font-script text-5xl text-gold-gradient">Today is the Day!</p>
-      </div>
+      <p className="font-script text-5xl text-orange-gradient" style={{
+        background: "linear-gradient(135deg,#F97316,#FED7AA,#FB923C)",
+        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+      }}>Today is the Day!</p>
     );
   }
 
   return (
-    <div className="text-center space-y-6">
-      <p className="font-sans-custom text-[11px] tracking-[0.4em] uppercase text-[#C9A84C]/70">Counting down to</p>
-      <p className="font-script text-4xl md:text-5xl text-gold-gradient">December 10, 2026</p>
-      <div className="flex items-center justify-center gap-4 md:gap-8 flex-wrap">
+    <div className="text-center space-y-5">
+      <p className="font-sans-custom text-[10px] tracking-[0.45em] uppercase text-orange-400/60">Counting down to</p>
+      <p className="font-script" style={{
+        fontSize: "clamp(2rem,6vw,3rem)",
+        background: "linear-gradient(135deg,#F97316,#FED7AA,#FB923C)",
+        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+      }}>
+        December 10, 2026
+      </p>
+      <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-6 flex-wrap">
         <Unit value={time.days} label="Days" />
-        <Separator />
+        <Sep />
         <Unit value={time.hours} label="Hours" />
-        <Separator />
-        <Unit value={time.minutes} label="Minutes" />
-        <Separator />
-        <Unit value={time.seconds} label="Seconds" />
+        <Sep />
+        <Unit value={time.minutes} label="Mins" />
+        <Sep />
+        <Unit value={time.seconds} label="Secs" />
       </div>
     </div>
   );
 }
 
-function Separator() {
+function Sep() {
   return (
     <motion.span
-      className="font-serif text-3xl text-[#C9A84C]/50 self-center mt-[-16px]"
+      className="font-serif text-2xl text-orange-500/40 self-center mb-5"
       animate={{ opacity: [1, 0.2, 1] }}
       transition={{ duration: 1, repeat: Infinity }}
-    >
-      :
-    </motion.span>
+    >:</motion.span>
   );
 }

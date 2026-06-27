@@ -3,55 +3,42 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-interface Petal {
-  id: number;
-  x: number;
-  delay: number;
-  duration: number;
-  size: number;
-  color: string;
-}
-
-function Petals() {
-  const [petals, setPetals] = useState<Petal[]>([]);
-
-  useEffect(() => {
-    const colors = ["#C9A84C", "#D4547A", "#8B1A4A", "#E8D5A3", "#F0A0B0"];
-    const p = Array.from({ length: 20 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      delay: Math.random() * 4,
-      duration: 5 + Math.random() * 5,
-      size: 8 + Math.random() * 14,
-      color: colors[Math.floor(Math.random() * colors.length)],
-    }));
-    setPetals(p);
-  }, []);
+/* ── floating ember particles ── */
+function Embers() {
+  const items = Array.from({ length: 22 }, (_, i) => ({
+    id: i,
+    x: 5 + (i * 4.2) % 90,
+    size: 2 + (i % 4),
+    delay: (i * 0.28) % 4,
+    dur: 2.8 + (i % 5) * 0.6,
+    drift: (i % 2 === 0 ? 1 : -1) * (8 + (i % 20)),
+  }));
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {petals.map((p) => (
+      {items.map((p) => (
         <motion.div
           key={p.id}
-          className="absolute rounded-full opacity-60"
+          className="absolute rounded-full"
           style={{
             left: `${p.x}%`,
-            top: "-20px",
+            bottom: "-10px",
             width: p.size,
-            height: p.size * 0.6,
-            backgroundColor: p.color,
-            borderRadius: "50% 0 50% 0",
+            height: p.size,
+            background: `radial-gradient(circle, #FBBF24, #F97316)`,
+            boxShadow: `0 0 ${p.size * 2}px #F97316`,
           }}
           animate={{
-            y: ["0vh", "110vh"],
-            rotate: [0, 720],
-            x: [0, Math.random() > 0.5 ? 80 : -80],
+            y: [0, -(80 + p.size * 20)],
+            x: [0, p.drift],
+            opacity: [0.9, 0],
+            scale: [1, 0.1],
           }}
           transition={{
-            duration: p.duration,
+            duration: p.dur,
             delay: p.delay,
             repeat: Infinity,
-            ease: "linear",
+            ease: "easeOut",
           }}
         />
       ))}
@@ -59,143 +46,240 @@ function Petals() {
   );
 }
 
-export default function IntroOverlay({ onEnter }: { onEnter: () => void }) {
-  const [phase, setPhase] = useState<"envelope" | "card" | "done">("envelope");
+/* ── pulsing rings ── */
+function Rings() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+      {[160, 220, 290, 370].map((r, i) => (
+        <motion.div
+          key={r}
+          className="absolute rounded-full border border-orange-500/20"
+          style={{ width: r, height: r }}
+          animate={{ scale: [1, 1.08, 1], opacity: [0.15, 0.35, 0.15] }}
+          transition={{ duration: 3 + i * 0.6, delay: i * 0.4, repeat: Infinity }}
+        />
+      ))}
+    </div>
+  );
+}
 
-  const handleEnvelopeClick = () => setPhase("card");
+export default function IntroOverlay({ onEnter }: { onEnter: () => void }) {
+  const [phase, setPhase] = useState<0 | 1 | 2>(0);
+
+  /* auto-advance from phase 0 → 1 after circle draws */
+  useEffect(() => {
+    if (phase === 0) {
+      const t = setTimeout(() => setPhase(1), 1800);
+      return () => clearTimeout(t);
+    }
+  }, [phase]);
 
   return (
     <AnimatePresence>
-      {phase !== "done" && (
+      {phase !== 2 && (
         <motion.div
-          className="fixed inset-0 z-[100] invitation-bg flex items-center justify-center overflow-hidden"
-          exit={{ opacity: 0, scale: 1.05 }}
-          transition={{ duration: 1.2, ease: "easeInOut" }}
+          key="intro"
+          className="fixed inset-0 z-[100] intro-bg flex items-center justify-center overflow-hidden"
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1, ease: "easeInOut" }}
         >
-          <Petals />
+          <Embers />
+          <Rings />
 
-          {/* Radial glow */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full"
-              style={{ background: "radial-gradient(ellipse, rgba(201,168,76,0.08) 0%, transparent 70%)" }} />
+          {/* ── SVG ornate circle that draws itself ── */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <svg width="340" height="340" viewBox="0 0 340 340" className="opacity-70">
+              {/* main circle */}
+              <motion.circle
+                cx="170" cy="170" r="160"
+                fill="none"
+                stroke="url(#ringGrad)"
+                strokeWidth="1.2"
+                strokeDasharray="1200"
+                strokeDashoffset="1200"
+                strokeLinecap="round"
+                animate={{ strokeDashoffset: 0 }}
+                transition={{ duration: 1.6, ease: "easeInOut" }}
+              />
+              {/* inner circle */}
+              <motion.circle
+                cx="170" cy="170" r="148"
+                fill="none"
+                stroke="#F97316"
+                strokeWidth="0.5"
+                strokeDasharray="1200"
+                strokeDashoffset="1200"
+                opacity="0.3"
+                animate={{ strokeDashoffset: 0 }}
+                transition={{ duration: 1.8, ease: "easeInOut", delay: 0.2 }}
+              />
+              {/* 8 compass diamonds */}
+              {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => {
+                const rad = (angle * Math.PI) / 180;
+                const cx = 170 + 160 * Math.cos(rad);
+                const cy = 170 + 160 * Math.sin(rad);
+                return (
+                  <motion.rect
+                    key={angle}
+                    x={cx - 4} y={cy - 4}
+                    width="8" height="8"
+                    fill="#F97316"
+                    transform={`rotate(45 ${cx} ${cy})`}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 0.8, scale: 1 }}
+                    transition={{ delay: 1.4 + angle / 1000, duration: 0.4 }}
+                  />
+                );
+              })}
+              <defs>
+                <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#F97316" />
+                  <stop offset="50%" stopColor="#FBBF24" />
+                  <stop offset="100%" stopColor="#F97316" />
+                </linearGradient>
+              </defs>
+            </svg>
           </div>
 
-          {/* Sparkle stars */}
-          {[...Array(12)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 rounded-full bg-[#E8D5A3]"
-              style={{
-                left: `${10 + (i * 7) % 80}%`,
-                top: `${15 + (i * 11) % 70}%`,
-              }}
-              animate={{ opacity: [0, 1, 0], scale: [0, 1, 0] }}
-              transition={{ duration: 2 + (i % 3), delay: i * 0.3, repeat: Infinity }}
-            />
-          ))}
-
-          <AnimatePresence mode="wait">
-            {phase === "envelope" && (
-              <motion.div
-                key="envelope"
-                initial={{ opacity: 0, y: 60 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.8, y: -40 }}
-                transition={{ duration: 0.8 }}
-                className="flex flex-col items-center gap-8 cursor-pointer select-none"
-                onClick={handleEnvelopeClick}
-              >
-                {/* Envelope SVG */}
+          {/* ── Content inside circle ── */}
+          <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-xs">
+            <AnimatePresence mode="wait">
+              {phase === 0 && (
                 <motion.div
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="relative"
+                  key="phase0"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex flex-col items-center gap-3"
                 >
-                  <svg width="280" height="200" viewBox="0 0 280 200" fill="none">
-                    {/* Envelope body */}
-                    <rect x="10" y="60" width="260" height="130" rx="8" fill="rgba(255,248,240,0.06)" stroke="#C9A84C" strokeWidth="1.5"/>
-                    {/* Envelope flap */}
-                    <motion.path
-                      d="M10 68 L140 130 L270 68"
-                      fill="rgba(139,26,74,0.3)"
-                      stroke="#C9A84C"
-                      strokeWidth="1.5"
-                      animate={{ d: ["M10 68 L140 130 L270 68", "M10 68 L140 20 L270 68"] }}
-                      transition={{ duration: 1.2, delay: 0.5, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+                  {/* Flame icon */}
+                  <motion.div
+                    className="text-5xl animate-glow"
+                    animate={{ scale: [1, 1.15, 1] }}
+                    transition={{ duration: 1.2, repeat: Infinity }}
+                  >
+                    🔥
+                  </motion.div>
+                  <p className="font-sans-custom text-[10px] tracking-[0.5em] uppercase text-orange-400/60">
+                    Loading invitation
+                  </p>
+                </motion.div>
+              )}
+
+              {phase === 1 && (
+                <motion.div
+                  key="phase1"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex flex-col items-center gap-4"
+                >
+                  {/* Mono date tag */}
+                  <motion.p
+                    initial={{ opacity: 0, y: -12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="font-sans-custom text-[10px] tracking-[0.45em] uppercase text-orange-400/70"
+                  >
+                    December 10 · 2026
+                  </motion.p>
+
+                  {/* Divider line */}
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                    className="w-20 h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"
+                  />
+
+                  {/* Names */}
+                  <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4, duration: 0.7 }}
+                    className="font-script leading-none"
+                    style={{
+                      fontSize: "clamp(2.6rem, 8vw, 3.8rem)",
+                      background: "linear-gradient(135deg, #F97316, #FED7AA, #FB923C)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
+                  >
+                    Berlin
+                  </motion.h1>
+
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.6 }}
+                    className="text-orange-500 text-lg"
+                  >
+                    ❤
+                  </motion.span>
+
+                  <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7, duration: 0.7 }}
+                    className="font-script leading-none"
+                    style={{
+                      fontSize: "clamp(2.2rem, 7vw, 3.2rem)",
+                      background: "linear-gradient(135deg, #F97316, #FED7AA, #FB923C)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
+                  >
+                    Jerlin Ashika
+                  </motion.h1>
+
+                  {/* Divider line */}
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: 0.9, duration: 0.5 }}
+                    className="w-20 h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"
+                  />
+
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.1 }}
+                    className="font-sans-custom text-[10px] tracking-widest uppercase text-orange-300/60"
+                  >
+                    Request the honour of your presence
+                  </motion.p>
+
+                  {/* Enter button */}
+                  <motion.button
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.4 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => { setPhase(2); onEnter(); }}
+                    className="mt-2 relative px-7 py-2.5 font-sans-custom text-[11px] tracking-[0.35em] uppercase overflow-hidden rounded group"
+                    style={{
+                      border: "1px solid rgba(249,115,22,0.5)",
+                      color: "#FED7AA",
+                    }}
+                  >
+                    <motion.span
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{ background: "rgba(249,115,22,0.12)" }}
                     />
-                    {/* Wax seal */}
-                    <circle cx="140" cy="130" r="24" fill="#8B1A4A" stroke="#C9A84C" strokeWidth="1.5"/>
-                    <text x="140" y="135" textAnchor="middle" fill="#E8D5A3" fontSize="14" fontFamily="Great Vibes, cursive">B♡J</text>
-                    {/* Bottom corners */}
-                    <line x1="10" y1="190" x2="140" y2="125" stroke="#C9A84C" strokeWidth="1" opacity="0.5"/>
-                    <line x1="270" y1="190" x2="140" y2="125" stroke="#C9A84C" strokeWidth="1" opacity="0.5"/>
-                  </svg>
+                    <motion.span
+                      className="absolute bottom-0 left-0 right-0 h-px"
+                      style={{ background: "linear-gradient(90deg, transparent, #F97316, transparent)" }}
+                      animate={{ scaleX: [0.3, 1, 0.3] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                    Open Invitation
+                  </motion.button>
                 </motion.div>
-
-                <div className="text-center space-y-2">
-                  <p className="font-script text-5xl text-gold-gradient">You&apos;re Invited</p>
-                  <p className="font-sans-custom text-xs tracking-[0.4em] text-[#C9A84C]/70 uppercase">Tap to open</p>
-                </div>
-
-                <motion.div
-                  animate={{ y: [0, 8, 0] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
-                  className="text-[#C9A84C]/50"
-                >
-                  ↓
-                </motion.div>
-              </motion.div>
-            )}
-
-            {phase === "card" && (
-              <motion.div
-                key="card"
-                initial={{ opacity: 0, scale: 0.8, rotateX: 30 }}
-                animate={{ opacity: 1, scale: 1, rotateX: 0 }}
-                transition={{ duration: 0.9, ease: "easeOut" }}
-                className="glass-card p-10 max-w-sm w-full mx-6 text-center space-y-6 relative overflow-hidden"
-              >
-                {/* Corner ornaments */}
-                {["top-3 left-3", "top-3 right-3 rotate-90", "bottom-3 right-3 rotate-180", "bottom-3 left-3 -rotate-90"].map((pos) => (
-                  <div key={pos} className={`absolute ${pos} w-6 h-6 opacity-60`}>
-                    <svg viewBox="0 0 24 24" fill="none"><path d="M2 2 L12 2 L2 12" stroke="#C9A84C" strokeWidth="1.5"/><circle cx="12" cy="2" r="2" fill="#C9A84C"/></svg>
-                  </div>
-                ))}
-
-                <div className="space-y-1">
-                  <p className="font-sans-custom text-[10px] tracking-[0.4em] text-[#C9A84C] uppercase">Together with their families</p>
-                  <div className="divider-gold my-3"/>
-                </div>
-
-                <div>
-                  <p className="font-script text-6xl text-gold-gradient leading-tight">Berlin</p>
-                  <p className="font-sans-custom text-[11px] tracking-widest text-[#FFF8F0]/50 my-2">&amp;</p>
-                  <p className="font-script text-6xl text-gold-gradient leading-tight">Jerlin Ashika</p>
-                </div>
-
-                <div className="divider-gold"/>
-
-                <div className="space-y-1">
-                  <p className="font-sans-custom text-xs tracking-widest text-[#FFF8F0]/70 uppercase">Request the honour of your presence</p>
-                  <p className="font-sans-custom text-xs tracking-widest text-[#FFF8F0]/70 uppercase">at their wedding</p>
-                </div>
-
-                <div className="space-y-1">
-                  <p className="font-sans-custom text-sm tracking-widest text-[#C9A84C]">December 10, 2026</p>
-                  <p className="font-sans-custom text-xs text-[#FFF8F0]/50">Beginning at Nine in the Morning</p>
-                </div>
-
-                <motion.button
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
-                  onClick={() => { setPhase("done"); onEnter(); }}
-                  className="w-full py-3 border border-[#C9A84C]/60 font-sans-custom text-xs tracking-[0.3em] uppercase text-[#C9A84C] hover:bg-[#C9A84C]/10 transition-colors duration-300 rounded"
-                >
-                  Enter Celebration
-                </motion.button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+              )}
+            </AnimatePresence>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

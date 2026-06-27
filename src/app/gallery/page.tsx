@@ -55,7 +55,7 @@ export default function GalleryPage() {
   const [lightboxPhoto, setLightboxPhoto] = useState<typeof engagementPhotos[0] | null>(null);
 
   return (
-    <div className="min-h-screen pt-20" style={{ background: "linear-gradient(180deg, #1A0A0F 0%, #0D050A 100%)" }}>
+    <div className="min-h-screen pt-20" style={{ background: "linear-gradient(180deg, #080503 0%, #0D0804 100%)" }}>
       {/* Lightbox */}
       <AnimatePresence>
         {lightboxPhoto && (
@@ -94,13 +94,13 @@ export default function GalleryPage() {
       {/* Header */}
       <section className="py-20 px-6 text-center">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-          <p className="font-sans-custom text-[11px] tracking-[0.5em] uppercase text-[#C9A84C] mb-4">Captured Moments</p>
-          <h1 className="font-script text-6xl md:text-7xl text-gold-gradient mb-4">Our Gallery</h1>
-          <p className="font-serif text-lg text-[#FFF8F0]/60 italic">A collection of beautiful memories</p>
+          <p className="font-sans-custom text-[11px] tracking-[0.5em] uppercase text-[var(--orange)] mb-4">Captured Moments</p>
+          <h1 className="font-script text-6xl md:text-7xl text-orange-gradient mb-4">Our Gallery</h1>
+          <p className="font-serif text-lg text-[#FAF5EE]/60 italic">A collection of beautiful memories</p>
         </motion.div>
       </section>
 
-      <div className="divider-gold max-w-sm mx-auto mb-12" />
+      <div className="divider-orange max-w-sm mx-auto mb-12" />
 
       {/* Album tabs */}
       <section className="px-6 max-w-6xl mx-auto">
@@ -111,15 +111,15 @@ export default function GalleryPage() {
               onClick={() => album.available && setActiveAlbum(album)}
               className={`flex items-center gap-2 px-5 py-3 rounded-full border font-sans-custom text-xs tracking-widest uppercase transition-all duration-300 ${
                 activeAlbum.id === album.id
-                  ? "border-[#C9A84C] bg-[#C9A84C]/15 text-[#C9A84C]"
+                  ? "border-[var(--orange)] bg-[var(--orange)]/15 text-[var(--orange)]"
                   : album.available
-                  ? "border-[#C9A84C]/20 text-[#FFF8F0]/50 hover:border-[#C9A84C]/40"
-                  : "border-white/10 text-[#FFF8F0]/25 cursor-not-allowed"
+                  ? "border-[var(--orange)]/20 text-[#FAF5EE]/50 hover:border-[var(--orange)]/40"
+                  : "border-white/10 text-[#FAF5EE]/25 cursor-not-allowed"
               }`}
             >
               <span>{album.emoji}</span>
               <span>{album.title}</span>
-              {!album.available && <span className="text-[9px] text-[#FFF8F0]/30 normal-case">soon</span>}
+              {!album.available && <span className="text-[9px] text-[#FAF5EE]/30 normal-case">soon</span>}
             </button>
           ))}
         </div>
@@ -130,7 +130,7 @@ export default function GalleryPage() {
             href={ENGAGEMENT_DRIVE}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 font-sans-custom text-xs tracking-widest uppercase text-[#C9A84C] border border-[#C9A84C]/30 px-5 py-2.5 rounded-full hover:bg-[#C9A84C]/10 transition-all"
+            className="inline-flex items-center gap-2 font-sans-custom text-xs tracking-widest uppercase text-[var(--orange)] border border-[var(--orange)]/30 px-5 py-2.5 rounded-full hover:bg-[var(--orange)]/10 transition-all"
           >
             <ExternalLink size={12} />
             View Full Album on Google Drive
@@ -176,9 +176,9 @@ export default function GalleryPage() {
             className="text-center py-20 glass-card max-w-md mx-auto mb-24"
           >
             <div className="text-5xl mb-4">{activeAlbum.emoji}</div>
-            <h3 className="font-script text-4xl text-gold-gradient mb-3">{activeAlbum.title}</h3>
-            <p className="font-sans-custom text-sm text-[#FFF8F0]/40">{activeAlbum.subtitle}</p>
-            <p className="font-sans-custom text-xs text-[#FFF8F0]/30 mt-3">Photos will be added soon</p>
+            <h3 className="font-script text-4xl text-orange-gradient mb-3">{activeAlbum.title}</h3>
+            <p className="font-sans-custom text-sm text-[#FAF5EE]/40">{activeAlbum.subtitle}</p>
+            <p className="font-sans-custom text-xs text-[#FAF5EE]/30 mt-3">Photos will be added soon</p>
           </motion.div>
         )}
       </section>

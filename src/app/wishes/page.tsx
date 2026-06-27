@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Heart, LogOut, Upload, X, Send } from "lucide-react";
+import { Heart, LogOut, Send, ChevronDown } from "lucide-react";
 import Image from "next/image";
 
 interface Wish {
@@ -15,35 +15,122 @@ interface Wish {
   createdAt: string;
 }
 
+const OG = "linear-gradient(135deg,#F97316,#FED7AA,#FB923C)";
+
+/* ── Hover wish card — shows compact view, expands on hover/tap ── */
 function WishCard({ wish, index }: { wish: Wish; index: number }) {
+  const [expanded, setExpanded] = useState(false);
+  const initials = wish.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.08 }}
-      className="glass-card p-6 hover:border-[#C9A84C]/30 transition-all duration-500"
+      transition={{ delay: index * 0.06, duration: 0.5 }}
+      onHoverStart={() => setExpanded(true)}
+      onHoverEnd={() => setExpanded(false)}
+      onClick={() => setExpanded((p) => !p)}
+      className="relative cursor-pointer select-none group"
+      style={{
+        background: "rgba(249,115,22,0.04)",
+        border: `1px solid ${expanded ? "rgba(249,115,22,0.4)" : "rgba(249,115,22,0.12)"}`,
+        borderRadius: 14,
+        transition: "border-color 0.3s, box-shadow 0.3s",
+        boxShadow: expanded ? "0 0 24px rgba(249,115,22,0.12)" : "none",
+      }}
     >
-      <div className="flex items-start gap-4">
-        {/* Avatar */}
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#8B1A4A] to-[#C9A84C] flex items-center justify-center text-white font-serif text-sm flex-shrink-0">
-          {wish.name.charAt(0).toUpperCase()}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2 mb-2">
-            <p className="font-sans-custom text-sm font-medium text-[#E8D5A3] truncate">{wish.name}</p>
-            <p className="font-sans-custom text-[10px] text-[#FFF8F0]/30 flex-shrink-0">
+      {/* Left accent bar */}
+      <div className="absolute left-0 top-3 bottom-3 w-0.5 rounded-full transition-all duration-300"
+        style={{ background: expanded ? "linear-gradient(to bottom,#F97316,#FBBF24)" : "rgba(249,115,22,0.2)", left: 0, borderRadius: "0 2px 2px 0" }} />
+
+      <div className="px-4 py-4 pl-4">
+        {/* Top row: avatar + name + date */}
+        <div className="flex items-center gap-3 mb-2">
+          {/* Avatar — shows Google profile pic when expanded */}
+          <div className="relative w-10 h-10 flex-shrink-0">
+            <AnimatePresence mode="wait">
+              {expanded && wish.photoUrl ? (
+                <motion.div key="photo"
+                  initial={{ opacity: 0, scale: 0.7 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.25 }}
+                  className="absolute inset-0 rounded-full overflow-hidden ring-2 ring-orange-500/60">
+                  <Image src={wish.photoUrl} alt={wish.name} width={40} height={40} className="w-full h-full object-cover" />
+                </motion.div>
+              ) : (
+                <motion.div key="initials"
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                  className="absolute inset-0 rounded-full flex items-center justify-center font-sans-custom text-sm font-semibold text-white"
+                  style={{ background: "linear-gradient(135deg,#C2410C,#F97316)" }}>
+                  {initials}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <p className="font-sans-custom text-sm font-medium text-orange-200 truncate">{wish.name}</p>
+            <AnimatePresence>
+              {expanded && (
+                <motion.p
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="font-sans-custom text-[10px] text-orange-400/60 truncate"
+                >
+                  {wish.email}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <p className="font-sans-custom text-[9px] text-white/30">
               {new Date(wish.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
             </p>
+            <motion.div
+              animate={{ rotate: expanded ? 180 : 0 }}
+              transition={{ duration: 0.25 }}
+              className="text-orange-500/40"
+            >
+              <ChevronDown size={13} />
+            </motion.div>
           </div>
-          <p className="font-serif text-base text-[#FFF8F0]/80 leading-relaxed">{wish.message}</p>
-          {wish.photoUrl && (
-            <div className="mt-3 rounded-lg overflow-hidden max-w-xs">
-              <Image src={wish.photoUrl} alt="Wish photo" width={400} height={300} className="w-full object-cover" />
-            </div>
-          )}
-          <div className="mt-3 flex items-center gap-1.5 text-[#D4547A]/60">
-            <Heart size={12} fill="currentColor" />
-            <span className="font-sans-custom text-[10px]">Wishes for the couple</span>
+        </div>
+
+        {/* Message — truncated by default, full on expand */}
+        <div className="pl-[52px]">
+          <p className={`font-serif text-sm leading-relaxed text-white/75 transition-all duration-300 ${
+            expanded ? "" : "line-clamp-2"
+          }`}>
+            {wish.message}
+          </p>
+
+          {/* Photo if any */}
+          <AnimatePresence>
+            {expanded && wish.photoUrl && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mt-3 rounded-xl overflow-hidden max-w-[240px]"
+              >
+                <Image src={wish.photoUrl} alt="Wish photo" width={400} height={300} className="w-full object-cover" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Heart footer */}
+          <div className="flex items-center gap-1.5 mt-2.5">
+            <motion.div
+              animate={{ scale: expanded ? [1, 1.3, 1] : 1 }}
+              transition={{ duration: 0.4 }}
+            >
+              <Heart size={11} fill={expanded ? "#F97316" : "none"} className="transition-colors duration-300"
+                style={{ color: "#F97316" }} />
+            </motion.div>
+            <span className="font-sans-custom text-[9px] text-orange-400/50">wishes for the couple</span>
           </div>
         </div>
       </div>
@@ -62,14 +149,10 @@ export default function WishesPage() {
 
   const fetchWishes = useCallback(async () => {
     try {
-      const res = await fetch("/api/wishes");
-      const data = await res.json();
+      const data = await fetch("/api/wishes").then((r) => r.json());
       setWishes(data.wishes || []);
-    } catch {
-      setWishes([]);
-    } finally {
-      setLoading(false);
-    }
+    } catch { setWishes([]); }
+    finally { setLoading(false); }
   }, []);
 
   useEffect(() => { fetchWishes(); }, [fetchWishes]);
@@ -77,9 +160,7 @@ export default function WishesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim() || submitting) return;
-    setSubmitting(true);
-    setError("");
-
+    setSubmitting(true); setError("");
     try {
       const res = await fetch("/api/wishes", {
         method: "POST",
@@ -87,66 +168,57 @@ export default function WishesPage() {
         body: JSON.stringify({ message }),
       });
       const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Failed to submit wish");
-      } else {
-        setSubmitted(true);
-        setMessage("");
-        fetchWishes();
-      }
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
+      if (!res.ok) setError(data.error || "Failed to submit");
+      else { setSubmitted(true); setMessage(""); fetchWishes(); }
+    } catch { setError("Something went wrong. Please try again."); }
+    finally { setSubmitting(false); }
   };
 
   return (
-    <div className="min-h-screen pt-20" style={{ background: "linear-gradient(180deg, #1A0A0F 0%, #0D050A 100%)" }}>
+    <div className="min-h-screen pt-20" style={{ background: "linear-gradient(180deg,#080503 0%,#0D0804 100%)" }}>
+
       {/* Header */}
-      <section className="py-20 px-6 text-center relative overflow-hidden">
+      <section className="py-16 sm:py-20 px-4 sm:px-6 text-center relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(212,84,122,0.08) 0%, transparent 60%)" }} />
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-          <p className="font-sans-custom text-[11px] tracking-[0.5em] uppercase text-[#C9A84C] mb-4">Messages of Love</p>
-          <h1 className="font-script text-6xl md:text-7xl text-gold-gradient mb-4">Wishes Wall</h1>
-          <p className="font-serif text-lg text-[#FFF8F0]/60 italic max-w-md mx-auto">
+          style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(249,115,22,0.07) 0%, transparent 60%)" }} />
+        <motion.div initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+          <p className="font-sans-custom text-[10px] tracking-[0.45em] uppercase text-orange-400 mb-3">Messages of Love</p>
+          <h1 className="font-script mb-3"
+            style={{ fontSize: "clamp(3rem,10vw,5rem)", background: OG,
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+            Wishes Wall
+          </h1>
+          <p className="font-serif text-base sm:text-lg text-white/50 italic max-w-sm mx-auto">
             Leave your heartfelt blessings for Berlin & Jerlin Ashika
           </p>
         </motion.div>
       </section>
 
-      <div className="divider-gold max-w-sm mx-auto mb-12" />
+      <div className="divider-orange max-w-sm mx-auto mb-10 sm:mb-14" />
 
       {/* Write a wish */}
-      <section className="px-6 max-w-2xl mx-auto mb-16">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="glass-card p-8"
-          style={{ border: "1px solid rgba(201,168,76,0.25)" }}
-        >
-          <h2 className="font-script text-4xl text-gold-gradient mb-6 text-center">Send Your Wishes</h2>
+      <section className="px-4 sm:px-6 max-w-2xl mx-auto mb-12 sm:mb-16">
+        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}
+          className="rounded-2xl p-6 sm:p-8"
+          style={{ background: "rgba(249,115,22,0.04)", border: "1px solid rgba(249,115,22,0.18)" }}>
+          <h2 className="font-script text-center mb-5 sm:mb-6"
+            style={{ fontSize: "clamp(2rem,6vw,2.8rem)", background: OG,
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+            Send Your Wishes
+          </h2>
 
           {status === "loading" ? (
-            <div className="text-center py-8">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                className="w-8 h-8 border-2 border-[#C9A84C] border-t-transparent rounded-full mx-auto"
-              />
+            <div className="flex justify-center py-8">
+              <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                className="w-7 h-7 rounded-full border-2 border-t-transparent border-orange-500" />
             </div>
           ) : !session ? (
             <div className="text-center space-y-4">
-              <p className="font-sans-custom text-sm text-[#FFF8F0]/60">Sign in with Google to leave your wish</p>
-              <p className="font-sans-custom text-xs text-[#FFF8F0]/35">One wish per account to keep the wall special</p>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <p className="font-sans-custom text-sm text-white/55">Sign in with Google to leave your wish</p>
+              <p className="font-sans-custom text-xs text-white/28">One wish per account to keep the wall authentic</p>
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
                 onClick={() => signIn("google")}
-                className="flex items-center gap-3 mx-auto px-6 py-3 bg-white text-gray-700 rounded-full font-sans-custom text-sm font-medium hover:bg-gray-50 transition-colors shadow-lg"
-              >
+                className="flex items-center gap-3 mx-auto px-6 py-3 bg-white text-gray-700 rounded-full font-sans-custom text-sm font-medium hover:bg-gray-50 transition-colors shadow-lg">
                 <svg width="18" height="18" viewBox="0 0 18 18">
                   <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
                   <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
@@ -157,31 +229,35 @@ export default function WishesPage() {
               </motion.button>
             </div>
           ) : submitted ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-6 space-y-3"
-            >
-              <div className="text-5xl">💝</div>
-              <p className="font-script text-4xl text-gold-gradient">Thank You!</p>
-              <p className="font-sans-custom text-sm text-[#FFF8F0]/60">Your wish has been added to the wall</p>
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-6 space-y-2">
+              <div className="text-5xl">🎉</div>
+              <p className="font-script text-4xl" style={{ background: OG,
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+                Thank You!
+              </p>
+              <p className="font-sans-custom text-sm text-white/50">Your wish has been added to the wall</p>
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="flex items-center gap-3 mb-4">
-                {session.user?.image && (
-                  <Image src={session.user.image} alt="You" width={36} height={36} className="rounded-full" />
+              {/* User info bar */}
+              <div className="flex items-center gap-3 p-3 rounded-xl"
+                style={{ background: "rgba(249,115,22,0.06)", border: "1px solid rgba(249,115,22,0.1)" }}>
+                {session.user?.image ? (
+                  <Image src={session.user.image} alt="You" width={36} height={36} className="rounded-full ring-2 ring-orange-500/40" />
+                ) : (
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center font-sans-custom text-sm text-white"
+                    style={{ background: "linear-gradient(135deg,#C2410C,#F97316)" }}>
+                    {session.user?.name?.[0]?.toUpperCase()}
+                  </div>
                 )}
-                <div>
-                  <p className="font-sans-custom text-sm text-[#E8D5A3]">{session.user?.name}</p>
-                  <p className="font-sans-custom text-[10px] text-[#FFF8F0]/40">{session.user?.email}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="font-sans-custom text-sm text-orange-200 truncate">{session.user?.name}</p>
+                  <p className="font-sans-custom text-[10px] text-orange-400/50 truncate">{session.user?.email}</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => signOut()}
-                  className="ml-auto text-[#FFF8F0]/30 hover:text-[#FFF8F0]/60 transition-colors"
-                >
-                  <LogOut size={14} />
+                <button type="button" onClick={() => signOut()}
+                  className="text-white/25 hover:text-white/50 transition-colors p-1">
+                  <LogOut size={13} />
                 </button>
               </div>
 
@@ -191,37 +267,27 @@ export default function WishesPage() {
                 placeholder="Write your heartfelt wishes for the couple…"
                 rows={4}
                 maxLength={500}
-                className="w-full bg-white/5 border border-[#C9A84C]/20 rounded-xl px-4 py-3 font-serif text-base text-[#FFF8F0] placeholder-[#FFF8F0]/25 outline-none focus:border-[#C9A84C]/50 transition-colors resize-none leading-relaxed"
+                className="w-full rounded-xl px-4 py-3 font-serif text-base text-white placeholder-white/20 outline-none resize-none leading-relaxed transition-all"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(249,115,22,0.15)" }}
               />
               <div className="flex items-center justify-between">
-                <span className="font-sans-custom text-[10px] text-[#FFF8F0]/25">{message.length}/500</span>
+                <span className="font-sans-custom text-[9px] text-white/22">{message.length}/500</span>
               </div>
 
               {error && (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="font-sans-custom text-sm text-[#D4547A] text-center"
-                >
-                  {error}
-                </motion.p>
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  className="font-sans-custom text-sm text-orange-400 text-center">{error}</motion.p>
               )}
 
-              <motion.button
-                type="submit"
-                disabled={submitting || !message.trim()}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full py-3.5 bg-gradient-to-r from-[#8B1A4A] to-[#C9A84C] font-sans-custom text-sm tracking-widest uppercase text-white rounded-xl disabled:opacity-50 transition-all flex items-center justify-center gap-2"
-              >
+              <motion.button type="submit" disabled={submitting || !message.trim()}
+                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+                className="w-full py-3.5 rounded-xl font-sans-custom text-[11px] tracking-widest uppercase text-white disabled:opacity-45 flex items-center justify-center gap-2 transition-opacity"
+                style={{ background: "linear-gradient(135deg,#C2410C,#F97316)" }}>
                 {submitting ? (
                   <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                    className="w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+                    className="w-4 h-4 rounded-full border-2 border-white border-t-transparent" />
                 ) : (
-                  <>
-                    <Send size={14} />
-                    Send Wishes
-                  </>
+                  <><Send size={13} /> Send Wishes</>
                 )}
               </motion.button>
             </form>
@@ -229,35 +295,42 @@ export default function WishesPage() {
         </motion.div>
       </section>
 
-      {/* Wishes wall */}
-      <section className="px-6 max-w-4xl mx-auto pb-24">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center mb-10"
-        >
-          <p className="font-script text-4xl text-gold-gradient mb-2">Messages of Love</p>
-          <p className="font-sans-custom text-xs text-[#FFF8F0]/30 tracking-widest uppercase">{wishes.length} wish{wishes.length !== 1 ? "es" : ""}</p>
+      {/* Wishes tree */}
+      <section className="px-4 sm:px-6 max-w-3xl mx-auto pb-24">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center mb-8">
+          <p className="font-script mb-1"
+            style={{ fontSize: "clamp(2rem,6vw,2.8rem)", background: OG,
+              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+            Messages of Love
+          </p>
+          <p className="font-sans-custom text-[10px] text-white/30 tracking-widest uppercase">
+            {wishes.length} wish{wishes.length !== 1 ? "es" : ""} · hover a card to read
+          </p>
         </motion.div>
 
         {loading ? (
-          <div className="text-center py-20">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-              className="w-8 h-8 border-2 border-[#C9A84C] border-t-transparent rounded-full mx-auto"
-            />
+          <div className="flex justify-center py-20">
+            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+              className="w-8 h-8 rounded-full border-2 border-t-transparent border-orange-500" />
           </div>
         ) : wishes.length === 0 ? (
-          <div className="text-center py-20 glass-card max-w-sm mx-auto">
-            <div className="text-4xl mb-4">💌</div>
-            <p className="font-sans-custom text-sm text-[#FFF8F0]/40">Be the first to leave a wish!</p>
+          <div className="text-center py-20 rounded-2xl"
+            style={{ background: "rgba(249,115,22,0.04)", border: "1px solid rgba(249,115,22,0.12)" }}>
+            <div className="text-4xl mb-3">💌</div>
+            <p className="font-sans-custom text-sm text-white/35">Be the first to leave a wish!</p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 gap-4">
-            {wishes.map((wish, i) => (
-              <WishCard key={wish.id} wish={wish} index={i} />
-            ))}
+          /* Tree / comment wall layout */
+          <div className="relative">
+            {/* vertical connector line */}
+            <div className="absolute left-5 top-0 bottom-0 w-px pointer-events-none"
+              style={{ background: "linear-gradient(to bottom, rgba(249,115,22,0.3), rgba(249,115,22,0.05))" }} />
+
+            <div className="flex flex-col gap-3 pl-10">
+              {wishes.map((wish, i) => (
+                <WishCard key={wish.id} wish={wish} index={i} />
+              ))}
+            </div>
           </div>
         )}
       </section>

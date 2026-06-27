@@ -57,15 +57,15 @@ function VenueCard({ event, index }: { event: typeof brideEvents[0]; index: numb
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7, delay: index * 0.15 }}
-      className="glass-card overflow-hidden group hover:border-[#C9A84C]/40 transition-all duration-500"
+      className="glass-card overflow-hidden group hover:border-[var(--orange)]/40 transition-all duration-500"
     >
       <div className="p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start">
         {/* Icon & time */}
         <div className="flex-shrink-0 text-center">
-          <div className="w-16 h-16 rounded-full border border-[#C9A84C]/30 flex items-center justify-center text-3xl mb-2 mx-auto">
+          <div className="w-16 h-16 rounded-full border border-[var(--orange)]/30 flex items-center justify-center text-3xl mb-2 mx-auto">
             {event.icon}
           </div>
-          <div className="flex items-center gap-1.5 text-[#C9A84C]">
+          <div className="flex items-center gap-1.5 text-[var(--orange)]">
             <Clock size={12} />
             <span className="font-sans-custom text-[11px] tracking-widest">{event.time}</span>
           </div>
@@ -73,14 +73,14 @@ function VenueCard({ event, index }: { event: typeof brideEvents[0]; index: numb
 
         {/* Content */}
         <div className="flex-1">
-          <p className="font-sans-custom text-[10px] tracking-[0.35em] uppercase text-[#C9A84C]/70 mb-1">{event.subtitle}</p>
-          <h3 className="font-serif text-2xl text-[#FFF8F0] mb-2">{event.title}</h3>
-          <p className="font-sans-custom text-sm text-[#FFF8F0]/55 leading-relaxed mb-4">{event.description}</p>
+          <p className="font-sans-custom text-[10px] tracking-[0.35em] uppercase text-[var(--orange)]/70 mb-1">{event.subtitle}</p>
+          <h3 className="font-serif text-2xl text-[#FAF5EE] mb-2">{event.title}</h3>
+          <p className="font-sans-custom text-sm text-[#FAF5EE]/55 leading-relaxed mb-4">{event.description}</p>
           <a
             href={event.mapUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 font-sans-custom text-xs tracking-widest uppercase text-[#C9A84C] border border-[#C9A84C]/40 px-4 py-2 rounded hover:bg-[#C9A84C]/10 transition-all duration-300 group"
+            className="inline-flex items-center gap-2 font-sans-custom text-xs tracking-widest uppercase text-[var(--orange)] border border-[var(--orange)]/40 px-4 py-2 rounded hover:bg-[var(--orange)]/10 transition-all duration-300 group"
           >
             <MapPin size={12} />
             Get Directions
@@ -94,8 +94,8 @@ function VenueCard({ event, index }: { event: typeof brideEvents[0]; index: numb
 
 function EventTimeline({ events, side }: { events: typeof brideEvents; side: "bride" | "groom" }) {
   const colors = side === "bride"
-    ? { accent: "#D4547A", glow: "rgba(212,84,122,0.15)" }
-    : { accent: "#C9A84C", glow: "rgba(201,168,76,0.15)" };
+    ? { accent: "#FB923C", glow: "rgba(212,84,122,0.15)" }
+    : { accent: "var(--orange)", glow: "rgba(201,168,76,0.15)" };
 
   return (
     <div className="relative">
@@ -127,21 +127,21 @@ function EventTimeline({ events, side }: { events: typeof brideEvents; side: "br
 
 export default function VenuePage() {
   return (
-    <div className="min-h-screen pt-20" style={{ background: "linear-gradient(180deg, #1A0A0F 0%, #0D050A 100%)" }}>
+    <div className="min-h-screen pt-20" style={{ background: "linear-gradient(180deg, #080503 0%, #0D0804 100%)" }}>
       {/* Header */}
       <section className="py-20 px-6 text-center relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 60%)" }} />
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-          <p className="font-sans-custom text-[11px] tracking-[0.5em] uppercase text-[#C9A84C] mb-4">Venue & Directions</p>
-          <h1 className="font-script text-6xl md:text-7xl text-gold-gradient mb-4">Find Your Way</h1>
-          <p className="font-serif text-lg text-[#FFF8F0]/60 italic max-w-md mx-auto">
+          <p className="font-sans-custom text-[11px] tracking-[0.5em] uppercase text-[var(--orange)] mb-4">Venue & Directions</p>
+          <h1 className="font-script text-6xl md:text-7xl text-orange-gradient mb-4">Find Your Way</h1>
+          <p className="font-serif text-lg text-[#FAF5EE]/60 italic max-w-md mx-auto">
             Two families, one celebration — here&apos;s how to join us on December 10, 2026
           </p>
         </motion.div>
       </section>
 
-      <div className="divider-gold max-w-sm mx-auto mb-16" />
+      <div className="divider-orange max-w-sm mx-auto mb-16" />
 
       {/* Bride Side */}
       <section id="bride" className="py-12 px-6 max-w-4xl mx-auto">
@@ -151,18 +151,18 @@ export default function VenuePage() {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-[#D4547A]/30 mb-4"
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-[#FB923C]/30 mb-4"
             style={{ background: "rgba(212,84,122,0.08)" }}>
             <span className="text-lg">🌸</span>
-            <span className="font-sans-custom text-[11px] tracking-widest uppercase text-[#D4547A]">Bride&apos;s Side</span>
+            <span className="font-sans-custom text-[11px] tracking-widest uppercase text-[#FB923C]">Bride&apos;s Side</span>
           </div>
-          <h2 className="font-serif text-3xl text-[#FFF8F0] mb-2">Morning Celebrations</h2>
-          <p className="font-sans-custom text-sm text-[#FFF8F0]/50">9:00 AM – 2:00 PM · December 10, 2026</p>
+          <h2 className="font-serif text-3xl text-[#FAF5EE] mb-2">Morning Celebrations</h2>
+          <p className="font-sans-custom text-sm text-[#FAF5EE]/50">9:00 AM – 2:00 PM · December 10, 2026</p>
         </motion.div>
         <EventTimeline events={brideEvents} side="bride" />
       </section>
 
-      <div className="divider-gold max-w-sm mx-auto my-16" />
+      <div className="divider-orange max-w-sm mx-auto my-16" />
 
       {/* Groom Side */}
       <section id="groom" className="py-12 px-6 max-w-4xl mx-auto pb-24">
@@ -172,13 +172,13 @@ export default function VenuePage() {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-[#C9A84C]/30 mb-4"
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-[var(--orange)]/30 mb-4"
             style={{ background: "rgba(201,168,76,0.08)" }}>
             <span className="text-lg">✨</span>
-            <span className="font-sans-custom text-[11px] tracking-widest uppercase text-[#C9A84C]">Groom&apos;s Side</span>
+            <span className="font-sans-custom text-[11px] tracking-widest uppercase text-[var(--orange)]">Groom&apos;s Side</span>
           </div>
-          <h2 className="font-serif text-3xl text-[#FFF8F0] mb-2">Evening Reception</h2>
-          <p className="font-sans-custom text-sm text-[#FFF8F0]/50">5:30 PM – 9:00 PM · December 10, 2026</p>
+          <h2 className="font-serif text-3xl text-[#FAF5EE] mb-2">Evening Reception</h2>
+          <p className="font-sans-custom text-sm text-[#FAF5EE]/50">5:30 PM – 9:00 PM · December 10, 2026</p>
         </motion.div>
         <EventTimeline events={groomEvents} side="groom" />
       </section>
@@ -192,7 +192,7 @@ export default function VenuePage() {
           className="max-w-2xl mx-auto glass-card p-8 text-center"
           style={{ border: "1px solid rgba(201,168,76,0.25)" }}
         >
-          <p className="font-script text-4xl text-gold-gradient mb-6">December 10, 2026</p>
+          <p className="font-script text-4xl text-orange-gradient mb-6">December 10, 2026</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             {[
               { time: "9 AM", event: "Bride's Home" },
@@ -201,13 +201,13 @@ export default function VenuePage() {
               { time: "~6 PM", event: "Reception" },
             ].map((item, i) => (
               <div key={i}>
-                <p className="font-sans-custom text-[11px] tracking-widest text-[#C9A84C] mb-1">{item.time}</p>
-                <p className="font-serif text-sm text-[#FFF8F0]/70">{item.event}</p>
+                <p className="font-sans-custom text-[11px] tracking-widest text-[var(--orange)] mb-1">{item.time}</p>
+                <p className="font-serif text-sm text-[#FAF5EE]/70">{item.event}</p>
               </div>
             ))}
           </div>
-          <div className="divider-gold my-6" />
-          <p className="font-sans-custom text-xs text-[#FFF8F0]/40 tracking-wide">
+          <div className="divider-orange my-6" />
+          <p className="font-sans-custom text-xs text-[#FAF5EE]/40 tracking-wide">
             All event timings are approximate. Please arrive 15 minutes early.
           </p>
         </motion.div>
