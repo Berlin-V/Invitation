@@ -1,0 +1,32 @@
+/*
+ * Design Tokens — single source of truth for the visual system.
+ * All Tailwind theme variables, palette values, and typography
+ * are defined here and consumed throughout the project via CSS custom properties.
+ */
+
+@theme {
+  /* ── Typography families ─────────────────────────────── */
+  --font-family-heading: var(--font-cormorant), "Georgia", serif;
+  --font-family-body: var(--font-inter), -apple-system, sans-serif;
+  --font-family-names: var(--font-allura), cursive;
+
+  /* ── Palette ─────────────────────────────────────────── */
+  --color-bg:           #FFFDF9;
+  --color-bg-secondary: #F8F4EF;
+  --color-surface:      #F2ECE4;
+  --color-text:         #4A403A;
+  --color-muted:        #8A7C73;
+
+  --color-gold:       #C9A56D;
+  --color-gold-light: #E8D5B0;
+  --color-gold-dark:  #A8854A;
+
+  --color-border: #E8E0D5;
+
+  /* ── Spacing scale (extends Tailwind's default) ──────── */
+  --spacing-section:    8rem;   /* desktop section padding  */
+  --spacing-section-sm: 5rem;   /* mobile section padding   */
+
+  /* ── Border radii ────────────────────────────────────── */
+  --radius-card: 2px;
+}
