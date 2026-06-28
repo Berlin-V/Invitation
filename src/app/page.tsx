@@ -16,8 +16,10 @@ import VenueSection from "@/components/sections/VenueSection";
 import DressCodeSection from "@/components/sections/DressCodeSection";
 import RSVPSection from "@/components/sections/RSVPSection";
 import WishesTreeSection from "@/components/sections/WishesTreeSection";
+import CoupleCard3D from "@/components/sections/CoupleCard3D";
 import FooterSection from "@/components/sections/FooterSection";
 import ChatBot from "@/components/ChatBot";
+import GlobalConfetti from "@/components/GlobalConfetti";
 
 type Phase = "loading" | "envelope" | "site";
 
@@ -83,9 +85,11 @@ export default function HomePage() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
+          <GlobalConfetti />
           <Navbar />
           <main>
             <HeroSection />
+            <CoupleCard3D />
             <CountdownSection />
             <StorySection />
             <EventsSection />
