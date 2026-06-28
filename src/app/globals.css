@@ -1,117 +1,163 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
 
-@theme {
-  --font-family-heading: var(--font-cormorant), "Georgia", serif;
-  --font-family-body: var(--font-inter), -apple-system, sans-serif;
-  --font-family-names: var(--font-allura), cursive;
-
-  --color-bg: #FFFDF9;
-  --color-bg-secondary: #F8F4EF;
-  --color-surface: #F2ECE4;
-  --color-text: #4A403A;
-  --color-muted: #8A7C73;
-  --color-gold: #C9A56D;
-  --color-gold-light: #E8D5B0;
-  --color-gold-dark: #A8854A;
-  --color-border: #E8E0D5;
-}
-
+/* ── Base ─────────────────────────────────────────────── */
 *,
 *::before,
-*::after { box-sizing: border-box; }
+*::after {
+  box-sizing: border-box;
+}
 
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  background-color: #0F0C09; /* prevents white flash during loading → site transition */
 }
 
 body {
-  background-color: #FFFDF9;
-  color: #4A403A;
-  font-family: var(--font-inter), -apple-system, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* ── Scrollbar ── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: #F8F4EF; }
-::-webkit-scrollbar-thumb { background: #C9A56D; border-radius: 2px; }
+/* ── Scrollbar ────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold);
+  border-radius: 2px;
+}
 
-/* ── Font utilities ── */
-.font-heading { font-family: var(--font-cormorant), "Georgia", serif; }
-.font-body    { font-family: var(--font-inter), sans-serif; }
-.font-names   { font-family: var(--font-allura), cursive; }
+/* ── Selection ────────────────────────────────────────── */
+::selection {
+  background: rgba(201, 165, 109, 0.18);
+  color: var(--color-text);
+}
 
-/* ── Selection ── */
-::selection { background: rgba(201,165,109,0.18); color: #4A403A; }
+/* ── Font utilities ───────────────────────────────────── */
+.font-heading {
+  font-family: var(--font-family-heading);
+}
+.font-body {
+  font-family: var(--font-family-body);
+}
+.font-names {
+  font-family: var(--font-family-names);
+}
 
-/* ── Glass card ── */
+/* ── Tracking utilities ───────────────────────────────── */
+.tracking-editorial {
+  letter-spacing: 0.38em;
+}
+.tracking-widest-xl {
+  letter-spacing: 0.28em;
+}
+
+/* ── Section spacing ──────────────────────────────────── */
+.section-pad {
+  padding-top: var(--spacing-section);
+  padding-bottom: var(--spacing-section);
+}
+
+@media (max-width: 768px) {
+  .section-pad {
+    padding-top: var(--spacing-section-sm);
+    padding-bottom: var(--spacing-section-sm);
+  }
+}
+
+/* ── Glass surfaces ───────────────────────────────────── */
 .glass {
-  background: rgba(255,253,249,0.72);
+  background: rgba(255, 253, 249, 0.72);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(201,165,109,0.22);
+  border: 1px solid rgba(201, 165, 109, 0.22);
 }
 
 .glass-dark {
-  background: rgba(74,64,58,0.65);
+  background: rgba(74, 64, 58, 0.65);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(201,165,109,0.18);
+  border: 1px solid rgba(201, 165, 109, 0.18);
 }
 
-/* ── Dividers ── */
+/* ── Dividers ─────────────────────────────────────────── */
 .divider-gold {
   height: 1px;
-  background: linear-gradient(90deg, transparent, #C9A56D55, #C9A56D, #C9A56D55, transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201, 165, 109, 0.33),
+    #c9a56d,
+    rgba(201, 165, 109, 0.33),
+    transparent
+  );
 }
 
 .divider-thin {
   height: 1px;
-  background: linear-gradient(90deg, transparent, #E8E0D5, transparent);
+  background: linear-gradient(90deg, transparent, var(--color-border), transparent);
 }
 
-/* ── Section spacing ── */
-.section-pad {
-  padding-top: 8rem;
-  padding-bottom: 8rem;
+/* ── Image reveal container ───────────────────────────── */
+.img-reveal {
+  overflow: hidden;
 }
 
-@media (max-width: 768px) {
-  .section-pad { padding-top: 5rem; padding-bottom: 5rem; }
-}
-
-/* ── Tracking utilities ── */
-.tracking-editorial { letter-spacing: 0.38em; }
-.tracking-widest-xl { letter-spacing: 0.28em; }
-
-/* ── Image reveal ── */
-.img-reveal { overflow: hidden; }
-
-/* ── Animations ── */
-@keyframes petal-fall {
-  0%   { transform: translateY(-10px) rotate(0deg) translateX(0); opacity: 1; }
-  100% { transform: translateY(110vh)  rotate(720deg) translateX(60px); opacity: 0; }
-}
-
-@keyframes float-gentle {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-8px); }
-}
-
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-.animate-float   { animation: float-gentle 4s ease-in-out infinite; }
+/* ── Shimmer text ─────────────────────────────────────── */
 .shimmer-text {
-  background: linear-gradient(90deg, #C9A56D 0%, #E8D5B0 40%, #C9A56D 60%, #A8854A 100%);
+  background: linear-gradient(
+    90deg,
+    var(--color-gold) 0%,
+    var(--color-gold-light) 40%,
+    var(--color-gold) 60%,
+    var(--color-gold-dark) 100%
+  );
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: shimmer 3s linear infinite;
+}
+
+/* ── Keyframe animations ──────────────────────────────── */
+@keyframes petal-fall {
+  0% {
+    transform: translateY(-10px) rotate(0deg) translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(720deg) translateX(60px);
+    opacity: 0;
+  }
+}
+
+@keyframes float-gentle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.animate-float {
+  animation: float-gentle 4s ease-in-out infinite;
 }
