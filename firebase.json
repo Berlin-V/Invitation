@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "site": "berlinwedsjerlinashika",
+    "public": "public-hosting-stub",
+    "ignore": ["**/.*"],
+    "rewrites": [
+      {
+        "source": "**",
+        "run": {
+          "serviceId": "wedding-site",
+          "region": "asia-south1"
+        }
+      }
+    ]
+  }
+}

@@ -226,7 +226,7 @@ export default function EnvelopeAnimation({ onEnter }: EnvelopeAnimationProps) {
 
             <div className="divider-thin" style={{ margin: "1.5rem 0" }} />
 
-            {/* Date and location */}
+            {/* Date */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -238,20 +238,9 @@ export default function EnvelopeAnimation({ onEnter }: EnvelopeAnimationProps) {
                   fontSize: "0.78rem",
                   letterSpacing: "0.18em",
                   color: "#8A7C73",
-                  marginBottom: "0.3rem",
                 }}
               >
                 December 10, 2026
-              </p>
-              <p
-                style={{
-                  fontFamily: "var(--font-cormorant), Georgia, serif",
-                  fontSize: "0.72rem",
-                  letterSpacing: "0.12em",
-                  color: "#8A7C73",
-                }}
-              >
-                Tamil Nadu, India
               </p>
             </motion.div>
 

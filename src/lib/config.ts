@@ -7,7 +7,6 @@ export const COUPLE = {
   bride: "Jerlin Ashika",
   groomShort: "Berlin",
   brideShort: "Jerlin",
-  location: "Tamil Nadu, India",
 };
 
 export const WEDDING_DATE = {
@@ -62,29 +61,6 @@ export const EVENTS = {
       { title: "Groom's Home",    time: "5:30 PM",   mapUrl: MAPS.groomHouse,    icon: "🏠", description: "The groom's side celebration begins at the family home with a warm welcome." },
       { title: "Reception Hall",  time: "~6:00 PM",  mapUrl: MAPS.receptionHall, icon: "🎊", description: "The evening reception — a grand celebration of love, family, and new beginnings." },
     ],
-  },
-};
-
-// ─── Dress code ───────────────────────────────
-export const DRESS_CODE = {
-  bride: { label: "Bride", color: "#FFFFFF", name: "White" },
-  groom: { label: "Groom", color: "#E8DCC8", name: "Beige" },
-  ladies: {
-    label: "Ladies",
-    colors: [
-      { hex: "#Fac2bc", name: "Blush" },
-      { hex: "#Faa38b", name: "Peach" },
-      { hex: "#Ee7863", name: "Coral" },
-      { hex: "#F58893", name: "Rose" },
-      { hex: "#F2772f", name: "Amber Rose" },
-    ],
-    note: "Any of these shades — gowns, sarees, or lehengas",
-  },
-  gents: {
-    label: "Gents",
-    color: "#1A1A1A",
-    name: "Black",
-    note: "Black suit or black pants, tie/pocket square in any ladies palette colour",
   },
 };
 

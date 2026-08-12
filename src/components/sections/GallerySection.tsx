@@ -9,31 +9,18 @@ const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
 interface GalleryImage {
   id: string;
-  seed: string;
+  src: string;
   w: number;
   h: number;
   alt: string;
 }
 
-// Varied sizes create natural masonry rhythm
 const IMAGES: GalleryImage[] = [
-  { id: "g1",  seed: "wedding1",  w: 600, h: 900, alt: "Couple portrait"         },
-  { id: "g2",  seed: "wedding2",  w: 800, h: 600, alt: "Engagement photo"        },
-  { id: "g3",  seed: "wedding3",  w: 600, h: 800, alt: "Romantic moment"         },
-  { id: "g4",  seed: "wedding4",  w: 800, h: 600, alt: "Outdoor portrait"        },
-  { id: "g5",  seed: "wedding5",  w: 600, h: 750, alt: "Candid laughter"         },
-  { id: "g6",  seed: "wedding6",  w: 800, h: 600, alt: "Golden hour"             },
-  { id: "g7",  seed: "wedding7",  w: 600, h: 900, alt: "Dress detail"            },
-  { id: "g8",  seed: "wedding8",  w: 800, h: 550, alt: "Couple walking"          },
-  { id: "g9",  seed: "wedding9",  w: 600, h: 800, alt: "Ring exchange"           },
-  { id: "g10", seed: "wedding10", w: 800, h: 600, alt: "First dance"             },
-  { id: "g11", seed: "wedding11", w: 600, h: 850, alt: "Bridal portrait"         },
-  { id: "g12", seed: "wedding12", w: 800, h: 600, alt: "Family celebration"      },
+  { id: "propose", src: "/images/proposeBJ.jpeg",   w: 4082, h: 5429, alt: "Berlin proposing to Jerlin Ashika" },
+  { id: "ring",    src: "/images/ringMoment.jpeg",  w: 3592, h: 5392, alt: "The ring exchange moment" },
+  { id: "stage",   src: "/images/stageClose.jpeg",  w: 4082, h: 6123, alt: "Berlin & Jerlin Ashika on stage" },
+  { id: "evening", src: "/images/berlinAshi.jpeg",  w: 1080, h: 1546, alt: "Berlin & Jerlin Ashika, an evening together" },
 ];
-
-function getImageUrl(img: GalleryImage) {
-  return `https://picsum.photos/seed/${img.seed}/${img.w}/${img.h}`;
-}
 
 interface LightboxProps {
   images: GalleryImage[];
@@ -158,7 +145,7 @@ function Lightbox({ images, activeIndex, onClose, onNext, onPrev }: LightboxProp
         onClick={(e) => e.stopPropagation()}
       >
         <NextImage
-          src={getImageUrl(img)}
+          src={img.src}
           alt={img.alt}
           width={img.w}
           height={img.h}
@@ -274,7 +261,7 @@ export default function GallerySection() {
             whileHover="hovered"
           >
             <motion.img
-              src={getImageUrl(img)}
+              src={img.src}
               alt={img.alt}
               loading="lazy"
               style={{ width: "100%", height: "auto", display: "block" }}

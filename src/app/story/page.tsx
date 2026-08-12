@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { COUPLE, WEDDING_DATE } from "@/lib/config";
+import { WEDDING_DATE } from "@/lib/config";
 
 const milestones = [
   {
