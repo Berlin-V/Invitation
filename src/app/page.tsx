@@ -12,14 +12,11 @@ import StorySection from "@/components/sections/StorySection";
 import EventsSection from "@/components/sections/EventsSection";
 import VideoSection from "@/components/sections/VideoSection";
 import GallerySection from "@/components/sections/GallerySection";
-import VenueSection from "@/components/sections/VenueSection";
-import DressCodeSection from "@/components/sections/DressCodeSection";
 import RSVPSection from "@/components/sections/RSVPSection";
 import WishesTreeSection from "@/components/sections/WishesTreeSection";
 import CoupleCard3D from "@/components/sections/CoupleCard3D";
 import FooterSection from "@/components/sections/FooterSection";
 import ChatBot from "@/components/ChatBot";
-import GlobalConfetti from "@/components/GlobalConfetti";
 
 type Phase = "loading" | "envelope" | "site";
 
@@ -32,6 +29,8 @@ export default function HomePage() {
     // Setting ready=true here means both server and client render the
     // same static placeholder initially — zero chance of a hydration mismatch.
     const visited = Boolean(sessionStorage.getItem("wed_visited"));
+    // Client-only read of sessionStorage; must run post-hydration so server/client first paint match.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPhase(visited ? "site" : "loading");
     setReady(true);
   }, []);
@@ -85,7 +84,6 @@ export default function HomePage() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          <GlobalConfetti />
           <Navbar />
           <main>
             <HeroSection />
@@ -95,8 +93,6 @@ export default function HomePage() {
             <EventsSection />
             <VideoSection />
             <GallerySection />
-            <VenueSection />
-            <DressCodeSection />
             <RSVPSection />
             <WishesTreeSection />
           </main>

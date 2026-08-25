@@ -72,7 +72,7 @@ function CardBack() {
             marginBottom: "0.2rem",
           }}
         >
-          {COUPLE.bride}
+          {COUPLE.groom}
         </p>
         <p
           style={{
@@ -97,7 +97,7 @@ function CardBack() {
             marginBottom: "1rem",
           }}
         >
-          {COUPLE.groom}
+          {COUPLE.bride}
         </p>
 
         {/* Gold divider */}
@@ -109,7 +109,7 @@ function CardBack() {
           }}
         />
 
-        {/* Date + location */}
+        {/* Date */}
         <p
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
@@ -117,22 +117,10 @@ function CardBack() {
             letterSpacing: "0.16em",
             color: "#4A403A",
             textAlign: "center",
-            marginBottom: "0.25rem",
-          }}
-        >
-          {WEDDING_DATE.display}
-        </p>
-        <p
-          style={{
-            fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.68rem",
-            letterSpacing: "0.12em",
-            color: "#8A7C73",
-            textAlign: "center",
             marginBottom: "1.25rem",
           }}
         >
-          {COUPLE.location}
+          {WEDDING_DATE.display}
         </p>
 
         {/* Divider */}
@@ -270,7 +258,7 @@ function CardBack() {
 // ── Main 3D card ───────────────────────────────────────────────────────────
 export default function CoupleCard3D() {
   const [flipped, setFlipped] = useState(false);
-  const isDragging = useRef(false);
+  const [isDragging, setIsDragging] = useState(false);
   const dragStartX = useRef(0);
 
   // Raw rotation motion value, spring-smoothed for display
@@ -278,19 +266,9 @@ export default function CoupleCard3D() {
   const rotation = useSpring(rawRotation, { stiffness: 80, damping: 18 });
   const rotateY = useTransform(rotation, (r) => `${r}deg`);
 
-  // Shadow deepens as card turns
-  const shadowOpacity = useTransform(rotation, [-90, 0, 90, 180], [0.1, 0.35, 0.1, 0.35]);
-
-  const snapToNearest = useCallback(() => {
-    const cur = rawRotation.get();
-    const target = Math.abs(cur % 360) < 90 ? 0 : 180;
-    rawRotation.set(target);
-    setFlipped(target !== 0);
-  }, [rawRotation]);
-
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
-      isDragging.current = false;
+      setIsDragging(false);
       dragStartX.current = e.clientX;
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     },
@@ -300,18 +278,18 @@ export default function CoupleCard3D() {
   const handlePointerMove = useCallback(
     (e: React.PointerEvent) => {
       const dx = e.clientX - dragStartX.current;
-      if (Math.abs(dx) > 4) isDragging.current = true;
-      if (!isDragging.current) return;
+      if (Math.abs(dx) > 4 && !isDragging) setIsDragging(true);
+      if (!isDragging && Math.abs(dx) <= 4) return;
       const base = flipped ? 180 : 0;
       rawRotation.set(base + dx * 0.55);
     },
-    [flipped, rawRotation]
+    [isDragging, flipped, rawRotation]
   );
 
   const handlePointerUp = useCallback(
     (e: React.PointerEvent) => {
       const dx = e.clientX - dragStartX.current;
-      if (!isDragging.current) {
+      if (!isDragging) {
         // Pure click — toggle
         const next = !flipped;
         rawRotation.set(next ? 180 : 0);
@@ -324,10 +302,10 @@ export default function CoupleCard3D() {
         rawRotation.set(target);
         setFlipped(target === 180);
       }
-      isDragging.current = false;
+      setIsDragging(false);
       void dx;
     },
-    [flipped, rawRotation]
+    [isDragging, flipped, rawRotation]
   );
 
   return (
@@ -394,7 +372,7 @@ export default function CoupleCard3D() {
           style={{
             perspective: "1200px",
             perspectiveOrigin: "50% 50%",
-            cursor: isDragging.current ? "grabbing" : "grab",
+            cursor: isDragging ? "grabbing" : "grab",
           }}
         >
           {/* Rotating card */}
@@ -460,7 +438,7 @@ export default function CoupleCard3D() {
                     lineHeight: 1.15,
                   }}
                 >
-                  {COUPLE.bride} & {COUPLE.groom}
+                  {COUPLE.groom} & {COUPLE.bride}
                 </p>
                 <p
                   style={{

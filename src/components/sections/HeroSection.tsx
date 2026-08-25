@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import GiftUsButton from "@/components/GiftUsButton";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
@@ -9,6 +11,19 @@ const fadeUp = (delay: number) => ({
   initial: { opacity: 0, y: 28 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.9, delay, ease: EASE },
+});
+
+// Deterministic golden-angle spread — even-looking scatter without Math.random(),
+// which would differ between server and client render and break hydration.
+const STARS = Array.from({ length: 30 }, (_, i) => {
+  const angle = i * 137.5;
+  return {
+    left: `${angle % 100}%`,
+    top: `${(angle * 1.7) % 100}%`,
+    size: 1 + (i % 3),
+    duration: 3 + (i % 5),
+    delay: (i % 7) * 0.3,
+  };
 });
 
 export default function HeroSection() {
@@ -20,29 +35,17 @@ export default function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative flex items-center justify-center overflow-hidden"
-      style={{ minHeight: "100svh" }}
+      className="relative flex justify-center overflow-hidden"
+      style={{ minHeight: "100svh", alignItems: "flex-start", paddingTop: "clamp(5.5rem, 15vh, 9rem)" }}
     >
-      {/* Video background */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ zIndex: 0 }}
-      >
-        <source src="/wedding-video.mov" type="video/quicktime" />
-        <source src="/wedding-video.mp4" type="video/mp4" />
-      </video>
-
-      {/* Fallback gradient when video doesn't load */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: "linear-gradient(160deg, #2C1810 0%, #1A1510 40%, #0F0C09 100%)",
-          zIndex: 1,
-        }}
+      {/* Background photo — full-bleed, cropped to fill */}
+      <Image
+        src="/images/berlinJerlin.jpeg"
+        alt="Berlin & Jerlin Ashika"
+        fill
+        priority
+        sizes="100vw"
+        style={{ objectFit: "cover", objectPosition: "center top", zIndex: 0 }}
       />
 
       {/* Cinematic overlay — darker top and bottom, lighter middle */}
@@ -64,6 +67,32 @@ export default function HeroSection() {
           zIndex: 2,
         }}
       />
+
+      {/* Twinkling stars */}
+      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 2 }}>
+        {STARS.map((s, i) => (
+          <motion.span
+            key={i}
+            style={{
+              position: "absolute",
+              left: s.left,
+              top: s.top,
+              width: s.size,
+              height: s.size,
+              borderRadius: "50%",
+              background: "#FFFDF9",
+              boxShadow: "0 0 4px rgba(255,253,249,0.8)",
+            }}
+            animate={{ opacity: [0.15, 0.9, 0.15], y: [0, -8, 0] }}
+            transition={{
+              duration: s.duration,
+              delay: s.delay,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
 
       {/* Hero content */}
       <div
@@ -98,7 +127,7 @@ export default function HeroSection() {
           }}
         />
 
-        {/* Bride name */}
+        {/* Groom name */}
         <motion.h1
           {...fadeUp(0.65)}
           style={{
@@ -109,7 +138,7 @@ export default function HeroSection() {
             marginBottom: "0.25rem",
           }}
         >
-          Jerlin Ashika
+          Berlin
         </motion.h1>
 
         {/* Ampersand */}
@@ -127,7 +156,7 @@ export default function HeroSection() {
           and
         </motion.p>
 
-        {/* Groom name */}
+        {/* Bride name */}
         <motion.h2
           {...fadeUp(0.95)}
           style={{
@@ -138,7 +167,7 @@ export default function HeroSection() {
             marginBottom: "2.5rem",
           }}
         >
-          Berlin
+          Jerlin Ashika
         </motion.h2>
 
         {/* Divider */}
@@ -170,19 +199,10 @@ export default function HeroSection() {
           December 10, 2026
         </motion.p>
 
-        {/* Location */}
-        <motion.p
-          {...fadeUp(1.25)}
-          style={{
-            fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "clamp(0.68rem, 1.6vw, 0.78rem)",
-            letterSpacing: "0.16em",
-            color: "rgba(255,253,249,0.4)",
-            textTransform: "uppercase",
-          }}
-        >
-          Tamil Nadu, India
-        </motion.p>
+        {/* Gift us */}
+        <motion.div {...fadeUp(1.3)} style={{ marginTop: "1.75rem" }}>
+          <GiftUsButton />
+        </motion.div>
       </div>
 
       {/* Scroll indicator */}

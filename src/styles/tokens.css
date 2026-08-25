@@ -10,6 +10,14 @@
   --font-family-body: var(--font-inter), -apple-system, sans-serif;
   --font-family-names: var(--font-allura), cursive;
 
+  /* Same three families, exposed under the class names some pages already
+     reference (font-serif/font-script/font-sans-custom) — overrides
+     Tailwind's generic default font-serif and defines the other two, so
+     every page renders the same brand fonts instead of a fallback stack. */
+  --font-serif: var(--font-cormorant), "Georgia", serif;
+  --font-script: var(--font-allura), cursive;
+  --font-sans-custom: var(--font-inter), -apple-system, sans-serif;
+
   /* ── Palette ─────────────────────────────────────────── */
   --color-bg:           #FFFDF9;
   --color-bg-secondary: #F8F4EF;

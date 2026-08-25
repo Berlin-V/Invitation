@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 export default function FooterSection() {
-  const [year, setYear] = useState(2026);
-  useEffect(() => { setYear(new Date().getFullYear()); }, []);
+  const year = new Date().getFullYear();
 
   return (
     <footer
@@ -55,7 +53,7 @@ export default function FooterSection() {
           }}
         />
 
-        {/* Date and venue */}
+        {/* Date */}
         <p
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
@@ -63,21 +61,9 @@ export default function FooterSection() {
             letterSpacing: "0.3em",
             color: "rgba(201,165,109,0.5)",
             textTransform: "uppercase",
-            marginBottom: "0.4rem",
           }}
         >
           December 10, 2026
-        </p>
-        <p
-          style={{
-            fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.68rem",
-            letterSpacing: "0.2em",
-            color: "rgba(201,165,109,0.35)",
-            textTransform: "uppercase",
-          }}
-        >
-          Tamil Nadu, India
         </p>
 
         {/* Bottom line */}

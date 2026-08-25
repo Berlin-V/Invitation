@@ -8,6 +8,24 @@ You answer questions based on the provided couple information. Be friendly, conc
 Use occasional heart emojis but don't overdo it.
 If asked something not in the information, kindly say you don't have that detail yet but they can reach out to the families.`;
 
+// Per-instance in-memory limiter — caps runaway Gemini usage/cost from a single visitor.
+// Resets on server restart / cold start, which is an acceptable tradeoff for this site's traffic.
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 20;
+const requestLog = new Map<string, number[]>();
+
+function isRateLimited(key: string): boolean {
+  const now = Date.now();
+  const recent = (requestLog.get(key) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+  if (recent.length >= RATE_LIMIT_MAX_REQUESTS) {
+    requestLog.set(key, recent);
+    return true;
+  }
+  recent.push(now);
+  requestLog.set(key, recent);
+  return false;
+}
+
 function getCoupleInfo(): string {
   try {
     const path = join(process.cwd(), "src/lib/couple-info.md");
@@ -19,6 +37,13 @@ function getCoupleInfo(): string {
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    if (isRateLimited(ip)) {
+      return NextResponse.json({
+        reply: "You've reached the chat limit for now — please try again in a bit!",
+      });
+    }
+
     const { message, history } = await req.json();
     const apiKey = process.env.GEMINI_API_KEY;
 
@@ -29,7 +54,10 @@ export async function POST(req: NextRequest) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-flash-latest",
+      generationConfig: { maxOutputTokens: 220 },
+    });
 
     const coupleInfo = getCoupleInfo();
     const context = `${SYSTEM_CONTEXT}\n\n## Couple Information:\n${coupleInfo}`;

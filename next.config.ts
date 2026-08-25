@@ -1,13 +1,25 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   images: {
     remotePatterns: [
       // Temporary placeholder images — swap for real photos when available
       { protocol: "https", hostname: "picsum.photos" },
-      // Google profile photos used on the Wishes wall
-      { protocol: "https", hostname: "lh3.googleusercontent.com" },
     ],
+  },
+  async headers() {
+    // Next.js marks these fully-static pages cacheable for a year, which is meant
+    // for platforms (like Vercel) that purge that cache on every deploy. Firebase
+    // Hosting's CDN doesn't know to do that, so redeploys were invisible to anyone
+    // hitting an edge node that had already cached the old response. Forcing
+    // revalidation on the document routes fixes that without touching the (safe,
+    // content-hashed) long-term caching on /_next/static/*.
+    const documentRoutes = ["/", "/gallery", "/story", "/venue", "/wishes"];
+    return documentRoutes.map((source) => ({
+      source,
+      headers: [{ key: "Cache-Control", value: "no-cache, must-revalidate" }],
+    }));
   },
 };
 

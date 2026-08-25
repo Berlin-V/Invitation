@@ -8,13 +8,12 @@ import Image from "next/image";
 import { DRIVE, COUPLE, WEDDING_DATE } from "@/lib/config";
 const ENGAGEMENT_DRIVE = DRIVE.engagementAlbum;
 
-// Placeholder engagement photos — replace with actual Drive photo URLs
-const engagementPhotos = Array.from({ length: 9 }, (_, i) => ({
-  id: i + 1,
-  src: `https://picsum.photos/seed/engagement${i + 1}/600/800`,
-  alt: `${COUPLE.groom} & ${COUPLE.bride} - Engagement ${i + 1}`,
-  aspect: i % 3 === 0 ? "tall" : i % 3 === 1 ? "wide" : "square",
-}));
+const engagementPhotos = [
+  { id: 1, src: "/images/proposeBJ.jpeg",  w: 4082, h: 5429, alt: `${COUPLE.groom} proposing to ${COUPLE.bride}` },
+  { id: 2, src: "/images/ringMoment.jpeg", w: 3592, h: 5392, alt: "The ring exchange moment" },
+  { id: 3, src: "/images/stageClose.jpeg", w: 4082, h: 6123, alt: `${COUPLE.groom} & ${COUPLE.bride} on stage` },
+  { id: 4, src: "/images/berlinAshi.jpeg", w: 1080, h: 1546, alt: `${COUPLE.groom} & ${COUPLE.bride}, an evening together` },
+];
 
 const albums = [
   {
@@ -159,8 +158,8 @@ export default function GalleryPage() {
                   <Image
                     src={photo.src}
                     alt={photo.alt}
-                    width={600}
-                    height={800}
+                    width={photo.w}
+                    height={photo.h}
                     className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">

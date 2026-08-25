@@ -159,7 +159,7 @@ export default function RSVPSection() {
             marginBottom: "1rem",
           }}
         >
-          Kindly respond by November 1, 2026
+          Kindly respond fast so that we can arrange accordingly
         </p>
         <h2
           style={{

@@ -53,12 +53,6 @@ export interface EventGroup {
   items: EventItem[];
 }
 
-// ── Dress code ────────────────────────────────────────────────────────────────
-export interface DressCodeColor {
-  hex: string;
-  name: string;
-}
-
 // ── Chatbot ───────────────────────────────────────────────────────────────────
 export interface ChatMessage {
   role: "user" | "assistant";

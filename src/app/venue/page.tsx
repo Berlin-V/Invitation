@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { MapPin, Clock, ArrowUpRight } from "lucide-react";
-import { EVENTS, COUPLE, WEDDING_DATE } from "@/lib/config";
+import { EVENTS, WEDDING_DATE } from "@/lib/config";
 
 const brideEvents = EVENTS.brideSide.items.map((item, i) => ({
   id: ["bride-house", "church"][i],
