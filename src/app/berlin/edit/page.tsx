@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Trash2, Pencil, Check, X } from "lucide-react";
+import { Trash2, RotateCcw, Pencil, Check, X } from "lucide-react";
 
 interface Wish {
   id: string;
@@ -9,6 +9,7 @@ interface Wish {
   relation: string;
   message: string;
   createdAt: string;
+  deleted?: boolean;
 }
 
 const SECRET_KEY = "wed_admin_secret";
@@ -17,6 +18,13 @@ function sideLabel(relation: string): string {
   if (relation.startsWith("Groom's")) return "Groom";
   if (relation.startsWith("Bride's")) return "Bride";
   return "Groom & Bride";
+}
+
+function relationshipLabel(relation: string): string {
+  if (relation.startsWith("Groom's")) return relation.slice("Groom's ".length);
+  if (relation.startsWith("Bride's")) return relation.slice("Bride's ".length);
+  if (relation.endsWith(" of the Couple")) return relation.slice(0, -" of the Couple".length);
+  return relation;
 }
 
 async function fetchWishes(secret: string): Promise<Wish[]> {
@@ -105,19 +113,20 @@ export default function EditWishesPage() {
     }
   };
 
-  const remove = async (id: string) => {
+  const setWishDeleted = async (id: string, deleted: boolean) => {
     if (!secret) return;
-    if (!window.confirm("Delete this wish permanently?")) return;
+    if (deleted && !window.confirm("Hide this wish from the site? It stays saved and can be restored here.")) return;
     setBusyId(id);
     try {
       const res = await fetch(`/api/wishes/${id}`, {
-        method: "DELETE",
-        headers: { "x-admin-secret": secret },
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", "x-admin-secret": secret },
+        body: JSON.stringify({ deleted }),
       });
-      if (!res.ok) throw new Error("delete-failed");
-      setWishes((prev) => prev?.filter((w) => w.id !== id) ?? null);
+      if (!res.ok) throw new Error("update-failed");
+      setWishes((prev) => prev?.map((w) => (w.id === id ? { ...w, deleted } : w)) ?? null);
     } catch {
-      setLoadError("Couldn't delete that wish. Try again.");
+      setLoadError(deleted ? "Couldn't hide that wish. Try again." : "Couldn't restore that wish. Try again.");
     } finally {
       setBusyId(null);
     }
@@ -222,7 +231,7 @@ export default function EditWishesPage() {
         <table style={{ width: "100%", borderCollapse: "collapse", background: "#FFFDF9", minWidth: "720px" }}>
           <thead>
             <tr style={{ background: "rgba(201,165,109,0.12)" }}>
-              {["Name", "You're Here For", "Message", "Submitted", ""].map((h) => (
+              {["Name", "You're Here For", "Relationship", "Message", "Submitted", ""].map((h) => (
                 <th
                   key={h}
                   style={{
@@ -245,7 +254,13 @@ export default function EditWishesPage() {
               const isEditing = editingId === w.id;
               const isBusy = busyId === w.id;
               return (
-                <tr key={w.id} style={{ borderTop: "1px solid rgba(201,165,109,0.15)" }}>
+                <tr
+                  key={w.id}
+                  style={{
+                    borderTop: "1px solid rgba(201,165,109,0.15)",
+                    opacity: w.deleted ? 0.5 : 1,
+                  }}
+                >
                   <td style={{ padding: "0.75rem 1rem", verticalAlign: "top" }}>
                     {isEditing ? (
                       <input
@@ -254,7 +269,22 @@ export default function EditWishesPage() {
                         onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
                       />
                     ) : (
-                      <span style={{ fontSize: "0.85rem", color: "#4A403A" }}>{w.name}</span>
+                      <span style={{ fontSize: "0.85rem", color: "#4A403A" }}>
+                        {w.name}
+                        {w.deleted && (
+                          <span
+                            style={{
+                              marginLeft: "0.5rem",
+                              fontSize: "0.62rem",
+                              letterSpacing: "0.08em",
+                              textTransform: "uppercase",
+                              color: "#C0392B",
+                            }}
+                          >
+                            Hidden
+                          </span>
+                        )}
+                      </span>
                     )}
                   </td>
                   <td style={{ padding: "0.75rem 1rem", verticalAlign: "top" }}>
@@ -267,6 +297,11 @@ export default function EditWishesPage() {
                     ) : (
                       <span style={{ fontSize: "0.85rem", color: "#8A7C73" }}>{sideLabel(w.relation)}</span>
                     )}
+                  </td>
+                  <td style={{ padding: "0.75rem 1rem", verticalAlign: "top" }}>
+                    <span style={{ fontSize: "0.85rem", color: "#8A7C73" }}>
+                      {relationshipLabel(isEditing ? draft.relation : w.relation)}
+                    </span>
                   </td>
                   <td style={{ padding: "0.75rem 1rem", verticalAlign: "top", maxWidth: "360px" }}>
                     {isEditing ? (
@@ -304,14 +339,25 @@ export default function EditWishesPage() {
                         <button onClick={() => startEdit(w)} aria-label="Edit" style={iconBtnStyle}>
                           <Pencil size={14} strokeWidth={1.5} />
                         </button>
-                        <button
-                          onClick={() => remove(w.id)}
-                          disabled={isBusy}
-                          aria-label="Delete"
-                          style={{ ...iconBtnStyle, color: "#C0392B" }}
-                        >
-                          <Trash2 size={14} strokeWidth={1.5} />
-                        </button>
+                        {w.deleted ? (
+                          <button
+                            onClick={() => setWishDeleted(w.id, false)}
+                            disabled={isBusy}
+                            aria-label="Restore"
+                            style={{ ...iconBtnStyle, color: "#3E7A4A" }}
+                          >
+                            <RotateCcw size={14} strokeWidth={1.5} />
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => setWishDeleted(w.id, true)}
+                            disabled={isBusy}
+                            aria-label="Hide"
+                            style={{ ...iconBtnStyle, color: "#C0392B" }}
+                          >
+                            <Trash2 size={14} strokeWidth={1.5} />
+                          </button>
+                        )}
                       </div>
                     )}
                   </td>

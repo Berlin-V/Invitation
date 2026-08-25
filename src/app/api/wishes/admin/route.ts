@@ -17,6 +17,7 @@ export async function GET(req: NextRequest) {
           relation: "Friend of the Couple",
           message: "Wishing you both a lifetime of love and happiness! May your journey together be filled with joy, laughter, and endless blessings. Congratulations Berlin and Jerlin Ashika! 🎉",
           createdAt: new Date(Date.now() - 86400000).toISOString(),
+          deleted: false,
         },
         {
           id: "sample2",
@@ -24,6 +25,7 @@ export async function GET(req: NextRequest) {
           relation: "Family",
           message: "So happy for you both — wishing you a lifetime of love!",
           createdAt: new Date(Date.now() - 172800000).toISOString(),
+          deleted: false,
         },
       ],
     });

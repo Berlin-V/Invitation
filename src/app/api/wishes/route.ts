@@ -30,6 +30,7 @@ export async function GET() {
           relation: "Friend of the Couple",
           message: "Wishing you both a lifetime of love and happiness! May your journey together be filled with joy, laughter, and endless blessings. Congratulations Berlin and Jerlin Ashika! 🎉",
           createdAt: new Date(Date.now() - 86400000).toISOString(),
+          deleted: false,
         },
       ],
     });
@@ -37,7 +38,9 @@ export async function GET() {
 
   try {
     const snap = await db.collection("wishes").orderBy("createdAt", "desc").limit(50).get();
-    const wishes = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    const wishes = snap.docs
+      .map((d) => ({ id: d.id, ...d.data() }))
+      .filter((w) => !(w as { deleted?: boolean }).deleted);
     return NextResponse.json(
       { wishes },
       { headers: { "Cache-Control": "public, max-age=60, stale-while-revalidate=300" } }
@@ -69,6 +72,7 @@ export async function POST(req: NextRequest) {
       relation: relation.trim(),
       message: message.trim().slice(0, 500),
       createdAt: new Date().toISOString(),
+      deleted: false,
     };
 
     const ref = await db.collection("wishes").add(wish);

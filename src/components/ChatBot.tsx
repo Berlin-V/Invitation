@@ -23,6 +23,40 @@ const FLOAT_HEARTS = Array.from({ length: 10 }, (_, i) => {
   };
 });
 
+const THINKING_PHRASES = [
+  "Let me read the story I wrote…",
+  "Flipping through their love story…",
+  "Digging through my cupid notes…",
+  "Checking the timeline real quick…",
+  "Dusting off my wings…",
+];
+
+function ThinkingIndicator() {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setPhraseIndex((i) => (i + 1) % THINKING_PHRASES.length);
+    }, 1800);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.span
+        key={phraseIndex}
+        initial={{ opacity: 0, y: 4 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -4 }}
+        transition={{ duration: 0.25 }}
+        className="text-sm text-white/70 font-sans-custom italic"
+      >
+        {THINKING_PHRASES[phraseIndex]}
+      </motion.span>
+    </AnimatePresence>
+  );
+}
+
 function FloatingHearts() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
@@ -182,12 +216,7 @@ export default function ChatBot() {
                 <div className="relative flex justify-start" style={{ zIndex: 1 }}>
                   <div className="rounded-2xl rounded-bl-sm px-4 py-2.5"
                     style={{ background: "rgba(249,115,22,0.1)", border: "1px solid rgba(249,115,22,0.18)" }}>
-                    <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1.2 }}
-                      className="flex items-center gap-1">
-                      {[0, 1, 2].map((i) => (
-                        <Heart key={i} size={11} fill="#F97316" style={{ color: "#F97316" }} />
-                      ))}
-                    </motion.span>
+                    <ThinkingIndicator />
                   </div>
                 </div>
               )}
