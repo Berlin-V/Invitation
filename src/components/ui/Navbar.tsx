@@ -9,7 +9,6 @@ const NAV_LINKS = [
   { label: "Story",    href: "#story"    },
   { label: "Events",   href: "#events"   },
   { label: "Gallery",  href: "#gallery"  },
-  { label: "RSVP",     href: "#rsvp"     },
 ] as const;
 
 export default function Navbar() {

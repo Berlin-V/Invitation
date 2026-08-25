@@ -1,20 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { initializeApp, getApps, getApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
-
-function getAdminDb() {
-  const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-  if (!projectId || projectId === "your_project_id") return null;
-
-  try {
-    const app = getApps().length
-      ? getApp()
-      : initializeApp({ projectId });
-    return getFirestore(app);
-  } catch {
-    return null;
-  }
-}
+import { getAdminDb } from "@/lib/firebase-admin";
 
 // Per-instance in-memory limiter — without an auth gate, this is the only spam guard.
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;

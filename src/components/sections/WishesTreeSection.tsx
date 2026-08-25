@@ -8,8 +8,17 @@ const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 interface Wish {
   id: string;
   name: string;
+  relation: string;
   message: string;
   createdAt: string;
+}
+
+type LeafSide = "bride" | "groom" | "both";
+
+function leafSideFor(relation: string): LeafSide {
+  if (relation.startsWith("Groom's")) return "groom";
+  if (relation.startsWith("Bride's")) return "bride";
+  return "both";
 }
 
 // Leaf anchor positions (%) relative to the tree container
@@ -99,19 +108,29 @@ function burstConfetti(canvas: HTMLCanvasElement, cx: number, cy: number) {
   return () => cancelAnimationFrame(rafId);
 }
 
+const LEAF_GRADIENTS: Record<LeafSide, [string, string]> = {
+  bride: ["#A9E08F", "#6FA857"],
+  groom: ["#3E6B39", "#183A1B"],
+  both: ["#F5D76E", "#E08A32"],
+};
+
 // Leaf SVG — organic shape with midrib when active
-function LeafIcon({ active, hovered }: { active: boolean; hovered: boolean }) {
+function LeafIcon({ side, hovered }: { side: LeafSide | null; hovered: boolean }) {
+  const active = side !== null;
+  const gradientId = side ? `lg-${side}` : "lg-active";
+  const [from, to] = side ? LEAF_GRADIENTS[side] : LEAF_GRADIENTS.both;
+
   return (
     <svg width="26" height="32" viewBox="0 0 26 32" fill="none" aria-hidden="true">
       <defs>
-        <linearGradient id="lg-active" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#527A4E" />
-          <stop offset="100%" stopColor="#2D4A2A" />
+        <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor={from} />
+          <stop offset="100%" stopColor={to} />
         </linearGradient>
       </defs>
       <motion.path
         d="M13 1 C20 1 25 7 25 15 C25 23 19 31 13 32 C7 31 1 23 1 15 C1 7 6 1 13 1 Z"
-        fill={active ? "url(#lg-active)" : "rgba(30,40,22,0.55)"}
+        fill={active ? `url(#${gradientId})` : "rgba(30,40,22,0.55)"}
         stroke={active ? "rgba(201,165,109,0.35)" : "rgba(30,40,22,0.3)"}
         strokeWidth="0.5"
         animate={{
@@ -173,7 +192,7 @@ function Leaf({ wish, pos, idx, canvasRef }: LeafProps) {
           justifyContent: "center",
         }}
       >
-        <LeafIcon active={!!wish} hovered={hovered} />
+        <LeafIcon side={wish ? leafSideFor(wish.relation) : null} hovered={hovered} />
 
         {/* Tooltip */}
         <AnimatePresence>

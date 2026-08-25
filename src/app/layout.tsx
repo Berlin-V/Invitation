@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Inter, Allura } from "next/font/google";
 import "./globals.css";
 import GlobalConfetti from "@/components/GlobalConfetti";
 import CursorRibbon from "@/components/CursorRibbon";
+import BackgroundMusic from "@/components/BackgroundMusic";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-bg text-text antialiased">
         <GlobalConfetti />
         <CursorRibbon />
+        <BackgroundMusic />
         {children}
       </body>
     </html>
