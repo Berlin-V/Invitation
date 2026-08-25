@@ -1,20 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { initializeApp, getApps, getApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
-
-function getAdminDb() {
-  const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-  if (!projectId || projectId === "your_project_id") return null;
-
-  try {
-    const app = getApps().length
-      ? getApp()
-      : initializeApp({ projectId });
-    return getFirestore(app);
-  } catch {
-    return null;
-  }
-}
+import { getAdminDb } from "@/lib/firebase-admin";
 
 // Per-instance in-memory limiter — without an auth gate, this is the only spam guard.
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
@@ -45,6 +30,7 @@ export async function GET() {
           relation: "Friend of the Couple",
           message: "Wishing you both a lifetime of love and happiness! May your journey together be filled with joy, laughter, and endless blessings. Congratulations Berlin and Jerlin Ashika! 🎉",
           createdAt: new Date(Date.now() - 86400000).toISOString(),
+          deleted: false,
         },
       ],
     });
@@ -52,7 +38,9 @@ export async function GET() {
 
   try {
     const snap = await db.collection("wishes").orderBy("createdAt", "desc").limit(50).get();
-    const wishes = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    const wishes = snap.docs
+      .map((d) => ({ id: d.id, ...d.data() }))
+      .filter((w) => !(w as { deleted?: boolean }).deleted);
     return NextResponse.json(
       { wishes },
       { headers: { "Cache-Control": "public, max-age=60, stale-while-revalidate=300" } }
@@ -84,6 +72,7 @@ export async function POST(req: NextRequest) {
       relation: relation.trim(),
       message: message.trim().slice(0, 500),
       createdAt: new Date().toISOString(),
+      deleted: false,
     };
 
     const ref = await db.collection("wishes").add(wish);

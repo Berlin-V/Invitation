@@ -12,7 +12,6 @@ import StorySection from "@/components/sections/StorySection";
 import EventsSection from "@/components/sections/EventsSection";
 import VideoSection from "@/components/sections/VideoSection";
 import GallerySection from "@/components/sections/GallerySection";
-import RSVPSection from "@/components/sections/RSVPSection";
 import WishesTreeSection from "@/components/sections/WishesTreeSection";
 import CoupleCard3D from "@/components/sections/CoupleCard3D";
 import FooterSection from "@/components/sections/FooterSection";
@@ -93,7 +92,6 @@ export default function HomePage() {
             <EventsSection />
             <VideoSection />
             <GallerySection />
-            <RSVPSection />
             <WishesTreeSection />
           </main>
           <FooterSection />
