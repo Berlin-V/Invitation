@@ -4,6 +4,7 @@ import "./globals.css";
 import GlobalConfetti from "@/components/GlobalConfetti";
 import CursorRibbon from "@/components/CursorRibbon";
 import BackgroundMusic from "@/components/BackgroundMusic";
+import ShootingStars from "@/components/ShootingStars";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GlobalConfetti />
         <CursorRibbon />
         <BackgroundMusic />
+        <ShootingStars />
         {children}
       </body>
     </html>

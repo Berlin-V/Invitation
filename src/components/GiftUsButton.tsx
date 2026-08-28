@@ -86,8 +86,6 @@ function GiftModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-const GOLD_GRADIENT = "linear-gradient(135deg, #C9A56D, #F2CB8E)";
-
 // A little burst of hearts right where the button was clicked — the
 // "celebration" before the gift registry opens.
 function ClickBurst() {
@@ -155,8 +153,8 @@ export default function GiftUsButton({ className, style }: GiftUsButtonProps) {
         whileHover="hover"
         whileTap={{ scale: 0.95 }}
         variants={{
-          rest: { scale: 1, background: "rgba(201,165,109,0.14)", color: "#F2CB8E" },
-          hover: { scale: 1.06, background: GOLD_GRADIENT, color: "#2A1F14" },
+          rest: { scale: 1, color: "#F2CB8E" },
+          hover: { scale: 1.06, color: "#2A1F14" },
         }}
         transition={{ duration: 0.3, ease: EASE }}
         className={`gift-us-button relative ${className ?? ""}`}

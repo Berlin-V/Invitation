@@ -156,11 +156,22 @@ interface LeafProps {
 
 function Leaf({ wish, pos, idx, canvasRef }: LeafProps) {
   const [hovered, setHovered] = useState(false);
+  const dismissTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (dismissTimer.current) clearTimeout(dismissTimer.current);
+  }, []);
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
       if (!wish || !canvasRef.current) return;
       burstConfetti(canvasRef.current, e.clientX, e.clientY);
+
+      // Hover doesn't exist on touch — a tap opens the tooltip directly and
+      // auto-dismisses it after a few seconds instead of waiting for a hover-end.
+      setHovered(true);
+      if (dismissTimer.current) clearTimeout(dismissTimer.current);
+      dismissTimer.current = setTimeout(() => setHovered(false), 3200);
     },
     [wish, canvasRef]
   );
