@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import MusicToggle from "./MusicToggle";
 
 const NAV_LINKS = [
   { label: "Story",    href: "#story"    },
@@ -128,10 +127,8 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Right side: music + hamburger */}
+        {/* Right side: hamburger */}
         <div className="flex items-center gap-3">
-          <MusicToggle scrolled={false} />
-
           {/* Mobile hamburger */}
           <button
             className="md:hidden p-1"
