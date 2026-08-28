@@ -161,3 +161,13 @@ body {
 .animate-float {
   animation: float-gentle 4s ease-in-out infinite;
 }
+
+/* framer-motion can't animate a gradient background, so the Gift Us
+   button's hover fill is a plain CSS transition instead. */
+.gift-us-button {
+  background: rgba(201, 165, 109, 0.14);
+  transition: background 0.3s ease;
+}
+.gift-us-button:hover {
+  background: linear-gradient(135deg, #c9a56d, #f2cb8e);
+}

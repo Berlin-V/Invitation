@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Gift, X, ExternalLink } from "lucide-react";
+import { Gift, X, ExternalLink, Heart } from "lucide-react";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 const GIFT_URL = "https://giftus.io/events/berlin-jerlin-ashika-7tji";
@@ -86,6 +86,41 @@ function GiftModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+// A little burst of hearts right where the button was clicked — the
+// "celebration" before the gift registry opens.
+function ClickBurst() {
+  const hearts = [
+    { x: -34, y: -18, delay: 0 },
+    { x: -8, y: -34, delay: 0.05 },
+    { x: 18, y: -30, delay: 0.03 },
+    { x: 36, y: -12, delay: 0.08 },
+    { x: 0, y: -42, delay: 0.02 },
+  ];
+  return (
+    <div
+      aria-hidden="true"
+      style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "visible" }}
+    >
+      {hearts.map((h, i) => (
+        <motion.span
+          key={i}
+          initial={{ opacity: 0, x: 0, y: 0, scale: 0.4 }}
+          animate={{ opacity: [0, 1, 0], x: h.x, y: h.y, scale: 1 }}
+          transition={{ duration: 0.7, delay: h.delay, ease: "easeOut" }}
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            color: i % 2 === 0 ? "#F58893" : "#E8D5B0",
+          }}
+        >
+          <Heart size={14} fill="currentColor" strokeWidth={0} />
+        </motion.span>
+      ))}
+    </div>
+  );
+}
+
 interface GiftUsButtonProps {
   className?: string;
   style?: React.CSSProperties;
@@ -93,35 +128,56 @@ interface GiftUsButtonProps {
 
 export default function GiftUsButton({ className, style }: GiftUsButtonProps) {
   const [open, setOpen] = useState(false);
+  const [bursting, setBursting] = useState(false);
+
+  const handleClick = () => {
+    setBursting(true);
+    setOpen(true);
+    setTimeout(() => setBursting(false), 750);
+  };
 
   return (
-    <>
+    <div className="relative inline-block" style={style}>
+      {/* Ambient pulse ring — draws the eye even before anyone hovers */}
+      <motion.span
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
+        style={{ borderRadius: "999px", border: "1.5px solid rgba(201,165,109,0.6)" }}
+        animate={{ scale: [1, 1.18, 1], opacity: [0.55, 0, 0.55] }}
+        transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
+      />
+
       <motion.button
-        onClick={() => setOpen(true)}
-        whileHover={{ scale: 1.03 }}
-        whileTap={{ scale: 0.96 }}
-        className={className}
+        onClick={handleClick}
+        initial="rest"
+        whileHover="hover"
+        whileTap={{ scale: 0.95 }}
+        variants={{
+          rest: { scale: 1, color: "#F2CB8E" },
+          hover: { scale: 1.06, color: "#2A1F14" },
+        }}
+        transition={{ duration: 0.3, ease: EASE }}
+        className={`gift-us-button relative ${className ?? ""}`}
         style={{
           display: "inline-flex",
           alignItems: "center",
-          gap: "0.5rem",
-          padding: "0.65rem 1.5rem",
-          background: "transparent",
-          border: "1px solid rgba(201,165,109,0.55)",
+          gap: "0.55rem",
+          padding: "0.8rem 2rem",
+          border: "1.5px solid rgba(233,197,131,0.75)",
           borderRadius: "999px",
-          color: "#E8D5B0",
           fontFamily: "var(--font-cormorant), Georgia, serif",
-          fontSize: "0.68rem",
-          letterSpacing: "0.28em",
+          fontSize: "0.78rem",
+          fontWeight: 700,
+          letterSpacing: "0.3em",
           textTransform: "uppercase",
           cursor: "pointer",
-          ...style,
         }}
       >
-        <Gift size={13} strokeWidth={1.5} /> Gift Us
+        <Gift size={15} strokeWidth={2} /> Gift Us
+        <AnimatePresence>{bursting && <ClickBurst />}</AnimatePresence>
       </motion.button>
 
       <AnimatePresence>{open && <GiftModal onClose={() => setOpen(false)} />}</AnimatePresence>
-    </>
+    </div>
   );
 }

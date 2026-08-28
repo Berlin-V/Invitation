@@ -7,7 +7,7 @@ Berlin and Jerlin Ashika's story starts long before either of them knew it was a
 By 7th grade, they had become classmates properly — sharing classrooms, school days, and years of growing up side by side, still with no idea what was quietly being written for them.
 
 ## 12th grade: the first real conversation
-It wasn't until 12th grade that they actually spoke for the first time — in the chemistry lab, during a public lab exam. A simple beginning, in the most unexpected place, to something neither of them saw coming.
+It wasn't until 12th grade that they actually spoke for the first time — in the physics lab, during a public lab exam. A simple beginning, in the most unexpected place, to something neither of them saw coming.
 
 ## May 4th: the first WhatsApp conversation
 Their first real conversation happened over WhatsApp on May 4th. What started as messages soon turned into deep, late-night calls and conversations that stretched on for hours. Both of them were falling in love — quietly, separately, neither one saying it out loud yet.
