@@ -126,56 +126,19 @@ function RolledScroll({ onOpen }: { onOpen: () => void }) {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.94 }}
         style={{
-          position: "relative",
-          width: "min(78vw, 260px)",
-          height: "94px",
+          width: "min(70vw, 240px)",
           background: "none",
           border: "none",
           cursor: "pointer",
           padding: 0,
+          filter: "drop-shadow(0 14px 24px rgba(74,54,26,0.3))",
         }}
       >
-        {/* Scroll ends */}
-        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "18px", borderRadius: "999px", background: "linear-gradient(90deg, #6B4A22, #9C6B33)" }} />
-        <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "18px", borderRadius: "999px", background: "linear-gradient(270deg, #6B4A22, #9C6B33)" }} />
-
-        {/* Rolled paper body */}
-        <div
-          style={{
-            position: "absolute",
-            left: "12px",
-            right: "12px",
-            top: "8%",
-            bottom: "8%",
-            borderRadius: "10px",
-            background: "linear-gradient(180deg, #F4E9CE, #E5D3A8 45%, #D8C08A)",
-            boxShadow: "0 8px 22px rgba(74,54,26,0.35), inset 0 0 18px rgba(139,94,46,0.25)",
-          }}
+        <img
+          src="/images/story/scroll.png"
+          alt="A rolled, sealed scroll"
+          style={{ width: "100%", height: "auto", display: "block" }}
         />
-
-        {/* Ribbon */}
-        <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: "10px", transform: "translateX(-50%)", background: "linear-gradient(180deg, #C0392B, #8B1E14)" }} />
-
-        {/* Wax seal / knot */}
-        <div
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "34px",
-            height: "34px",
-            borderRadius: "50%",
-            background: "radial-gradient(circle at 35% 30%, #E67E22, #A93226)",
-            border: "1px solid rgba(255,253,249,0.5)",
-            boxShadow: "0 3px 10px rgba(0,0,0,0.35)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Heart size={14} fill="#FFFDF9" strokeWidth={0} />
-        </div>
       </motion.button>
 
       <p
