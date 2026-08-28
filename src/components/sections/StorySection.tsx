@@ -17,8 +17,6 @@ interface Milestone {
   title: string;
   description: string;
   media: Media;
-  x: number; // % position on the map
-  y: number; // % position on the map
 }
 
 const MILESTONES: Milestone[] = [
@@ -29,8 +27,6 @@ const MILESTONES: Milestone[] = [
     description:
       "Two kids joined the same 3rd grade class at Bethlehem Metric Hr. Sec. School, Karungal — and even sat their entrance exam in the very same hall, with no idea what was already being written for them.",
     media: { kind: "illustration", src: "/images/story/entrance_exam.png", alt: "Berlin and Jerlin Ashika as children, sitting their entrance exam" },
-    x: 16,
-    y: 7,
   },
   {
     id: "classmates",
@@ -39,8 +35,6 @@ const MILESTONES: Milestone[] = [
     description:
       "By 7th grade, they had become classmates properly — sharing classrooms and school days, still years away from knowing what was quietly taking shape between them.",
     media: { kind: "illustration", src: "/images/story/7th_grade.png", alt: "Berlin and Jerlin Ashika as classmates in 7th grade" },
-    x: 62,
-    y: 17,
   },
   {
     id: "first-words",
@@ -49,8 +43,6 @@ const MILESTONES: Milestone[] = [
     description:
       "It wasn't until 12th grade that they actually spoke for the first time — in the physics lab, during a public lab exam. A simple beginning, in the most unexpected place.",
     media: { kind: "illustration", src: "/images/story/lab.png", alt: "Berlin and Jerlin Ashika's first conversation in the 12th grade lab" },
-    x: 22,
-    y: 30,
   },
   {
     id: "whatsapp",
@@ -59,8 +51,6 @@ const MILESTONES: Milestone[] = [
     description:
       "Their first real conversation happened over WhatsApp. What began as messages soon turned into deep, late-night calls — both of them quietly falling, neither saying it out loud yet.",
     media: { kind: "icon", icon: MessageCircle },
-    x: 72,
-    y: 41,
   },
   {
     id: "confession",
@@ -69,8 +59,6 @@ const MILESTONES: Milestone[] = [
     description:
       "Jerlin Ashika was the braver one — the first to confess her love to Berlin. From that day, what had been unspoken became real.",
     media: { kind: "icon", icon: Heart },
-    x: 27,
-    y: 53,
   },
   {
     id: "long-distance",
@@ -79,8 +67,6 @@ const MILESTONES: Milestone[] = [
     description:
       "Three years of long-distance love followed — no in-person meetings, just calls and messages carrying them through fights, misunderstandings, and everything in between: strangers → schoolmates → classmates → friends → crush → lovers → fiancés.",
     media: { kind: "icon", icon: MapPinned },
-    x: 68,
-    y: 64,
   },
   {
     id: "engagement",
@@ -88,8 +74,6 @@ const MILESTONES: Milestone[] = [
     title: "Engaged, on Easter Sunday",
     description: "On Easter Sunday, their long-distance love became a promise for forever.",
     media: { kind: "photo", src: "/images/proposeBJ.jpeg", alt: "Berlin proposing to Jerlin Ashika" },
-    x: 24,
-    y: 77,
   },
   {
     id: "wedding",
@@ -97,16 +81,8 @@ const MILESTONES: Milestone[] = [
     title: "Forever Begins",
     description: "And now, a new role and a new beginning await — Berlin and Jerlin Ashika are getting married.",
     media: { kind: "photo", src: "/images/stageClose.jpeg", alt: "Berlin & Jerlin Ashika on stage" },
-    x: 58,
-    y: 91,
   },
 ];
-
-// A hand-drawn-feeling trail through every waypoint. Coordinates are plain
-// percentages (0–100) and the <svg> below stretches non-uniformly to match
-// the map's actual aspect ratio, so this stays in sync with MILESTONES x/y.
-const TRAIL_PATH =
-  "M16,7 C36,10 46,13 62,17 C46,21 30,25 22,30 C42,34 62,37 72,41 C54,45 36,48 27,53 C42,57 58,60 68,64 C50,69 34,72 24,77 C36,82 46,86 58,91";
 
 // ── Rolled scroll — the closed state that invites a tap ─────────────────────
 function RolledScroll({ onOpen }: { onOpen: () => void }) {
@@ -121,17 +97,17 @@ function RolledScroll({ onOpen }: { onOpen: () => void }) {
       <motion.button
         onClick={onOpen}
         aria-label="Open the map to reveal our story"
-        animate={{ y: [0, -12, 0], rotate: [0, -2, 2, 0] }}
+        animate={{ y: [0, -14, 0], rotate: [0, -2, 2, 0] }}
         transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.94 }}
         style={{
-          width: "min(70vw, 240px)",
+          width: "min(88vw, 380px)",
           background: "none",
           border: "none",
           cursor: "pointer",
           padding: 0,
-          filter: "drop-shadow(0 14px 24px rgba(74,54,26,0.3))",
+          filter: "drop-shadow(0 18px 30px rgba(74,54,26,0.32))",
         }}
       >
         <img
@@ -156,18 +132,100 @@ function RolledScroll({ onOpen }: { onOpen: () => void }) {
   );
 }
 
-function MarkerBadge({ milestone }: { milestone: Milestone }) {
+// The story stays hidden until tapped — this is the on-map marker only.
+function TrailStop({
+  milestone,
+  index,
+  onOpen,
+}: {
+  milestone: Milestone;
+  index: number;
+  onOpen: () => void;
+}) {
   const { media } = milestone;
-  if (media.kind === "icon") {
-    const Icon = media.icon;
-    return <Icon size={18} strokeWidth={1.6} color="#FFFDF9" />;
-  }
+  const isLast = index === MILESTONES.length - 1;
+  const fromLeft = index % 2 === 0;
+
   return (
-    <img
-      src={media.src}
-      alt=""
-      style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }}
-    />
+    <motion.div
+      className="relative flex items-center"
+      style={{ justifyContent: fromLeft ? "flex-start" : "flex-end", marginBottom: index === MILESTONES.length - 1 ? 0 : "1.75rem" }}
+      initial={{ opacity: 0, x: fromLeft ? -30 : 30 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.6, delay: 0.04 * index, ease: EASE }}
+    >
+      {/* Trail connector dot, centered */}
+      <span
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "8px",
+          height: "8px",
+          borderRadius: "50%",
+          background: isLast ? "#C9A56D" : "#8B5E2E",
+          boxShadow: "0 0 0 4px rgba(139,94,46,0.15)",
+          zIndex: 1,
+        }}
+      />
+
+      <button
+        onClick={onOpen}
+        aria-label={`Reveal: ${milestone.title}`}
+        style={{
+          width: "44%",
+          maxWidth: "230px",
+          background: "none",
+          border: "none",
+          padding: 0,
+          cursor: "pointer",
+          textAlign: fromLeft ? "left" : "right",
+        }}
+      >
+        {media.kind === "icon" ? (
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "56px",
+              height: "56px",
+              borderRadius: "50%",
+              background: "rgba(139,94,46,0.12)",
+              border: "1px solid rgba(139,94,46,0.3)",
+            }}
+          >
+            <media.icon size={22} strokeWidth={1.5} color="#6B4A22" />
+          </div>
+        ) : (
+          <img
+            src={media.src}
+            alt={media.alt}
+            style={{
+              width: "100%",
+              height: "auto",
+              display: "block",
+              filter: "drop-shadow(0 6px 14px rgba(43,31,18,0.35))",
+            }}
+          />
+        )}
+        <p
+          style={{
+            marginTop: "0.4rem",
+            fontFamily: "var(--font-cormorant), Georgia, serif",
+            fontSize: "0.62rem",
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "#6B5D53",
+          }}
+        >
+          {milestone.year}
+        </p>
+      </button>
+    </motion.div>
   );
 }
 
@@ -235,7 +293,6 @@ function MemoryCard({ milestone, onClose }: { milestone: Milestone; onClose: () 
               objectFit: "contain",
               display: "block",
               margin: "0 auto 1.1rem",
-              borderRadius: "10px",
             }}
           />
         )}
@@ -279,120 +336,6 @@ function MemoryCard({ milestone, onClose }: { milestone: Milestone; onClose: () 
   );
 }
 
-function Waypoint({
-  milestone,
-  index,
-  onOpen,
-}: {
-  milestone: Milestone;
-  index: number;
-  onOpen: () => void;
-}) {
-  const [hovered, setHovered] = useState(false);
-  const isLast = index === MILESTONES.length - 1;
-  const pinGradient = isLast
-    ? "linear-gradient(145deg, #C9A56D, #8B5E2E)"
-    : "linear-gradient(145deg, #3A2C1E, #1C140D)";
-
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: `${milestone.x}%`,
-        top: `${milestone.y}%`,
-        transform: "translate(-50%, -100%)",
-        zIndex: 3,
-      }}
-    >
-      {isLast && (
-        <motion.span
-          aria-hidden="true"
-          className="absolute pointer-events-none"
-          style={{ top: 0, left: "50%", transform: "translateX(-50%)", width: "58px", height: "58px", borderRadius: "50%", border: "1.5px dashed rgba(201,165,109,0.7)" }}
-          animate={{ scale: [1, 1.5, 1], opacity: [0.7, 0, 0.7] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
-        />
-      )}
-
-      <motion.button
-        onClick={onOpen}
-        onHoverStart={() => setHovered(true)}
-        onHoverEnd={() => setHovered(false)}
-        initial={{ scale: 0, opacity: 0 }}
-        whileInView={{ scale: 1, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: index * 0.06, ease: EASE }}
-        animate={{ scale: hovered ? 1.15 : 1 }}
-        aria-label={`Reveal: ${milestone.title}`}
-        style={{
-          position: "relative",
-          width: isLast ? "50px" : "42px",
-          height: isLast ? "62px" : "52px",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          padding: 0,
-        }}
-      >
-        {/* Teardrop pin tail */}
-        <span
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            left: "50%",
-            bottom: "2px",
-            width: "14px",
-            height: "14px",
-            background: pinGradient,
-            transform: "translateX(-50%) rotate(45deg)",
-            borderRadius: "0 0 5px 0",
-          }}
-        />
-        {/* Pin head */}
-        <span
-          style={{
-            position: "absolute",
-            top: 0,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: isLast ? "50px" : "42px",
-            height: isLast ? "50px" : "42px",
-            borderRadius: "50%",
-            overflow: "hidden",
-            background: pinGradient,
-            border: `2px solid ${isLast ? "#FFFDF9" : "rgba(255,253,249,0.55)"}`,
-            boxShadow: "0 6px 14px rgba(43,31,18,0.4)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <MarkerBadge milestone={milestone} />
-        </span>
-      </motion.button>
-
-      {/* Year only — the story stays hidden until tapped */}
-      <p
-        style={{
-          position: "absolute",
-          top: "100%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          marginTop: "0.35rem",
-          whiteSpace: "nowrap",
-          fontFamily: "var(--font-cormorant), Georgia, serif",
-          fontSize: "0.6rem",
-          letterSpacing: "0.16em",
-          textTransform: "uppercase",
-          color: "#6B5D53",
-        }}
-      >
-        {milestone.year}
-      </p>
-    </div>
-  );
-}
-
 function TreasureMap({ onClose }: { onClose: () => void }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const openMilestone = MILESTONES.find((m) => m.id === openId) ?? null;
@@ -415,24 +358,26 @@ function TreasureMap({ onClose }: { onClose: () => void }) {
         onClick={(e) => e.stopPropagation()}
         style={{
           position: "relative",
-          width: "min(94vw, 620px)",
-          maxHeight: "88vh",
-          aspectRatio: "620 / 780",
+          width: "min(94vw, 480px)",
+          maxHeight: "90vh",
+          overflowY: "auto",
           borderRadius: "6px",
-          overflow: "hidden",
           border: "3px double rgba(139,94,46,0.55)",
           boxShadow: "0 30px 90px rgba(0,0,0,0.55)",
           background:
-            "radial-gradient(ellipse at 30% 20%, #FCF6E4, #E8D6AC 55%, #D2BA8A 100%)",
+            "radial-gradient(ellipse at 30% 0%, #FCF6E4, #E8D6AC 55%, #D2BA8A 100%)",
+          padding: "2.5rem 1.5rem 2rem",
         }}
       >
         <button
           onClick={onClose}
           aria-label="Roll the map back up"
           style={{
-            position: "absolute",
-            top: "0.75rem",
-            right: "0.75rem",
+            position: "sticky",
+            top: "0",
+            float: "right",
+            marginTop: "-1.75rem",
+            marginRight: "-0.75rem",
             zIndex: 5,
             background: "rgba(74,54,26,0.15)",
             border: "1px solid rgba(139,94,46,0.4)",
@@ -453,9 +398,6 @@ function TreasureMap({ onClose }: { onClose: () => void }) {
         <div
           aria-hidden="true"
           style={{
-            position: "absolute",
-            top: "0.9rem",
-            left: "0.9rem",
             width: "34px",
             height: "34px",
             borderRadius: "50%",
@@ -464,38 +406,36 @@ function TreasureMap({ onClose }: { onClose: () => void }) {
             alignItems: "center",
             justifyContent: "center",
             color: "rgba(139,94,46,0.6)",
-            zIndex: 2,
+            margin: "0 auto 1.75rem",
           }}
         >
           <Compass size={18} strokeWidth={1.2} />
         </div>
 
-        {/* Trail */}
-        <svg
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-          aria-hidden="true"
-        >
-          <path
-            d={TRAIL_PATH}
-            fill="none"
-            stroke="rgba(139,94,46,0.55)"
-            strokeWidth="0.6"
-            strokeDasharray="0.3 2.4"
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
+        {/* Vertical trail line */}
+        <div style={{ position: "relative" }}>
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: 0,
+              bottom: 0,
+              width: "0",
+              borderLeft: "2px dashed rgba(139,94,46,0.5)",
+              transform: "translateX(-50%)",
+            }}
           />
-        </svg>
 
-        {MILESTONES.map((milestone, i) => (
-          <Waypoint
-            key={milestone.id}
-            milestone={milestone}
-            index={i}
-            onOpen={() => setOpenId(milestone.id)}
-          />
-        ))}
+          {MILESTONES.map((milestone, i) => (
+            <TrailStop
+              key={milestone.id}
+              milestone={milestone}
+              index={i}
+              onOpen={() => setOpenId(milestone.id)}
+            />
+          ))}
+        </div>
       </motion.div>
 
       <AnimatePresence>
