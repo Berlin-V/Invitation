@@ -19,6 +19,7 @@ interface Milestone {
   media: Media;
   x: number;
   y: number;
+  rotate: number;
 }
 
 const MILESTONES: Milestone[] = [
@@ -29,8 +30,9 @@ const MILESTONES: Milestone[] = [
     description:
       "Two kids joined the same 3rd grade class at Bethlehem Metric Hr. Sec. School, Karungal — and even sat their entrance exam in the very same hall, with no idea what was already being written for them.",
     media: { kind: "illustration", src: "/images/story/entrance_exam.png", alt: "Berlin and Jerlin Ashika as children, sitting their entrance exam" },
-    x: 15,
-    y: 10,
+    x: 13,
+    y: 13,
+    rotate: -6,
   },
   {
     id: "classmates",
@@ -39,8 +41,9 @@ const MILESTONES: Milestone[] = [
     description:
       "By 7th grade, they had become classmates properly — sharing classrooms and school days, still years away from knowing what was quietly taking shape between them.",
     media: { kind: "illustration", src: "/images/story/7th_grade.png", alt: "Berlin and Jerlin Ashika as classmates in 7th grade" },
-    x: 62,
-    y: 9,
+    x: 72,
+    y: 8,
+    rotate: 5,
   },
   {
     id: "first-words",
@@ -49,8 +52,9 @@ const MILESTONES: Milestone[] = [
     description:
       "It wasn't until 12th grade that they actually spoke for the first time — in the physics lab, during a public lab exam. A simple beginning, in the most unexpected place.",
     media: { kind: "illustration", src: "/images/story/lab.png", alt: "Berlin and Jerlin Ashika's first conversation in the 12th grade lab" },
-    x: 20,
-    y: 33,
+    x: 40,
+    y: 24,
+    rotate: -4,
   },
   {
     id: "whatsapp",
@@ -59,8 +63,9 @@ const MILESTONES: Milestone[] = [
     description:
       "Their first real conversation happened over WhatsApp. What began as messages soon turned into deep, late-night calls — both of them quietly falling, neither saying it out loud yet.",
     media: { kind: "icon", icon: MessageCircle },
-    x: 76,
-    y: 31,
+    x: 87,
+    y: 29,
+    rotate: 4,
   },
   {
     id: "confession",
@@ -69,8 +74,9 @@ const MILESTONES: Milestone[] = [
     description:
       "Jerlin Ashika was the braver one — the first to confess her love to Berlin. From that day, what had been unspoken became real.",
     media: { kind: "icon", icon: Heart },
-    x: 46,
-    y: 49,
+    x: 15,
+    y: 44,
+    rotate: -3,
   },
   {
     id: "long-distance",
@@ -79,8 +85,9 @@ const MILESTONES: Milestone[] = [
     description:
       "Three years of long-distance love followed — no in-person meetings, just calls and messages carrying them through fights, misunderstandings, and everything in between: strangers → schoolmates → classmates → friends → crush → lovers → fiancés.",
     media: { kind: "icon", icon: MapPinned },
-    x: 80,
-    y: 56,
+    x: 60,
+    y: 48,
+    rotate: 5,
   },
   {
     id: "engagement",
@@ -88,8 +95,9 @@ const MILESTONES: Milestone[] = [
     title: "Engaged, on Easter Sunday",
     description: "On Easter Sunday, their long-distance love became a promise for forever.",
     media: { kind: "photo", src: "/images/proposeBJ.jpeg", alt: "Berlin proposing to Jerlin Ashika" },
-    x: 24,
-    y: 69,
+    x: 82,
+    y: 63,
+    rotate: -5,
   },
   {
     id: "wedding",
@@ -97,15 +105,16 @@ const MILESTONES: Milestone[] = [
     title: "Forever Begins",
     description: "And now, a new role and a new beginning await — Berlin and Jerlin Ashika are getting married.",
     media: { kind: "photo", src: "/images/stageClose.jpeg", alt: "Berlin & Jerlin Ashika on stage" },
-    x: 63,
-    y: 86,
+    x: 33,
+    y: 82,
+    rotate: 3,
   },
 ];
 
 // A winding dotted route through every waypoint, in the same 0–100 percent
 // coordinate space as MILESTONES x/y (the <svg> stretches to match).
 const TRAIL_PATH =
-  "M15,10 C35,9 45,8 62,9 C40,15 24,24 20,33 C42,32 62,31 76,31 C62,37 52,43 46,49 C60,51 72,53 80,56 C60,62 40,66 24,69 C38,76 50,80 63,86";
+  "M13,13 C45,4 58,2 72,8 C50,10 30,16 40,24 C64,20 82,22 87,29 C55,32 22,36 15,44 C35,52 50,44 60,48 C74,54 84,58 82,63 C60,68 40,72 33,82";
 
 // Generic torn-parchment silhouette — a fixed set of jagged points around a
 // 0–100 box, applied as a clip-path so the map reads as weathered paper
@@ -240,18 +249,18 @@ function MarkerArt({ milestone }: { milestone: Milestone }) {
       </div>
     );
   }
+  // No frame, no crop — the picture exactly as it is, just resting on the map.
   return (
     <img
       src={media.src}
       alt=""
       style={{
-        width: "58px",
-        height: "58px",
-        objectFit: "cover",
-        // An organic, hand-painted "island" outline instead of a perfect circle.
-        borderRadius: "45% 55% 60% 40% / 55% 45% 55% 45%",
-        border: "2px solid rgba(255,246,229,0.7)",
-        boxShadow: "0 4px 10px rgba(43,31,18,0.4)",
+        maxWidth: "110px",
+        maxHeight: "100px",
+        width: "auto",
+        height: "auto",
+        display: "block",
+        filter: "drop-shadow(0 5px 10px rgba(43,31,18,0.4))",
       }}
     />
   );
@@ -275,7 +284,7 @@ function Waypoint({
         position: "absolute",
         left: `${milestone.x}%`,
         top: `${milestone.y}%`,
-        transform: "translate(-50%, -50%)",
+        transform: `translate(-50%, -50%) rotate(${milestone.rotate}deg)`,
         zIndex: 3,
         display: "flex",
         flexDirection: "column",
