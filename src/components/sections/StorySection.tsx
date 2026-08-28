@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, Heart, MapPinned, X, Compass, LucideIcon } from "lucide-react";
+import { MessageCircle, Heart, MapPinned, X, LucideIcon } from "lucide-react";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
@@ -17,6 +17,8 @@ interface Milestone {
   title: string;
   description: string;
   media: Media;
+  x: number;
+  y: number;
 }
 
 const MILESTONES: Milestone[] = [
@@ -27,6 +29,8 @@ const MILESTONES: Milestone[] = [
     description:
       "Two kids joined the same 3rd grade class at Bethlehem Metric Hr. Sec. School, Karungal — and even sat their entrance exam in the very same hall, with no idea what was already being written for them.",
     media: { kind: "illustration", src: "/images/story/entrance_exam.png", alt: "Berlin and Jerlin Ashika as children, sitting their entrance exam" },
+    x: 15,
+    y: 10,
   },
   {
     id: "classmates",
@@ -35,6 +39,8 @@ const MILESTONES: Milestone[] = [
     description:
       "By 7th grade, they had become classmates properly — sharing classrooms and school days, still years away from knowing what was quietly taking shape between them.",
     media: { kind: "illustration", src: "/images/story/7th_grade.png", alt: "Berlin and Jerlin Ashika as classmates in 7th grade" },
+    x: 62,
+    y: 9,
   },
   {
     id: "first-words",
@@ -43,6 +49,8 @@ const MILESTONES: Milestone[] = [
     description:
       "It wasn't until 12th grade that they actually spoke for the first time — in the physics lab, during a public lab exam. A simple beginning, in the most unexpected place.",
     media: { kind: "illustration", src: "/images/story/lab.png", alt: "Berlin and Jerlin Ashika's first conversation in the 12th grade lab" },
+    x: 20,
+    y: 33,
   },
   {
     id: "whatsapp",
@@ -51,6 +59,8 @@ const MILESTONES: Milestone[] = [
     description:
       "Their first real conversation happened over WhatsApp. What began as messages soon turned into deep, late-night calls — both of them quietly falling, neither saying it out loud yet.",
     media: { kind: "icon", icon: MessageCircle },
+    x: 76,
+    y: 31,
   },
   {
     id: "confession",
@@ -59,6 +69,8 @@ const MILESTONES: Milestone[] = [
     description:
       "Jerlin Ashika was the braver one — the first to confess her love to Berlin. From that day, what had been unspoken became real.",
     media: { kind: "icon", icon: Heart },
+    x: 46,
+    y: 49,
   },
   {
     id: "long-distance",
@@ -67,6 +79,8 @@ const MILESTONES: Milestone[] = [
     description:
       "Three years of long-distance love followed — no in-person meetings, just calls and messages carrying them through fights, misunderstandings, and everything in between: strangers → schoolmates → classmates → friends → crush → lovers → fiancés.",
     media: { kind: "icon", icon: MapPinned },
+    x: 80,
+    y: 56,
   },
   {
     id: "engagement",
@@ -74,6 +88,8 @@ const MILESTONES: Milestone[] = [
     title: "Engaged, on Easter Sunday",
     description: "On Easter Sunday, their long-distance love became a promise for forever.",
     media: { kind: "photo", src: "/images/proposeBJ.jpeg", alt: "Berlin proposing to Jerlin Ashika" },
+    x: 24,
+    y: 69,
   },
   {
     id: "wedding",
@@ -81,8 +97,78 @@ const MILESTONES: Milestone[] = [
     title: "Forever Begins",
     description: "And now, a new role and a new beginning await — Berlin and Jerlin Ashika are getting married.",
     media: { kind: "photo", src: "/images/stageClose.jpeg", alt: "Berlin & Jerlin Ashika on stage" },
+    x: 63,
+    y: 86,
   },
 ];
+
+// A winding dotted route through every waypoint, in the same 0–100 percent
+// coordinate space as MILESTONES x/y (the <svg> stretches to match).
+const TRAIL_PATH =
+  "M15,10 C35,9 45,8 62,9 C40,15 24,24 20,33 C42,32 62,31 76,31 C62,37 52,43 46,49 C60,51 72,53 80,56 C60,62 40,66 24,69 C38,76 50,80 63,86";
+
+// Generic torn-parchment silhouette — a fixed set of jagged points around a
+// 0–100 box, applied as a clip-path so the map reads as weathered paper
+// rather than a clean rectangle.
+const TORN_EDGE_CLIP =
+  "polygon(2% 3%, 9% 0%, 18% 2%, 27% 0%, 38% 2%, 49% 0%, 60% 2%, 71% 0%, 82% 2%, 92% 0%, 100% 4%, 98% 14%, 100% 24%, 97% 34%, 100% 45%, 98% 56%, 100% 67%, 97% 78%, 100% 89%, 96% 97%, 88% 99%, 78% 97%, 68% 100%, 57% 97%, 46% 100%, 35% 97%, 24% 100%, 13% 97%, 3% 99%, 0% 90%, 3% 79%, 0% 68%, 3% 57%, 0% 46%, 3% 35%, 0% 24%, 3% 13%, 0% 5%)";
+
+const RIBBON_CLIP = "polygon(3% 50%, 0% 0%, 100% 0%, 97% 50%, 100% 100%, 0% 100%)";
+
+function Ribbon({ children, tone = "dark" }: { children: React.ReactNode; tone?: "dark" | "gold" }) {
+  return (
+    <div
+      style={{
+        clipPath: RIBBON_CLIP,
+        background: tone === "gold" ? "linear-gradient(135deg, #C9A56D, #8B5E2E)" : "rgba(58,40,20,0.92)",
+        padding: "0.35rem 0.9rem",
+        boxShadow: "0 3px 8px rgba(43,31,18,0.35)",
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "var(--font-cormorant), Georgia, serif",
+          fontSize: "0.6rem",
+          letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          color: "#FFF6E5",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {children}
+      </span>
+    </div>
+  );
+}
+
+function CompassRose() {
+  return (
+    <svg width="52" height="52" viewBox="0 0 52 52" aria-hidden="true">
+      <circle cx="26" cy="26" r="22" fill="none" stroke="rgba(107,74,34,0.55)" strokeWidth="1" />
+      <circle cx="26" cy="26" r="16" fill="none" stroke="rgba(107,74,34,0.4)" strokeWidth="0.6" />
+      {[0, 90, 180, 270].map((angle) => (
+        <polygon
+          key={angle}
+          points="26,6 29,26 26,24 23,26"
+          fill="rgba(107,74,34,0.75)"
+          transform={`rotate(${angle} 26 26)`}
+        />
+      ))}
+      {[45, 135, 225, 315].map((angle) => (
+        <polygon
+          key={angle}
+          points="26,12 27.6,26 26,24.6 24.4,26"
+          fill="rgba(107,74,34,0.4)"
+          transform={`rotate(${angle} 26 26)`}
+        />
+      ))}
+      <text x="26" y="8" textAnchor="middle" fontSize="6" fill="#4A2E08" fontFamily="Georgia, serif">N</text>
+      <text x="26" y="49" textAnchor="middle" fontSize="6" fill="#4A2E08" fontFamily="Georgia, serif">S</text>
+      <text x="4" y="28.5" textAnchor="middle" fontSize="6" fill="#4A2E08" fontFamily="Georgia, serif">W</text>
+      <text x="48" y="28.5" textAnchor="middle" fontSize="6" fill="#4A2E08" fontFamily="Georgia, serif">E</text>
+    </svg>
+  );
+}
 
 // ── Rolled scroll — the closed state that invites a tap ─────────────────────
 function RolledScroll({ onOpen }: { onOpen: () => void }) {
@@ -132,8 +218,46 @@ function RolledScroll({ onOpen }: { onOpen: () => void }) {
   );
 }
 
-// The story stays hidden until tapped — this is the on-map marker only.
-function TrailStop({
+function MarkerArt({ milestone }: { milestone: Milestone }) {
+  const { media } = milestone;
+  if (media.kind === "icon") {
+    const Icon = media.icon;
+    return (
+      <div
+        style={{
+          width: "44px",
+          height: "44px",
+          borderRadius: "50%",
+          background: "rgba(58,40,20,0.85)",
+          border: "2px solid rgba(255,246,229,0.6)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: "0 4px 10px rgba(43,31,18,0.4)",
+        }}
+      >
+        <Icon size={18} strokeWidth={1.6} color="#FFF6E5" />
+      </div>
+    );
+  }
+  return (
+    <img
+      src={media.src}
+      alt=""
+      style={{
+        width: "58px",
+        height: "58px",
+        objectFit: "cover",
+        // An organic, hand-painted "island" outline instead of a perfect circle.
+        borderRadius: "45% 55% 60% 40% / 55% 45% 55% 45%",
+        border: "2px solid rgba(255,246,229,0.7)",
+        boxShadow: "0 4px 10px rgba(43,31,18,0.4)",
+      }}
+    />
+  );
+}
+
+function Waypoint({
   milestone,
   index,
   onOpen,
@@ -142,90 +266,66 @@ function TrailStop({
   index: number;
   onOpen: () => void;
 }) {
-  const { media } = milestone;
+  const [hovered, setHovered] = useState(false);
   const isLast = index === MILESTONES.length - 1;
-  const fromLeft = index % 2 === 0;
 
   return (
-    <motion.div
-      className="relative flex items-center"
-      style={{ justifyContent: fromLeft ? "flex-start" : "flex-end", marginBottom: index === MILESTONES.length - 1 ? 0 : "1.75rem" }}
-      initial={{ opacity: 0, x: fromLeft ? -30 : 30 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.6, delay: 0.04 * index, ease: EASE }}
+    <div
+      style={{
+        position: "absolute",
+        left: `${milestone.x}%`,
+        top: `${milestone.y}%`,
+        transform: "translate(-50%, -50%)",
+        zIndex: 3,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "0.3rem",
+      }}
     >
-      {/* Trail connector dot, centered */}
-      <span
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "8px",
-          height: "8px",
-          borderRadius: "50%",
-          background: isLast ? "#C9A56D" : "#8B5E2E",
-          boxShadow: "0 0 0 4px rgba(139,94,46,0.15)",
-          zIndex: 1,
-        }}
-      />
-
-      <button
-        onClick={onOpen}
-        aria-label={`Reveal: ${milestone.title}`}
-        style={{
-          width: "44%",
-          maxWidth: "230px",
-          background: "none",
-          border: "none",
-          padding: 0,
-          cursor: "pointer",
-          textAlign: fromLeft ? "left" : "right",
-        }}
-      >
-        {media.kind === "icon" ? (
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "56px",
-              height: "56px",
-              borderRadius: "50%",
-              background: "rgba(139,94,46,0.12)",
-              border: "1px solid rgba(139,94,46,0.3)",
-            }}
-          >
-            <media.icon size={22} strokeWidth={1.5} color="#6B4A22" />
-          </div>
-        ) : (
-          <img
-            src={media.src}
-            alt={media.alt}
-            style={{
-              width: "100%",
-              height: "auto",
-              display: "block",
-              filter: "drop-shadow(0 6px 14px rgba(43,31,18,0.35))",
-            }}
-          />
-        )}
-        <p
-          style={{
-            marginTop: "0.4rem",
-            fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.62rem",
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            color: "#6B5D53",
-          }}
+      {isLast ? (
+        <motion.button
+          onClick={onOpen}
+          onHoverStart={() => setHovered(true)}
+          onHoverEnd={() => setHovered(false)}
+          initial={{ scale: 0, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: index * 0.06, ease: EASE }}
+          animate={{ scale: hovered ? 1.15 : 1 }}
+          aria-label={`Reveal: ${milestone.title}`}
+          style={{ position: "relative", background: "none", border: "none", cursor: "pointer", padding: "10px" }}
         >
-          {milestone.year}
-        </p>
-      </button>
-    </motion.div>
+          <motion.span
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{ borderRadius: "50%", border: "1.5px dashed rgba(201,165,109,0.7)" }}
+            animate={{ scale: [1, 1.5, 1], opacity: [0.7, 0, 0.7] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
+          />
+          <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+            <path d="M4 4 L30 30 M30 4 L4 30" stroke="#8B1E14" strokeWidth="5" strokeLinecap="round" />
+          </svg>
+        </motion.button>
+      ) : (
+        <motion.button
+          onClick={onOpen}
+          onHoverStart={() => setHovered(true)}
+          onHoverEnd={() => setHovered(false)}
+          initial={{ scale: 0, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: index * 0.06, ease: EASE }}
+          animate={{ scale: hovered ? 1.12 : 1 }}
+          aria-label={`Reveal: ${milestone.title}`}
+          style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
+        >
+          <MarkerArt milestone={milestone} />
+        </motion.button>
+      )}
+
+      <Ribbon tone={isLast ? "gold" : "dark"}>{milestone.year}</Ribbon>
+    </div>
   );
 }
 
@@ -343,7 +443,7 @@ function TreasureMap({ onClose }: { onClose: () => void }) {
   return (
     <motion.div
       className="fixed inset-0 flex items-center justify-center p-4"
-      style={{ zIndex: 250, background: "rgba(15,12,9,0.8)" }}
+      style={{ zIndex: 250, background: "rgba(15,12,9,0.82)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -358,29 +458,34 @@ function TreasureMap({ onClose }: { onClose: () => void }) {
         onClick={(e) => e.stopPropagation()}
         style={{
           position: "relative",
-          width: "min(94vw, 480px)",
-          maxHeight: "90vh",
-          overflowY: "auto",
-          borderRadius: "6px",
-          border: "3px double rgba(139,94,46,0.55)",
+          width: "min(95vw, 680px)",
+          maxHeight: "92vh",
+          aspectRatio: "680 / 620",
+          clipPath: TORN_EDGE_CLIP,
           boxShadow: "0 30px 90px rgba(0,0,0,0.55)",
           background:
-            "radial-gradient(ellipse at 30% 0%, #FCF6E4, #E8D6AC 55%, #D2BA8A 100%)",
-          padding: "2.5rem 1.5rem 2rem",
+            "radial-gradient(ellipse at 25% 15%, #FBF3DC 0%, #EFDDB0 40%, #D8BE86 75%, #B8996B 100%)",
         }}
       >
+        {/* Aged grain */}
+        <svg aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", mixBlendMode: "multiply" }}>
+          <filter id="story-map-grain">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#story-map-grain)" opacity="0.08" />
+        </svg>
+
         <button
           onClick={onClose}
           aria-label="Roll the map back up"
           style={{
-            position: "sticky",
-            top: "0",
-            float: "right",
-            marginTop: "-1.75rem",
-            marginRight: "-0.75rem",
-            zIndex: 5,
-            background: "rgba(74,54,26,0.15)",
-            border: "1px solid rgba(139,94,46,0.4)",
+            position: "absolute",
+            top: "1rem",
+            right: "1rem",
+            zIndex: 10,
+            background: "rgba(74,54,26,0.18)",
+            border: "1px solid rgba(139,94,46,0.45)",
             borderRadius: "50%",
             width: "32px",
             height: "32px",
@@ -394,48 +499,54 @@ function TreasureMap({ onClose }: { onClose: () => void }) {
           <X size={16} strokeWidth={1.5} />
         </button>
 
-        {/* Compass rose */}
-        <div
-          aria-hidden="true"
-          style={{
-            width: "34px",
-            height: "34px",
-            borderRadius: "50%",
-            border: "1px solid rgba(139,94,46,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "rgba(139,94,46,0.6)",
-            margin: "0 auto 1.75rem",
-          }}
-        >
-          <Compass size={18} strokeWidth={1.2} />
-        </div>
-
-        {/* Vertical trail line */}
-        <div style={{ position: "relative" }}>
+        {/* Title banner */}
+        <div style={{ position: "absolute", top: "1.2rem", left: "1.2rem", zIndex: 4 }}>
           <div
-            aria-hidden="true"
             style={{
-              position: "absolute",
-              left: "50%",
-              top: 0,
-              bottom: 0,
-              width: "0",
-              borderLeft: "2px dashed rgba(139,94,46,0.5)",
-              transform: "translateX(-50%)",
+              clipPath: RIBBON_CLIP,
+              background: "linear-gradient(135deg, #C9A56D, #8B5E2E)",
+              padding: "0.6rem 1.4rem",
+              boxShadow: "0 4px 12px rgba(43,31,18,0.4)",
             }}
-          />
-
-          {MILESTONES.map((milestone, i) => (
-            <TrailStop
-              key={milestone.id}
-              milestone={milestone}
-              index={i}
-              onOpen={() => setOpenId(milestone.id)}
-            />
-          ))}
+          >
+            <p style={{ fontFamily: "var(--font-allura), cursive", fontSize: "1.5rem", color: "#FFF6E5", lineHeight: 1 }}>
+              Our Story
+            </p>
+          </div>
         </div>
+
+        {/* Compass rose */}
+        <div style={{ position: "absolute", top: "1.1rem", right: "3.2rem", zIndex: 4 }}>
+          <CompassRose />
+        </div>
+
+        {/* Route */}
+        <svg
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+          aria-hidden="true"
+        >
+          <path
+            d={TRAIL_PATH}
+            fill="none"
+            stroke="#8B1E14"
+            strokeOpacity="0.55"
+            strokeWidth="1"
+            strokeDasharray="0.4 2.2"
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
+
+        {MILESTONES.map((milestone, i) => (
+          <Waypoint
+            key={milestone.id}
+            milestone={milestone}
+            index={i}
+            onOpen={() => setOpenId(milestone.id)}
+          />
+        ))}
       </motion.div>
 
       <AnimatePresence>
