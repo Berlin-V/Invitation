@@ -451,7 +451,7 @@ function TreasureMap({ onClose }: { onClose: () => void }) {
 
   return (
     <motion.div
-      className="fixed inset-0 flex items-center justify-center p-4"
+      className="fixed inset-0 flex items-center justify-center p-0 sm:p-4"
       style={{ zIndex: 250, background: "rgba(15,12,9,0.82)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -465,11 +465,9 @@ function TreasureMap({ onClose }: { onClose: () => void }) {
         exit={{ opacity: 0, scale: 0.92 }}
         transition={{ duration: 0.4, ease: EASE }}
         onClick={(e) => e.stopPropagation()}
+        className="w-screen h-[100dvh] sm:w-[min(95vw,680px)] sm:h-auto sm:max-h-[92vh] sm:aspect-[680/620]"
         style={{
           position: "relative",
-          width: "min(95vw, 680px)",
-          maxHeight: "92vh",
-          aspectRatio: "680 / 620",
           clipPath: TORN_EDGE_CLIP,
           boxShadow: "0 30px 90px rgba(0,0,0,0.55)",
           background:
