@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, Heart, MapPinned, X, LucideIcon } from "lucide-react";
+import { MessageCircle, Heart, MapPinned, X, Compass, LucideIcon } from "lucide-react";
 
 const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 
@@ -108,11 +108,96 @@ const MILESTONES: Milestone[] = [
 const TRAIL_PATH =
   "M16,7 C36,10 46,13 62,17 C46,21 30,25 22,30 C42,34 62,37 72,41 C54,45 36,48 27,53 C42,57 58,60 68,64 C50,69 34,72 24,77 C36,82 46,86 58,91";
 
+// ── Rolled scroll — the closed state that invites a tap ─────────────────────
+function RolledScroll({ onOpen }: { onOpen: () => void }) {
+  return (
+    <motion.div
+      className="flex flex-col items-center"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.8, ease: EASE }}
+    >
+      <motion.button
+        onClick={onOpen}
+        aria-label="Open the map to reveal our story"
+        animate={{ y: [0, -12, 0], rotate: [0, -2, 2, 0] }}
+        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.94 }}
+        style={{
+          position: "relative",
+          width: "min(78vw, 260px)",
+          height: "94px",
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          padding: 0,
+        }}
+      >
+        {/* Scroll ends */}
+        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "18px", borderRadius: "999px", background: "linear-gradient(90deg, #6B4A22, #9C6B33)" }} />
+        <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "18px", borderRadius: "999px", background: "linear-gradient(270deg, #6B4A22, #9C6B33)" }} />
+
+        {/* Rolled paper body */}
+        <div
+          style={{
+            position: "absolute",
+            left: "12px",
+            right: "12px",
+            top: "8%",
+            bottom: "8%",
+            borderRadius: "10px",
+            background: "linear-gradient(180deg, #F4E9CE, #E5D3A8 45%, #D8C08A)",
+            boxShadow: "0 8px 22px rgba(74,54,26,0.35), inset 0 0 18px rgba(139,94,46,0.25)",
+          }}
+        />
+
+        {/* Ribbon */}
+        <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: "10px", transform: "translateX(-50%)", background: "linear-gradient(180deg, #C0392B, #8B1E14)" }} />
+
+        {/* Wax seal / knot */}
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "34px",
+            height: "34px",
+            borderRadius: "50%",
+            background: "radial-gradient(circle at 35% 30%, #E67E22, #A93226)",
+            border: "1px solid rgba(255,253,249,0.5)",
+            boxShadow: "0 3px 10px rgba(0,0,0,0.35)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Heart size={14} fill="#FFFDF9" strokeWidth={0} />
+        </div>
+      </motion.button>
+
+      <p
+        style={{
+          marginTop: "1.25rem",
+          fontFamily: "var(--font-cormorant), Georgia, serif",
+          fontSize: "0.85rem",
+          fontStyle: "italic",
+          color: "rgba(74,64,58,0.6)",
+        }}
+      >
+        Tap the seal to unroll our story
+      </p>
+    </motion.div>
+  );
+}
+
 function MarkerBadge({ milestone }: { milestone: Milestone }) {
   const { media } = milestone;
   if (media.kind === "icon") {
     const Icon = media.icon;
-    return <Icon size={20} strokeWidth={1.6} color="#FFFDF9" />;
+    return <Icon size={18} strokeWidth={1.6} color="#FFFDF9" />;
   }
   return (
     <img
@@ -125,12 +210,11 @@ function MarkerBadge({ milestone }: { milestone: Milestone }) {
 
 function MemoryCard({ milestone, onClose }: { milestone: Milestone; onClose: () => void }) {
   const { media } = milestone;
-  const isFramed = media.kind !== "icon";
 
   return (
     <motion.div
       className="fixed inset-0 flex items-center justify-center p-4"
-      style={{ zIndex: 200, background: "rgba(15,12,9,0.78)" }}
+      style={{ zIndex: 300, background: "rgba(15,12,9,0.78)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -144,6 +228,7 @@ function MemoryCard({ milestone, onClose }: { milestone: Milestone; onClose: () 
         transition={{ duration: 0.32, ease: EASE }}
         onClick={(e) => e.stopPropagation()}
         style={{
+          position: "relative",
           width: "min(92vw, 420px)",
           maxHeight: "86vh",
           overflowY: "auto",
@@ -170,40 +255,26 @@ function MemoryCard({ milestone, onClose }: { milestone: Milestone; onClose: () 
             justifyContent: "center",
             cursor: "pointer",
             color: "#8A7C73",
+            zIndex: 1,
           }}
         >
           <X size={15} strokeWidth={1.5} />
         </button>
 
-        {isFramed && (
-          <div
+        {/* Frameless — the image itself, no boxed background */}
+        {media.kind !== "icon" && (
+          <img
+            src={media.src}
+            alt={media.alt}
             style={{
               width: "100%",
-              aspectRatio: media.kind === "illustration" ? "4/3" : "3/4",
-              borderRadius: "12px",
-              overflow: "hidden",
-              marginBottom: "1.1rem",
-              background:
-                media.kind === "illustration"
-                  ? "linear-gradient(145deg, #14100c, #2a1f14)"
-                  : undefined,
-              display: media.kind === "illustration" ? "flex" : undefined,
-              alignItems: media.kind === "illustration" ? "center" : undefined,
-              justifyContent: media.kind === "illustration" ? "center" : undefined,
-              padding: media.kind === "illustration" ? "0.5rem" : undefined,
+              maxHeight: "45vh",
+              objectFit: "contain",
+              display: "block",
+              margin: "0 auto 1.1rem",
+              borderRadius: "10px",
             }}
-          >
-            <img
-              src={media.src}
-              alt={media.alt}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: media.kind === "illustration" ? "contain" : "cover",
-                display: "block",
-              }}
-            />
-          </div>
+          />
         )}
 
         <p
@@ -256,6 +327,9 @@ function Waypoint({
 }) {
   const [hovered, setHovered] = useState(false);
   const isLast = index === MILESTONES.length - 1;
+  const pinGradient = isLast
+    ? "linear-gradient(145deg, #C9A56D, #8B5E2E)"
+    : "linear-gradient(145deg, #3A2C1E, #1C140D)";
 
   return (
     <div
@@ -263,15 +337,15 @@ function Waypoint({
         position: "absolute",
         left: `${milestone.x}%`,
         top: `${milestone.y}%`,
-        transform: "translate(-50%, -50%)",
+        transform: "translate(-50%, -100%)",
         zIndex: 3,
       }}
     >
       {isLast && (
         <motion.span
           aria-hidden="true"
-          className="absolute inset-0 pointer-events-none"
-          style={{ borderRadius: "50%", border: "1.5px dashed rgba(201,165,109,0.7)" }}
+          className="absolute pointer-events-none"
+          style={{ top: 0, left: "50%", transform: "translateX(-50%)", width: "58px", height: "58px", borderRadius: "50%", border: "1.5px dashed rgba(201,165,109,0.7)" }}
           animate={{ scale: [1, 1.5, 1], opacity: [0.7, 0, 0.7] }}
           transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }}
         />
@@ -289,23 +363,49 @@ function Waypoint({
         aria-label={`Reveal: ${milestone.title}`}
         style={{
           position: "relative",
-          width: isLast ? "58px" : "48px",
-          height: isLast ? "58px" : "48px",
-          borderRadius: "50%",
-          overflow: "hidden",
-          background: isLast
-            ? "linear-gradient(145deg, #C9A56D, #8B5E2E)"
-            : "linear-gradient(145deg, #3A2C1E, #1C140D)",
-          border: `2px solid ${isLast ? "#FFFDF9" : "rgba(255,253,249,0.55)"}`,
-          boxShadow: "0 6px 18px rgba(43,31,18,0.35)",
+          width: isLast ? "50px" : "42px",
+          height: isLast ? "62px" : "52px",
+          background: "none",
+          border: "none",
           cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
           padding: 0,
         }}
       >
-        <MarkerBadge milestone={milestone} />
+        {/* Teardrop pin tail */}
+        <span
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            left: "50%",
+            bottom: "2px",
+            width: "14px",
+            height: "14px",
+            background: pinGradient,
+            transform: "translateX(-50%) rotate(45deg)",
+            borderRadius: "0 0 5px 0",
+          }}
+        />
+        {/* Pin head */}
+        <span
+          style={{
+            position: "absolute",
+            top: 0,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: isLast ? "50px" : "42px",
+            height: isLast ? "50px" : "42px",
+            borderRadius: "50%",
+            overflow: "hidden",
+            background: pinGradient,
+            border: `2px solid ${isLast ? "#FFFDF9" : "rgba(255,253,249,0.55)"}`,
+            boxShadow: "0 6px 14px rgba(43,31,18,0.4)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <MarkerBadge milestone={milestone} />
+        </span>
       </motion.button>
 
       {/* Year only — the story stays hidden until tapped */}
@@ -315,11 +415,11 @@ function Waypoint({
           top: "100%",
           left: "50%",
           transform: "translateX(-50%)",
-          marginTop: "0.4rem",
+          marginTop: "0.35rem",
           whiteSpace: "nowrap",
           fontFamily: "var(--font-cormorant), Georgia, serif",
-          fontSize: "0.62rem",
-          letterSpacing: "0.18em",
+          fontSize: "0.6rem",
+          letterSpacing: "0.16em",
           textTransform: "uppercase",
           color: "#6B5D53",
         }}
@@ -330,86 +430,82 @@ function Waypoint({
   );
 }
 
-export default function StorySection() {
+function TreasureMap({ onClose }: { onClose: () => void }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const openMilestone = MILESTONES.find((m) => m.id === openId) ?? null;
 
   return (
-    <section
-      id="story"
-      style={{
-        backgroundColor: "#EFE6D3",
-        padding: "clamp(4rem, 10vw, 8rem) clamp(1.25rem, 5vw, 3rem)",
-      }}
+    <motion.div
+      className="fixed inset-0 flex items-center justify-center p-4"
+      style={{ zIndex: 250, background: "rgba(15,12,9,0.8)" }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      onClick={onClose}
     >
-      {/* Section header */}
       <motion.div
-        className="text-center"
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.9, ease: EASE }}
-        style={{ marginBottom: "clamp(2rem, 5vw, 3rem)" }}
-      >
-        <p
-          style={{
-            fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.62rem",
-            letterSpacing: "0.46em",
-            color: "#8B5E2E",
-            textTransform: "uppercase",
-            marginBottom: "1rem",
-          }}
-        >
-          Our journey
-        </p>
-        <h2
-          style={{
-            fontFamily: "var(--font-allura), cursive",
-            fontSize: "clamp(2.5rem, 7vw, 4.5rem)",
-            color: "#4A403A",
-            lineHeight: 1.1,
-            marginBottom: "1.25rem",
-          }}
-        >
-          Our Story
-        </h2>
-        <div className="divider-gold" style={{ maxWidth: "100px", margin: "0 auto 1rem" }} />
-        <p
-          style={{
-            fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.85rem",
-            fontStyle: "italic",
-            color: "rgba(74,64,58,0.55)",
-          }}
-        >
-          Tap a marker to uncover the memory.
-        </p>
-      </motion.div>
-
-      {/* Treasure map */}
-      <div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.92 }}
+        transition={{ duration: 0.4, ease: EASE }}
+        onClick={(e) => e.stopPropagation()}
         style={{
           position: "relative",
-          maxWidth: "620px",
-          margin: "0 auto",
+          width: "min(94vw, 620px)",
+          maxHeight: "88vh",
           aspectRatio: "620 / 780",
-          borderRadius: "20px",
+          borderRadius: "6px",
           overflow: "hidden",
-          border: "1px solid rgba(139,94,46,0.3)",
-          boxShadow: "0 20px 60px rgba(74,54,26,0.18), inset 0 0 60px rgba(139,94,46,0.1)",
+          border: "3px double rgba(139,94,46,0.55)",
+          boxShadow: "0 30px 90px rgba(0,0,0,0.55)",
           background:
-            "radial-gradient(ellipse at 30% 20%, rgba(255,250,235,0.9), rgba(232,214,172,0.75) 55%, rgba(210,186,138,0.85) 100%)",
+            "radial-gradient(ellipse at 30% 20%, #FCF6E4, #E8D6AC 55%, #D2BA8A 100%)",
         }}
       >
-        {/* Subtle parchment grain */}
-        <svg aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0.5, mixBlendMode: "multiply" }}>
-          <filter id="story-map-grain">
-            <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
-            <feColorMatrix type="saturate" values="0" />
-          </filter>
-          <rect width="100%" height="100%" filter="url(#story-map-grain)" opacity="0.05" />
-        </svg>
+        <button
+          onClick={onClose}
+          aria-label="Roll the map back up"
+          style={{
+            position: "absolute",
+            top: "0.75rem",
+            right: "0.75rem",
+            zIndex: 5,
+            background: "rgba(74,54,26,0.15)",
+            border: "1px solid rgba(139,94,46,0.4)",
+            borderRadius: "50%",
+            width: "32px",
+            height: "32px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            color: "#4A2E08",
+          }}
+        >
+          <X size={16} strokeWidth={1.5} />
+        </button>
+
+        {/* Compass rose */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: "0.9rem",
+            left: "0.9rem",
+            width: "34px",
+            height: "34px",
+            borderRadius: "50%",
+            border: "1px solid rgba(139,94,46,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "rgba(139,94,46,0.6)",
+            zIndex: 2,
+          }}
+        >
+          <Compass size={18} strokeWidth={1.2} />
+        </div>
 
         {/* Trail */}
         <svg
@@ -437,12 +533,67 @@ export default function StorySection() {
             onOpen={() => setOpenId(milestone.id)}
           />
         ))}
-      </div>
+      </motion.div>
 
       <AnimatePresence>
         {openMilestone && (
           <MemoryCard milestone={openMilestone} onClose={() => setOpenId(null)} />
         )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
+export default function StorySection() {
+  const [mapOpen, setMapOpen] = useState(false);
+
+  return (
+    <section
+      id="story"
+      style={{
+        backgroundColor: "#F8F4EF",
+        padding: "clamp(4rem, 10vw, 8rem) clamp(1.25rem, 5vw, 3rem)",
+      }}
+    >
+      {/* Section header */}
+      <motion.div
+        className="text-center"
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.9, ease: EASE }}
+        style={{ marginBottom: "clamp(2.5rem, 6vw, 4rem)" }}
+      >
+        <p
+          style={{
+            fontFamily: "var(--font-cormorant), Georgia, serif",
+            fontSize: "0.62rem",
+            letterSpacing: "0.46em",
+            color: "#C9A56D",
+            textTransform: "uppercase",
+            marginBottom: "1rem",
+          }}
+        >
+          Our journey
+        </p>
+        <h2
+          style={{
+            fontFamily: "var(--font-allura), cursive",
+            fontSize: "clamp(2.5rem, 7vw, 4.5rem)",
+            color: "#4A403A",
+            lineHeight: 1.1,
+            marginBottom: "1.25rem",
+          }}
+        >
+          Our Story
+        </h2>
+        <div className="divider-gold" style={{ maxWidth: "100px", margin: "0 auto" }} />
+      </motion.div>
+
+      <RolledScroll onOpen={() => setMapOpen(true)} />
+
+      <AnimatePresence>
+        {mapOpen && <TreasureMap onClose={() => setMapOpen(false)} />}
       </AnimatePresence>
     </section>
   );
