@@ -29,6 +29,13 @@ const THINKING_PHRASES = [
   "Digging through my cupid notes…",
   "Checking the timeline real quick…",
   "Dusting off my wings…",
+  "Consulting my arrow for the right words…",
+  "Peeking at the wedding scrapbook…",
+  "Sorting through stolen glances and sweet nothings…",
+  "Untangling my bowstring…",
+  "Asking the stars for the details…",
+  "Reliving the WhatsApp era for you…",
+  "Polishing up a good love story…",
 ];
 
 function ThinkingIndicator() {
