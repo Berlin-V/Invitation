@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
         model: "gemini-flash-latest",
         generationConfig: { maxOutputTokens: 1000 },
       });
-      const result = await fallbackModel.startChat(chatSetup).sendMessage(message);
+      const result = await withTimeout(fallbackModel.startChat(chatSetup).sendMessage(message), 12000);
       reply = result.response.text();
     }
 
