@@ -91,22 +91,25 @@ export async function POST(req: NextRequest) {
       ]);
     }
 
-    // "gemini-3.6-flash" is the fast, reliable pick — "gemini-flash-latest" is kept as a
-    // fallback only, since it occasionally 503s or takes far too long under high demand.
+    // "gemini-3.6-flash" doesn't exist for this API key/project — every call to it
+    // just hangs until our own timeout fires, wasting 12s on every single message
+    // before ever reaching a model that actually responds (confirmed via Cloud Run
+    // logs: 100% "Error: timeout" on that model, real responses/errors on this one).
+    // "gemini-flash-latest" does occasionally 503 under high demand, so we retry once.
     let reply: string;
     try {
       const model = genAI.getGenerativeModel({
-        model: "gemini-3.6-flash",
+        model: "gemini-flash-latest",
         generationConfig: { maxOutputTokens: 1000 },
       });
       const result = await withTimeout(model.startChat(chatSetup).sendMessage(message), 12000);
       reply = result.response.text();
     } catch {
-      const fallbackModel = genAI.getGenerativeModel({
+      const model = genAI.getGenerativeModel({
         model: "gemini-flash-latest",
         generationConfig: { maxOutputTokens: 1000 },
       });
-      const result = await withTimeout(fallbackModel.startChat(chatSetup).sendMessage(message), 12000);
+      const result = await withTimeout(model.startChat(chatSetup).sendMessage(message), 12000);
       reply = result.response.text();
     }
 
