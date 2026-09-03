@@ -27,16 +27,26 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-        <p
-          style={{
-            fontFamily: "var(--font-allura), cursive",
-            fontSize: "clamp(3rem, 10vw, 4.5rem)",
-            color: "#C9A56D",
-            lineHeight: 1,
+        <motion.img
+          src="/images/logo.svg"
+          alt="Berlin & Jerlin Ashika"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+            filter: [
+              "drop-shadow(0 4px 14px rgba(201,165,109,0.25))",
+              "drop-shadow(0 4px 22px rgba(201,165,109,0.5))",
+              "drop-shadow(0 4px 14px rgba(201,165,109,0.25))",
+            ],
           }}
-        >
-          B & J
-        </p>
+          transition={{
+            opacity: { duration: 1.0, ease: "easeOut" },
+            scale: { duration: 1.0, ease: [0.25, 0.46, 0.45, 0.94] },
+            filter: { duration: 2.6, delay: 1.0, repeat: Infinity, ease: "easeInOut" },
+          }}
+          style={{ width: "clamp(160px, 40vw, 240px)", height: "auto" }}
+        />
 
         <motion.div
           style={{ height: "1px", background: "rgba(201,165,109,0.4)", marginTop: "1.5rem" }}
@@ -59,6 +69,24 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           transition={{ duration: 1.0, delay: 1.0 }}
         >
           Preparing your invitation
+        </motion.p>
+
+        {/* Extra room on laptop/desktop screens — a short line so the intro
+            doesn't feel sparse once there's more space around it. */}
+        <motion.p
+          className="hidden md:block"
+          style={{
+            marginTop: "0.85rem",
+            fontFamily: "var(--font-cormorant), Georgia, serif",
+            fontSize: "0.95rem",
+            fontStyle: "italic",
+            color: "rgba(232,213,176,0.55)",
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.0, delay: 1.3 }}
+        >
+          A little love story, unfolding just for you
         </motion.p>
       </motion.div>
 
