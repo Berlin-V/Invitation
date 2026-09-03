@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import LoadingScreen from "@/components/sections/LoadingScreen";
 import EnvelopeAnimation from "@/components/sections/EnvelopeAnimation";
-import Navbar from "@/components/ui/Navbar";
+import Navbar, { NAV_SCROLL_OFFSET } from "@/components/ui/Navbar";
 import HeroSection from "@/components/sections/HeroSection";
 import CountdownSection from "@/components/sections/CountdownSection";
 import StorySection from "@/components/sections/StorySection";
@@ -40,6 +40,32 @@ export default function HomePage() {
     sessionStorage.setItem("wed_visited", "1");
     setPhase("site");
   };
+
+  // Deep links (e.g. "/#wishes" from the Wishes page) point at a section that
+  // only mounts once phase === "site" — the browser's native hash-scroll fires
+  // before that, so it misses. Scroll to it ourselves once it's actually there.
+  // Waits for images etc. above the target to finish loading first — on a slow
+  // connection, a fixed short delay can fire while the page is still growing,
+  // landing the scroll at a stale offset.
+  useEffect(() => {
+    if (phase !== "site") return;
+    const id = window.location.hash.slice(1);
+    if (!id) return;
+
+    const scrollToTarget = () => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const top = el.getBoundingClientRect().top + window.scrollY - NAV_SCROLL_OFFSET;
+      window.scrollTo({ top, behavior: "smooth" });
+    };
+
+    if (document.readyState === "complete") {
+      const timer = setTimeout(scrollToTarget, 100);
+      return () => clearTimeout(timer);
+    }
+    window.addEventListener("load", scrollToTarget, { once: true });
+    return () => window.removeEventListener("load", scrollToTarget);
+  }, [phase]);
 
   // ── Pre-hydration placeholder ──────────────────────────────────────────────
   // Both server and client render this exact same markup on first pass.
