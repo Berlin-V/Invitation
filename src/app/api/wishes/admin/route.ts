@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminDb, isAdminAuthorized } from "@/lib/firebase-admin";
+import { sampleWishes } from "@/lib/sample-wishes";
 
 export async function GET(req: NextRequest) {
   if (!isAdminAuthorized(req)) {
@@ -8,27 +9,8 @@ export async function GET(req: NextRequest) {
 
   const db = getAdminDb();
   if (!db) {
-    // Sample data when Firebase isn't configured, so the edit UI can still be exercised.
-    return NextResponse.json({
-      wishes: [
-        {
-          id: "sample1",
-          name: "Sarah & James",
-          relation: "Friend of the Couple",
-          message: "Wishing you both a lifetime of love and happiness! May your journey together be filled with joy, laughter, and endless blessings. Congratulations Berlin and Jerlin Ashika! 🎉",
-          createdAt: new Date(Date.now() - 86400000).toISOString(),
-          deleted: false,
-        },
-        {
-          id: "sample2",
-          name: "Aunt Priya",
-          relation: "Family",
-          message: "So happy for you both — wishing you a lifetime of love!",
-          createdAt: new Date(Date.now() - 172800000).toISOString(),
-          deleted: false,
-        },
-      ],
-    });
+    // Sample data when Firebase isn't configured, so the edit UI still works.
+    return NextResponse.json({ wishes: sampleWishes() });
   }
 
   try {

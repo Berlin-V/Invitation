@@ -3,10 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { getCountdown } from "@/utils";
-
-const TARGET_ISO = "2026-12-10T09:00:00+05:30";
-
-const EASE = [0.25, 0.46, 0.45, 0.94] as const;
+import { EASE } from "@/constants/motion";
+import { WEDDING_DATE } from "@/constants";
 
 interface TimeLeft {
   days: number;
@@ -24,7 +22,7 @@ export default function CountdownSection() {
 
   useEffect(() => {
     const tick = () => {
-      const { days, hours, minutes, seconds } = getCountdown(TARGET_ISO);
+      const { days, hours, minutes, seconds } = getCountdown(WEDDING_DATE.iso);
       setTime({ days, hours, minutes, seconds });
     };
     tick();
@@ -58,7 +56,7 @@ export default function CountdownSection() {
           fontFamily: "var(--font-cormorant), Georgia, serif",
           fontSize: "0.62rem",
           letterSpacing: "0.46em",
-          color: "#C9A56D",
+          color: "#8F6410",
           textTransform: "uppercase",
           marginBottom: "1rem",
         }}
@@ -84,7 +82,7 @@ export default function CountdownSection() {
         viewport={{ once: true, margin: "-60px" }}
         variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
       >
-        {units.map((unit, i) => (
+        {units.map((unit) => (
           <motion.div
             key={unit.label}
             className="flex flex-col items-center"
@@ -114,7 +112,7 @@ export default function CountdownSection() {
               style={{
                 height: "1px",
                 width: "32px",
-                background: "rgba(201,165,109,0.45)",
+                background: "rgba(217,180,65,0.45)",
                 margin: "0.75rem auto",
               }}
             />
@@ -125,17 +123,12 @@ export default function CountdownSection() {
                 fontFamily: "var(--font-cormorant), Georgia, serif",
                 fontSize: "0.6rem",
                 letterSpacing: "0.36em",
-                color: "#8A7C73",
+                color: "#796D65",
                 textTransform: "uppercase",
               }}
             >
               {unit.label}
             </p>
-
-            {/* Vertical separator between units (except last) */}
-            {i < units.length - 1 && (
-              <div style={{ display: "none" }} aria-hidden="true" />
-            )}
           </motion.div>
         ))}
       </motion.div>
@@ -151,7 +144,7 @@ export default function CountdownSection() {
           fontFamily: "var(--font-cormorant), Georgia, serif",
           fontSize: "clamp(1rem, 3vw, 1.3rem)",
           fontStyle: "italic",
-          color: "#8A7C73",
+          color: "#796D65",
           letterSpacing: "0.04em",
         }}
       >

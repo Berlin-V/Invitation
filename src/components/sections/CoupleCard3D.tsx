@@ -3,9 +3,8 @@
 import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { COUPLE, WEDDING_DATE, EVENTS } from "@/constants";
-
-const EASE = [0.25, 0.46, 0.45, 0.94] as const;
+import { COUPLE, EVENTS, MEDIA, WEDDING_DATE } from "@/constants";
+import { EASE } from "@/constants/motion";
 
 // ── Card dimensions ────────────────────────────────────────────────────────
 const CARD_W = 340;
@@ -31,7 +30,7 @@ function CardBack() {
       <div
         style={{
           height: "3px",
-          background: "linear-gradient(90deg, transparent, #C9A56D, transparent)",
+          background: "linear-gradient(90deg, transparent, #D9B441, transparent)",
           flexShrink: 0,
         }}
       />
@@ -43,7 +42,7 @@ function CardBack() {
           overflowY: "auto",
           padding: "clamp(1.25rem, 4vw, 1.75rem) clamp(1.25rem, 4vw, 2rem)",
           scrollbarWidth: "thin",
-          scrollbarColor: "rgba(201,165,109,0.4) transparent",
+          scrollbarColor: "rgba(217,180,65,0.4) transparent",
         }}
       >
         {/* Eyebrow */}
@@ -52,7 +51,7 @@ function CardBack() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.56rem",
             letterSpacing: "0.42em",
-            color: "#C9A56D",
+            color: "#8F6410",
             textTransform: "uppercase",
             textAlign: "center",
             marginBottom: "0.75rem",
@@ -79,7 +78,7 @@ function CardBack() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.65rem",
             letterSpacing: "0.24em",
-            color: "#C9A56D",
+            color: "#8F6410",
             textAlign: "center",
             fontStyle: "italic",
             marginBottom: "0.2rem",
@@ -104,7 +103,7 @@ function CardBack() {
         <div
           style={{
             height: "1px",
-            background: "linear-gradient(90deg, transparent, rgba(201,165,109,0.6), transparent)",
+            background: "linear-gradient(90deg, transparent, rgba(217,180,65,0.6), transparent)",
             margin: "0 auto 1rem",
           }}
         />
@@ -128,7 +127,7 @@ function CardBack() {
           style={{
             height: "1px",
             width: "32px",
-            background: "rgba(201,165,109,0.4)",
+            background: "rgba(217,180,65,0.4)",
             margin: "0 auto 1.25rem",
           }}
         />
@@ -139,7 +138,7 @@ function CardBack() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.56rem",
             letterSpacing: "0.38em",
-            color: "#C9A56D",
+            color: "#8F6410",
             textTransform: "uppercase",
             textAlign: "center",
             marginBottom: "0.6rem",
@@ -170,7 +169,7 @@ function CardBack() {
         <div
           style={{
             height: "1px",
-            background: "linear-gradient(90deg, transparent, rgba(201,165,109,0.3), transparent)",
+            background: "linear-gradient(90deg, transparent, rgba(217,180,65,0.3), transparent)",
             margin: "1rem auto",
           }}
         />
@@ -181,7 +180,7 @@ function CardBack() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.56rem",
             letterSpacing: "0.38em",
-            color: "#C9A56D",
+            color: "#8F6410",
             textTransform: "uppercase",
             textAlign: "center",
             marginBottom: "0.6rem",
@@ -212,7 +211,7 @@ function CardBack() {
         <div
           style={{
             height: "1px",
-            background: "linear-gradient(90deg, transparent, rgba(201,165,109,0.4), transparent)",
+            background: "linear-gradient(90deg, transparent, rgba(217,180,65,0.4), transparent)",
             margin: "1.25rem auto 1rem",
           }}
         />
@@ -222,7 +221,7 @@ function CardBack() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.75rem",
             fontStyle: "italic",
-            color: "#8A7C73",
+            color: "#796D65",
             textAlign: "center",
             lineHeight: 1.65,
             marginBottom: "0.5rem",
@@ -235,7 +234,7 @@ function CardBack() {
           style={{
             fontFamily: "var(--font-allura), cursive",
             fontSize: "1.1rem",
-            color: "#C9A56D",
+            color: "#8F6410",
             textAlign: "center",
           }}
         >
@@ -247,7 +246,7 @@ function CardBack() {
       <div
         style={{
           height: "3px",
-          background: "linear-gradient(90deg, transparent, #C9A56D, transparent)",
+          background: "linear-gradient(90deg, transparent, #D9B441, transparent)",
           flexShrink: 0,
         }}
       />
@@ -331,7 +330,7 @@ export default function CoupleCard3D() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.62rem",
             letterSpacing: "0.46em",
-            color: "rgba(201,165,109,0.55)",
+            color: "rgba(217,180,65,0.75)",
             textTransform: "uppercase",
             marginBottom: "1rem",
           }}
@@ -342,18 +341,18 @@ export default function CoupleCard3D() {
           style={{
             fontFamily: "var(--font-allura), cursive",
             fontSize: "clamp(2.5rem, 7vw, 4.5rem)",
-            color: "#C9A56D",
+            color: "#D9B441",
             lineHeight: 1.1,
             marginBottom: "1.25rem",
           }}
         >
-          Berlin & Jerlin Ashika
+          {COUPLE.groom} & {COUPLE.bride}
         </h2>
         <div
           style={{
             height: "1px",
             width: "80px",
-            background: "linear-gradient(90deg, transparent, rgba(201,165,109,0.45), transparent)",
+            background: "linear-gradient(90deg, transparent, rgba(217,180,65,0.45), transparent)",
             margin: "0 auto",
           }}
         />
@@ -400,16 +399,17 @@ export default function CoupleCard3D() {
                 backfaceVisibility: "hidden",
                 WebkitBackfaceVisibility: "hidden",
                 overflow: "hidden",
-                border: "1px solid rgba(201,165,109,0.3)",
+                border: "1px solid rgba(217,180,65,0.3)",
               }}
             >
               <Image
-                src="/images/berlinJerlin.jpeg"
-                alt="Berlin & Jerlin Ashika"
+                src={MEDIA.heroPhoto}
+                alt={`${COUPLE.groom} & ${COUPLE.bride}`}
                 fill
                 sizes={`${CARD_W}px`}
+                quality={90}
                 style={{ objectFit: "cover", objectPosition: "center top" }}
-                priority
+                preload
               />
 
               {/* Subtle gradient overlay on photo */}
@@ -445,7 +445,7 @@ export default function CoupleCard3D() {
                     fontFamily: "var(--font-cormorant), Georgia, serif",
                     fontSize: "0.6rem",
                     letterSpacing: "0.28em",
-                    color: "rgba(232,213,176,0.75)",
+                    color: "rgba(242,220,160,0.75)",
                     textTransform: "uppercase",
                     marginTop: "0.2rem",
                   }}
@@ -476,7 +476,7 @@ export default function CoupleCard3D() {
               fontFamily: "var(--font-cormorant), Georgia, serif",
               fontSize: "0.62rem",
               letterSpacing: "0.3em",
-              color: "rgba(201,165,109,0.65)",
+              color: "#D9B441",
               textTransform: "uppercase",
             }}
           >

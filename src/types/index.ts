@@ -13,54 +13,42 @@ export interface NavLink {
 }
 
 // ── Gallery ───────────────────────────────────────────────────────────────────
-export interface GalleryImage {
+/** A gallery photo. `w`/`h` are the file's intrinsic pixel dimensions. */
+export interface GalleryPhoto {
   id: string;
   src: string;
+  w: number;
+  h: number;
   alt: string;
-  width: number;
-  height: number;
-  category?: string;
 }
 
 export interface GalleryAlbum {
   id: string;
-  label: string;
-  images: GalleryImage[];
+  title: string;
+  subtitle: string;
+  emoji: string;
+  photos: GalleryPhoto[];
+  available: boolean;
 }
 
 // ── Wishes / Guestbook ────────────────────────────────────────────────────────
-export interface WishEntry {
+/** A guestbook entry as stored in Firestore and returned by /api/wishes. */
+export interface Wish {
   id: string;
   name: string;
-  email: string;
+  /** Composed label, e.g. "Groom's College Mate" — see composeRelation(). */
+  relation: string;
   message: string;
-  createdAt: Date | string;
+  createdAt: string;
+  /** Soft-delete flag; only ever present on the admin endpoint's payload. */
+  deleted?: boolean;
 }
 
-// ── Events ────────────────────────────────────────────────────────────────────
-export interface EventItem {
-  title: string;
-  time: string;
-  mapUrl: string;
-  icon: string;
-  description: string;
-}
-
-export interface EventGroup {
-  label: string;
-  date: string;
-  timeRange: string;
-  items: EventItem[];
-}
+/** Which side of the family a wish came from, derived from `relation`. */
+export type WishSide = "bride" | "groom" | "both";
 
 // ── Chatbot ───────────────────────────────────────────────────────────────────
 export interface ChatMessage {
   role: "user" | "assistant";
-  content: string;
-}
-
-// ── API responses ─────────────────────────────────────────────────────────────
-export interface ApiResponse<T = unknown> {
-  data?: T;
-  error?: string;
+  text: string;
 }

@@ -1,30 +1,18 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import NextImage from "next/image";
+import Link from "next/link";
+import { EASE } from "@/constants/motion";
+import { ENGAGEMENT_PHOTOS } from "@/constants/gallery";
+import type { GalleryPhoto } from "@/types";
 
-const EASE = [0.25, 0.46, 0.45, 0.94] as const;
 const AUTO_ROTATE_MS = 4500;
 
-interface GalleryImage {
-  id: string;
-  src: string;
-  w: number;
-  h: number;
-  alt: string;
-}
-
-const IMAGES: GalleryImage[] = [
-  { id: "propose", src: "/images/proposeBJ.jpeg",   w: 4082, h: 5429, alt: "Berlin proposing to Jerlin Ashika" },
-  { id: "ring",    src: "/images/ringMoment.jpeg",  w: 3592, h: 5392, alt: "The ring exchange moment" },
-  { id: "stage",   src: "/images/stageClose.jpeg",  w: 4082, h: 6123, alt: "Berlin & Jerlin Ashika on stage" },
-  { id: "evening", src: "/images/berlinAshi.jpeg",  w: 1080, h: 1546, alt: "Berlin & Jerlin Ashika, an evening together" },
-];
-
 interface LightboxProps {
-  images: GalleryImage[];
+  images: GalleryPhoto[];
   activeIndex: number;
   onClose: () => void;
   onNext: () => void;
@@ -62,7 +50,7 @@ function Lightbox({ images, activeIndex, onClose, onNext, onPrev }: LightboxProp
           top: "1.5rem",
           right: "1.5rem",
           background: "rgba(255,253,249,0.08)",
-          border: "1px solid rgba(201,165,109,0.2)",
+          border: "1px solid rgba(217,180,65,0.2)",
           borderRadius: "50%",
           width: "40px",
           height: "40px",
@@ -87,7 +75,7 @@ function Lightbox({ images, activeIndex, onClose, onNext, onPrev }: LightboxProp
           top: "50%",
           transform: "translateY(-50%)",
           background: "rgba(255,253,249,0.08)",
-          border: "1px solid rgba(201,165,109,0.2)",
+          border: "1px solid rgba(217,180,65,0.2)",
           borderRadius: "50%",
           width: "44px",
           height: "44px",
@@ -112,7 +100,7 @@ function Lightbox({ images, activeIndex, onClose, onNext, onPrev }: LightboxProp
           top: "50%",
           transform: "translateY(-50%)",
           background: "rgba(255,253,249,0.08)",
-          border: "1px solid rgba(201,165,109,0.2)",
+          border: "1px solid rgba(217,180,65,0.2)",
           borderRadius: "50%",
           width: "44px",
           height: "44px",
@@ -150,6 +138,8 @@ function Lightbox({ images, activeIndex, onClose, onNext, onPrev }: LightboxProp
           alt={img.alt}
           width={img.w}
           height={img.h}
+          quality={90}
+          sizes="(max-width: 900px) 90vw, 860px"
           style={{
             maxWidth: "100%",
             maxHeight: "85vh",
@@ -172,7 +162,7 @@ function Lightbox({ images, activeIndex, onClose, onNext, onPrev }: LightboxProp
           fontFamily: "var(--font-cormorant), Georgia, serif",
           fontSize: "0.65rem",
           letterSpacing: "0.28em",
-          color: "rgba(201,165,109,0.5)",
+          color: "rgba(217,180,65,0.75)",
         }}
       >
         {activeIndex + 1} / {images.length}
@@ -181,30 +171,35 @@ function Lightbox({ images, activeIndex, onClose, onNext, onPrev }: LightboxProp
   );
 }
 
-const HEART_COLORS = ["#FAC2BC", "#F58893", "#E8D5B0", "#EE7863"];
+const HEART_COLORS = ["#FAC2BC", "#F58893", "#F2DCA0", "#EE7863"];
+
+// Deterministic golden-angle spread — an even-looking scatter without
+// Math.random(), which React flags as impure during render and which would
+// also differ between the server and client passes.
+const BURST_HEARTS = Array.from({ length: 11 }, (_, i) => {
+  const angle = i * 137.5;
+  const spread = (angle % 100) / 100 - 0.5; // −0.5…0.5, evenly distributed
+  return {
+    id: i,
+    x: spread * 160,
+    drift: (((angle * 1.7) % 100) / 100 - 0.5) * 50,
+    rise: 140 + ((angle * 2.3) % 90),
+    delay: (i % 5) * 0.07,
+    duration: 1.1 + (i % 4) * 0.18,
+    size: 9 + (i % 5) * 2.6,
+    color: HEART_COLORS[i % HEART_COLORS.length],
+  };
+});
 
 function HeartBurst() {
-  const hearts = useMemo(
-    () =>
-      Array.from({ length: 11 }, (_, i) => ({
-        id: i,
-        x: (Math.random() - 0.5) * 160,
-        drift: (Math.random() - 0.5) * 50,
-        rise: 140 + Math.random() * 90,
-        delay: Math.random() * 0.35,
-        duration: 1.1 + Math.random() * 0.7,
-        size: 9 + Math.random() * 13,
-        color: HEART_COLORS[i % HEART_COLORS.length],
-      })),
-    []
-  );
+  // Values are module-level constants; nothing to memoise.
 
   return (
     <div
       aria-hidden="true"
       style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}
     >
-      {hearts.map((h) => (
+      {BURST_HEARTS.map((h) => (
         <motion.span
           key={h.id}
           initial={{ opacity: 0, x: h.x, y: 30, scale: 0.3, rotate: 0 }}
@@ -237,7 +232,7 @@ export default function GallerySection() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const advance = useCallback((dir: 1 | -1) => {
-    setIndex((i) => (i + dir + IMAGES.length) % IMAGES.length);
+    setIndex((i) => (i + dir + ENGAGEMENT_PHOTOS.length) % ENGAGEMENT_PHOTOS.length);
     setBurstId((b) => b + 1);
   }, []);
 
@@ -252,7 +247,7 @@ export default function GallerySection() {
     return () => clearInterval(timer);
   }, [advance, lightboxOpen]);
 
-  const img = IMAGES[index];
+  const img = ENGAGEMENT_PHOTOS[index];
 
   return (
     <section
@@ -276,7 +271,7 @@ export default function GallerySection() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.62rem",
             letterSpacing: "0.46em",
-            color: "#C9A56D",
+            color: "#8F6410",
             textTransform: "uppercase",
             marginBottom: "1rem",
           }}
@@ -325,8 +320,9 @@ export default function GallerySection() {
                 alt={img.alt}
                 fill
                 sizes="(max-width: 480px) 90vw, 400px"
+                quality={90}
                 style={{ objectFit: "cover" }}
-                priority={index === 0}
+                preload={index === 0}
               />
             </motion.div>
           </AnimatePresence>
@@ -388,7 +384,7 @@ export default function GallerySection() {
 
         {/* Dots */}
         <div className="flex items-center justify-center" style={{ gap: "0.5rem", marginTop: "1.25rem" }}>
-          {IMAGES.map((im, i) => (
+          {ENGAGEMENT_PHOTOS.map((im, i) => (
             <button
               key={im.id}
               onClick={() => goTo(i)}
@@ -397,7 +393,7 @@ export default function GallerySection() {
                 width: i === index ? "22px" : "8px",
                 height: "8px",
                 borderRadius: "999px",
-                background: i === index ? "#C9A56D" : "rgba(201,165,109,0.3)",
+                background: i === index ? "#D9B441" : "rgba(217,180,65,0.3)",
                 border: "none",
                 cursor: "pointer",
                 padding: 0,
@@ -408,11 +404,38 @@ export default function GallerySection() {
         </div>
       </div>
 
+      {/* Deep link — the album page carries the other albums and the Drive link */}
+      <motion.div
+        className="text-center"
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
+        style={{ marginTop: "clamp(2.5rem, 6vw, 3.5rem)" }}
+      >
+        <Link
+          href="/gallery"
+          style={{
+            display: "inline-block",
+            color: "#B08A2E",
+            fontFamily: "var(--font-cormorant), Georgia, serif",
+            fontSize: "0.66rem",
+            letterSpacing: "0.32em",
+            textTransform: "uppercase",
+            padding: "0.75rem 2.25rem",
+            textDecoration: "none",
+            border: "1px solid rgba(217,180,65,0.45)",
+          }}
+        >
+          View All Albums
+        </Link>
+      </motion.div>
+
       {/* Lightbox */}
       <AnimatePresence>
         {lightboxOpen && (
           <Lightbox
-            images={IMAGES}
+            images={ENGAGEMENT_PHOTOS}
             activeIndex={index}
             onClose={() => setLightboxOpen(false)}
             onNext={() => advance(1)}

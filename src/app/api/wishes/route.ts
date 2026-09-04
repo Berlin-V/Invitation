@@ -1,39 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminDb } from "@/lib/firebase-admin";
+import { clientKey, createRateLimiter } from "@/lib/rate-limit";
+import { sampleWishes } from "@/lib/sample-wishes";
 
-// Per-instance in-memory limiter — without an auth gate, this is the only spam guard.
-const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
-const RATE_LIMIT_MAX_SUBMISSIONS = 5;
-const submissionLog = new Map<string, number[]>();
-
-function isRateLimited(key: string): boolean {
-  const now = Date.now();
-  const recent = (submissionLog.get(key) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
-  if (recent.length >= RATE_LIMIT_MAX_SUBMISSIONS) {
-    submissionLog.set(key, recent);
-    return true;
-  }
-  recent.push(now);
-  submissionLog.set(key, recent);
-  return false;
-}
+// Without an auth gate, this is the only spam guard on the guestbook.
+const isRateLimited = createRateLimiter({ windowMs: 60 * 60 * 1000, max: 5 });
 
 export async function GET() {
   const db = getAdminDb();
   if (!db) {
-    // Return sample wishes when Firebase isn't configured
-    return NextResponse.json({
-      wishes: [
-        {
-          id: "sample1",
-          name: "Sarah & James",
-          relation: "Friend of the Couple",
-          message: "Wishing you both a lifetime of love and happiness! May your journey together be filled with joy, laughter, and endless blessings. Congratulations Berlin and Jerlin Ashika! 🎉",
-          createdAt: new Date(Date.now() - 86400000).toISOString(),
-          deleted: false,
-        },
-      ],
-    });
+    return NextResponse.json({ wishes: sampleWishes().slice(0, 1) });
   }
 
   try {
@@ -51,9 +27,11 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  if (isRateLimited(ip)) {
-    return NextResponse.json({ error: "You've submitted enough wishes for now — thank you!" }, { status: 429 });
+  if (isRateLimited(clientKey(req))) {
+    return NextResponse.json(
+      { error: "You've submitted enough wishes for now — thank you!" },
+      { status: 429 }
+    );
   }
 
   const { name, relation, message } = await req.json();

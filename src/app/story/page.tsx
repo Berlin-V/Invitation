@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { WEDDING_DATE } from "@/lib/config";
+import { WEDDING_DATE } from "@/constants";
+import BackToHome from "@/components/ui/BackToHome";
 
 const milestones = [
   {
@@ -37,12 +38,14 @@ const milestones = [
 export default function StoryPage() {
   return (
     <div className="min-h-screen pt-20" style={{ background: "linear-gradient(180deg, #080503 0%, #0D0804 100%)" }}>
+      <BackToHome href="/#story" />
+
       {/* Header */}
       <section className="py-20 px-6 text-center relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(139,26,74,0.1) 0%, transparent 60%)" }} />
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
-          <p className="font-sans-custom text-[11px] tracking-[0.5em] uppercase text-[var(--orange)] mb-4">A Love Story</p>
+          <p className="font-sans-custom text-[11px] tracking-[0.5em] uppercase text-orange mb-4">A Love Story</p>
           <h1 className="font-script text-6xl md:text-8xl text-orange-gradient mb-6">Our Story</h1>
           <p className="font-serif text-xl text-[#FAF5EE]/60 italic max-w-lg mx-auto leading-relaxed">
             &ldquo;In all the world, there is no heart for me like yours.&rdquo;
@@ -72,7 +75,7 @@ export default function StoryPage() {
                 {/* Content */}
                 <div className="flex-1">
                   <div className={`glass-card p-8 ${m.side === "right" ? "md:text-right" : ""}`}>
-                    <p className="font-sans-custom text-[10px] tracking-[0.4em] uppercase text-[var(--orange)] mb-2">{m.year}</p>
+                    <p className="font-sans-custom text-[10px] tracking-[0.4em] uppercase text-orange mb-2">{m.year}</p>
                     <h3 className="font-script text-4xl text-[#FAF5EE] mb-3">{m.title}</h3>
                     <p className="font-serif text-base text-[#FAF5EE]/65 leading-relaxed">{m.text}</p>
                   </div>
@@ -81,7 +84,7 @@ export default function StoryPage() {
                 {/* Icon node */}
                 <div className="flex-shrink-0 flex flex-col items-center">
                   <motion.div
-                    className="w-16 h-16 rounded-full border-2 border-[var(--orange)]/50 flex items-center justify-center text-2xl relative z-10"
+                    className="w-16 h-16 rounded-full border-2 border-orange/50 flex items-center justify-center text-2xl relative z-10"
                     style={{ background: "rgba(201,168,76,0.1)", boxShadow: "0 0 20px rgba(201,168,76,0.15)" }}
                     whileInView={{ scale: [0.8, 1.05, 1] }}
                     viewport={{ once: true }}
@@ -109,7 +112,7 @@ export default function StoryPage() {
         >
           <p className="text-3xl mb-4">💌</p>
           <h3 className="font-script text-4xl text-orange-gradient mb-3">More to Come</h3>
-          <p className="font-sans-custom text-sm text-[#FAF5EE]/50 leading-relaxed">
+          <p className="font-sans-custom text-sm text-[#FAF5EE]/52 leading-relaxed">
             The full story of Berlin & Jerlin Ashika — how they met, fell in love, and chose each other — will be shared here soon. Stay tuned for the complete tale.
           </p>
         </motion.div>

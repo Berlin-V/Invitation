@@ -1,21 +1,15 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, Send, ChevronDown, ArrowLeft } from "lucide-react";
-import { COUPLE } from "@/lib/config";
+import { Heart, Send, ChevronDown } from "lucide-react";
+import { COUPLE } from "@/constants";
+import BackToHome from "@/components/ui/BackToHome";
+import { composeRelation } from "@/lib/wish-relation";
+import type { Wish } from "@/types";
 
-interface Wish {
-  id: string;
-  name: string;
-  relation: string;
-  message: string;
-  createdAt: string;
-}
-
-const OG = "linear-gradient(135deg,#C9A56D,#F2CB8E,#E8D5B0)";
+const OG = "linear-gradient(135deg,#D9B441,#F7D98F,#F2DCA0)";
 
 // Deterministic golden-angle spread — avoids Math.random(), which would differ
 // between server and client render and break hydration.
@@ -38,6 +32,7 @@ function RingMomentBackdrop() {
         src="/images/ringMoment.jpeg"
         alt=""
         fill
+        sizes="100vw"
         style={{ objectFit: "cover", objectPosition: "center", opacity: 0.1, filter: "grayscale(0.4)" }}
       />
       {/* Fine grid overlay */}
@@ -45,7 +40,7 @@ function RingMomentBackdrop() {
         className="absolute inset-0"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(201,165,109,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(201,165,109,0.1) 1px, transparent 1px)",
+            "linear-gradient(rgba(217,180,65,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(217,180,65,0.1) 1px, transparent 1px)",
           backgroundSize: "28px 28px",
         }}
       />
@@ -94,35 +89,33 @@ const RELATION_TYPES = [
 type SideKey = (typeof SIDES)[number]["key"];
 type RelationTypeKey = (typeof RELATION_TYPES)[number]["key"];
 
-function composeRelation(side: SideKey | null, type: RelationTypeKey | null): string {
+function relationFor(side: SideKey | null, type: RelationTypeKey | null): string {
   if (!side || !type) return "";
   const typeLabel = RELATION_TYPES.find((t) => t.key === type)!.label;
-  if (side === "groom") return `${COUPLE.groom}'s ${typeLabel}`;
-  if (side === "bride") return `${COUPLE.bride}'s ${typeLabel}`;
-  return `${typeLabel} of ${COUPLE.groom} & ${COUPLE.bride}`;
+  return composeRelation(side, typeLabel);
 }
 
 /* ── Two-step relation picker — pick a side, then a relation type ── */
 function RelationPicker({ onChange }: { onChange: (relation: string) => void }) {
   const [side, setSide] = useState<SideKey | null>(null);
   const [type, setType] = useState<RelationTypeKey | null>(null);
-  const composed = composeRelation(side, type);
+  const composed = relationFor(side, type);
   const sideMeta = SIDES.find((s) => s.key === side);
   const typeMeta = RELATION_TYPES.find((t) => t.key === type);
 
   const selectSide = (s: SideKey) => {
     setSide(s);
-    onChange(composeRelation(s, type));
+    onChange(relationFor(s, type));
   };
   const selectType = (t: RelationTypeKey) => {
     setType(t);
-    onChange(composeRelation(side, t));
+    onChange(relationFor(side, t));
   };
 
   return (
     <div className="space-y-3">
       <div>
-        <p className="font-sans-custom text-[10px] tracking-widest uppercase text-[#C9A56D]/60 mb-2">
+        <p className="font-sans-custom text-[10px] tracking-widest uppercase text-[#D9B441]/75 mb-2">
           You&rsquo;re here for the…
         </p>
         <div className="flex gap-2 flex-wrap">
@@ -135,9 +128,9 @@ function RelationPicker({ onChange }: { onChange: (relation: string) => void }) 
               onClick={() => selectSide(s.key)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-full font-sans-custom text-xs transition-colors"
               style={{
-                background: side === s.key ? "linear-gradient(135deg,#8B5E2E,#C9A56D)" : "rgba(255,255,255,0.04)",
-                border: `1px solid ${side === s.key ? "transparent" : "rgba(201,165,109,0.18)"}`,
-                color: side === s.key ? "#fff" : "rgba(255,255,255,0.6)",
+                background: side === s.key ? "linear-gradient(135deg,#D9B441,#F0D07A)" : "rgba(255,255,255,0.04)",
+                border: `1px solid ${side === s.key ? "transparent" : "rgba(217,180,65,0.18)"}`,
+                color: side === s.key ? "#2A1F14" : "rgba(255,255,255,0.6)",
               }}
             >
               <span>{s.emoji}</span> {s.label}
@@ -154,7 +147,7 @@ function RelationPicker({ onChange }: { onChange: (relation: string) => void }) 
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <p className="font-sans-custom text-[10px] tracking-widest uppercase text-[#C9A56D]/60 mb-2 mt-1">
+            <p className="font-sans-custom text-[10px] tracking-widest uppercase text-[#D9B441]/75 mb-2 mt-1">
               And your relation is…
             </p>
             <div className="flex gap-2 flex-wrap">
@@ -167,9 +160,9 @@ function RelationPicker({ onChange }: { onChange: (relation: string) => void }) 
                   onClick={() => selectType(t.key)}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-full font-sans-custom text-xs transition-colors"
                   style={{
-                    background: type === t.key ? "linear-gradient(135deg,#8B5E2E,#C9A56D)" : "rgba(255,255,255,0.04)",
-                    border: `1px solid ${type === t.key ? "transparent" : "rgba(201,165,109,0.18)"}`,
-                    color: type === t.key ? "#fff" : "rgba(255,255,255,0.6)",
+                    background: type === t.key ? "linear-gradient(135deg,#D9B441,#F0D07A)" : "rgba(255,255,255,0.04)",
+                    border: `1px solid ${type === t.key ? "transparent" : "rgba(217,180,65,0.18)"}`,
+                    color: type === t.key ? "#2A1F14" : "rgba(255,255,255,0.6)",
                   }}
                 >
                   <span>{t.emoji}</span> {t.label}
@@ -187,10 +180,10 @@ function RelationPicker({ onChange }: { onChange: (relation: string) => void }) 
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full"
-            style={{ background: "rgba(201,165,109,0.12)", border: "1px solid rgba(201,165,109,0.3)" }}
+            style={{ background: "rgba(217,180,65,0.12)", border: "1px solid rgba(217,180,65,0.3)" }}
           >
             <span className="text-sm">{sideMeta?.emoji} {typeMeta?.emoji}</span>
-            <span className="font-sans-custom text-xs text-[#E8D5B0]">{composed}</span>
+            <span className="font-sans-custom text-xs text-[#F2DCA0]">{composed}</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -214,42 +207,42 @@ function WishCard({ wish, index }: { wish: Wish; index: number }) {
       onClick={() => setExpanded((p) => !p)}
       className="relative cursor-pointer select-none group"
       style={{
-        background: "rgba(201,165,109,0.04)",
-        border: `1px solid ${expanded ? "rgba(201,165,109,0.4)" : "rgba(201,165,109,0.12)"}`,
+        background: "rgba(217,180,65,0.04)",
+        border: `1px solid ${expanded ? "rgba(217,180,65,0.4)" : "rgba(217,180,65,0.12)"}`,
         borderRadius: 14,
         transition: "border-color 0.3s, box-shadow 0.3s",
-        boxShadow: expanded ? "0 0 24px rgba(201,165,109,0.12)" : "none",
+        boxShadow: expanded ? "0 0 24px rgba(217,180,65,0.12)" : "none",
       }}
     >
       {/* Left accent bar */}
       <div className="absolute left-0 top-3 bottom-3 w-0.5 rounded-full transition-all duration-300"
-        style={{ background: expanded ? "linear-gradient(to bottom,#C9A56D,#FBBF24)" : "rgba(201,165,109,0.2)", left: 0, borderRadius: "0 2px 2px 0" }} />
+        style={{ background: expanded ? "linear-gradient(to bottom,#D9B441,#FBBF24)" : "rgba(217,180,65,0.2)", left: 0, borderRadius: "0 2px 2px 0" }} />
 
       <div className="px-4 py-4 pl-4">
         {/* Top row: avatar + name + relation */}
         <div className="flex items-center gap-3 mb-2">
           <div className="relative w-10 h-10 flex-shrink-0">
             <div
-              className="absolute inset-0 rounded-full flex items-center justify-center font-sans-custom text-sm font-semibold text-white"
-              style={{ background: "linear-gradient(135deg,#8B5E2E,#C9A56D)" }}
+              className="absolute inset-0 rounded-full flex items-center justify-center font-sans-custom text-sm font-semibold"
+              style={{ background: "linear-gradient(135deg,#D9B441,#F0D07A)", color: "#2A1F14" }}
             >
               {initials}
             </div>
           </div>
 
           <div className="flex-1 min-w-0">
-            <p className="font-sans-custom text-sm font-medium text-[#E8D5B0] truncate">{wish.name}</p>
-            <p className="font-sans-custom text-[10px] text-[#C9A56D]/60 truncate">{wish.relation}</p>
+            <p className="font-sans-custom text-sm font-medium text-[#F2DCA0] truncate">{wish.name}</p>
+            <p className="font-sans-custom text-[10px] text-[#D9B441]/75 truncate">{wish.relation}</p>
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
-            <p className="font-sans-custom text-[9px] text-white/30">
+            <p className="font-sans-custom text-[9px] text-white/52">
               {new Date(wish.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
             </p>
             <motion.div
               animate={{ rotate: expanded ? 180 : 0 }}
               transition={{ duration: 0.25 }}
-              className="text-[#C9A56D]/40"
+              className="text-[#D9B441]/75"
             >
               <ChevronDown size={13} />
             </motion.div>
@@ -270,10 +263,10 @@ function WishCard({ wish, index }: { wish: Wish; index: number }) {
               animate={{ scale: expanded ? [1, 1.3, 1] : 1 }}
               transition={{ duration: 0.4 }}
             >
-              <Heart size={11} fill={expanded ? "#C9A56D" : "none"} className="transition-colors duration-300"
-                style={{ color: "#C9A56D" }} />
+              <Heart size={11} fill={expanded ? "#D9B441" : "none"} className="transition-colors duration-300"
+                style={{ color: "#D9B441" }} />
             </motion.div>
-            <span className="font-sans-custom text-[9px] text-[#C9A56D]/50">wishes for the couple</span>
+            <span className="font-sans-custom text-[9px] text-[#D9B441]/75">wishes for the couple</span>
           </div>
         </div>
       </div>
@@ -324,34 +317,20 @@ export default function WishesPage() {
       <RingMomentBackdrop />
       <FloatingDecor />
 
-      {/* Back to home */}
-      <motion.div
-        initial={{ opacity: 0, x: -12 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6 }}
-        style={{ position: "fixed", top: "1.25rem", left: "1.25rem", zIndex: 50 }}
-      >
-        <Link
-          href="/#wishes"
-          className="flex items-center gap-2 px-4 py-2 rounded-full font-sans-custom text-xs tracking-wide backdrop-blur-md transition-colors hover:bg-white/10"
-          style={{ background: "rgba(15,12,9,0.55)", border: "1px solid rgba(201,165,109,0.25)", color: "rgba(255,255,255,0.75)" }}
-        >
-          <ArrowLeft size={14} /> Back to Home
-        </Link>
-      </motion.div>
+      <BackToHome href="/#wishes" />
 
       <div className="relative" style={{ zIndex: 1 }}>
       {/* Header */}
       <section className="py-16 sm:py-20 px-4 sm:px-6 text-center relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(201,165,109,0.07) 0%, transparent 60%)" }} />
+          style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(217,180,65,0.07) 0%, transparent 60%)" }} />
         <motion.div initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-          <p className="font-sans-custom text-[10px] tracking-[0.45em] uppercase text-[#C9A56D] mb-3">Messages of Love</p>
-          <h1 className="font-script mb-4" style={{ fontSize: "clamp(3rem,10vw,5rem)", color: "#E8D5B0" }}>
+          <p className="font-sans-custom text-[10px] tracking-[0.45em] uppercase text-[#D9B441] mb-3">Messages of Love</p>
+          <h1 className="font-script mb-4" style={{ fontSize: "clamp(3rem,10vw,5rem)", color: "#F2DCA0" }}>
             Wishes Wall
           </h1>
           <div className="divider-gold mx-auto mb-4" style={{ maxWidth: "100px" }} />
-          <p className="font-serif text-base sm:text-lg text-white/50 italic max-w-sm mx-auto">
+          <p className="font-serif text-base sm:text-lg text-white/52 italic max-w-sm mx-auto">
             Leave your heartfelt blessings for {COUPLE.groom} & {COUPLE.bride}
           </p>
         </motion.div>
@@ -363,12 +342,12 @@ export default function WishesPage() {
       <section className="px-4 sm:px-6 max-w-2xl mx-auto mb-12 sm:mb-16">
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
           className="rounded-2xl p-6 sm:p-8"
-          style={{ background: "rgba(201,165,109,0.04)", border: "1px solid rgba(201,165,109,0.18)" }}
+          style={{ background: "rgba(217,180,65,0.04)", border: "1px solid rgba(217,180,65,0.18)" }}
           whileInView={{
             boxShadow: [
-              "0 0 0px rgba(201,165,109,0)",
-              "0 0 32px rgba(201,165,109,0.12)",
-              "0 0 0px rgba(201,165,109,0)",
+              "0 0 0px rgba(217,180,65,0)",
+              "0 0 32px rgba(217,180,65,0.12)",
+              "0 0 0px rgba(217,180,65,0)",
             ],
           }}
           viewport={{ once: false, amount: 0.5 }}
@@ -392,7 +371,7 @@ export default function WishesPage() {
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
                 Thank You!
               </p>
-              <p className="font-sans-custom text-sm text-white/50">Your wish has been added to the wall</p>
+              <p className="font-sans-custom text-sm text-white/52">Your wish has been added to the wall</p>
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -403,7 +382,7 @@ export default function WishesPage() {
                 placeholder="Your name"
                 maxLength={60}
                 className="w-full rounded-xl px-4 py-3 font-sans-custom text-sm text-white placeholder-white/20 outline-none transition-all"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,165,109,0.15)" }}
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(217,180,65,0.15)" }}
               />
 
               <RelationPicker onChange={setRelation} />
@@ -415,24 +394,24 @@ export default function WishesPage() {
                 rows={4}
                 maxLength={500}
                 className="w-full rounded-xl px-4 py-3 font-serif text-base text-white placeholder-white/20 outline-none resize-none leading-relaxed transition-all"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,165,109,0.15)" }}
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(217,180,65,0.15)" }}
               />
               <div className="flex items-center justify-between">
-                <span className="font-sans-custom text-[9px] text-white/22">{message.length}/500</span>
+                <span className="font-sans-custom text-[9px] text-white/52">{message.length}/500</span>
               </div>
 
               {error && (
                 <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                  className="font-sans-custom text-sm text-[#C9A56D] text-center">{error}</motion.p>
+                  className="font-sans-custom text-sm text-[#D9B441] text-center">{error}</motion.p>
               )}
 
               <motion.button type="submit" disabled={submitting || !name.trim() || !relation || !message.trim()}
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                className="w-full py-3.5 rounded-xl font-sans-custom text-[11px] tracking-widest uppercase text-white disabled:opacity-45 flex items-center justify-center gap-2 transition-opacity"
-                style={{ background: "linear-gradient(135deg,#8B5E2E,#C9A56D)" }}>
+                className="w-full py-3.5 rounded-xl font-sans-custom text-[11px] tracking-widest uppercase disabled:opacity-45 flex items-center justify-center gap-2 transition-opacity"
+                style={{ background: "linear-gradient(135deg,#D9B441,#F0D07A)", color: "#2A1F14" }}>
                 {submitting ? (
                   <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                    className="w-4 h-4 rounded-full border-2 border-white border-t-transparent" />
+                    className="w-4 h-4 rounded-full border-2 border-t-transparent" style={{ borderColor: "#2A1F14", borderTopColor: "transparent" }} />
                 ) : (
                   <><Send size={13} /> Send Wishes</>
                 )}
@@ -450,7 +429,7 @@ export default function WishesPage() {
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
             Messages of Love
           </p>
-          <p className="font-sans-custom text-[10px] text-white/30 tracking-widest uppercase">
+          <p className="font-sans-custom text-[10px] text-white/52 tracking-widest uppercase">
             {wishes.length} wish{wishes.length !== 1 ? "es" : ""} · hover a card to read
           </p>
         </motion.div>
@@ -458,20 +437,20 @@ export default function WishesPage() {
         {loading ? (
           <div className="flex justify-center py-20">
             <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-              className="w-8 h-8 rounded-full border-2 border-t-transparent border-[#C9A56D]" />
+              className="w-8 h-8 rounded-full border-2 border-t-transparent border-[#D9B441]" />
           </div>
         ) : wishes.length === 0 ? (
           <div className="text-center py-20 rounded-2xl"
-            style={{ background: "rgba(201,165,109,0.04)", border: "1px solid rgba(201,165,109,0.12)" }}>
+            style={{ background: "rgba(217,180,65,0.04)", border: "1px solid rgba(217,180,65,0.12)" }}>
             <div className="text-4xl mb-3">💌</div>
-            <p className="font-sans-custom text-sm text-white/35">Be the first to leave a wish!</p>
+            <p className="font-sans-custom text-sm text-white/52">Be the first to leave a wish!</p>
           </div>
         ) : (
           /* Tree / comment wall layout */
           <div className="relative">
             {/* vertical connector line */}
             <div className="absolute left-5 top-0 bottom-0 w-px pointer-events-none"
-              style={{ background: "linear-gradient(to bottom, rgba(201,165,109,0.3), rgba(201,165,109,0.05))" }} />
+              style={{ background: "linear-gradient(to bottom, rgba(217,180,65,0.3), rgba(217,180,65,0.05))" }} />
 
             <div className="flex flex-col gap-3 pl-10">
               {wishes.map((wish, i) => (

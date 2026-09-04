@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter, Allura } from "next/font/google";
 import "./globals.css";
+import { COUPLE, SITE, WEDDING_DATE } from "@/constants";
 import GlobalConfetti from "@/components/GlobalConfetti";
 import CursorRibbon from "@/components/CursorRibbon";
 import BackgroundMusic from "@/components/BackgroundMusic";
@@ -29,11 +30,11 @@ const allura = Allura({
 });
 
 export const metadata: Metadata = {
-  title: "Berlin & Jerlin Ashika — Wedding, December 9–10, 2026",
-  description: "Join us as we celebrate the union of Berlin & Jerlin Ashika on December 9–10, 2026.",
+  title: SITE.title,
+  description: SITE.description,
   openGraph: {
-    title: "Berlin & Jerlin Ashika — Wedding",
-    description: "December 9–10, 2026",
+    title: `${COUPLE.groom} & ${COUPLE.bride} — Wedding`,
+    description: WEDDING_DATE.display,
     type: "website",
   },
 };

@@ -4,8 +4,8 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import GiftUsButton from "@/components/GiftUsButton";
-
-const EASE = [0.25, 0.46, 0.45, 0.94] as const;
+import { EASE } from "@/constants/motion";
+import { COUPLE, MEDIA, WEDDING_DATE } from "@/constants";
 
 const fadeUp = (delay: number) => ({
   initial: { opacity: 0, y: 28 },
@@ -40,10 +40,11 @@ export default function HeroSection() {
     >
       {/* Background photo — full-bleed, cropped to fill */}
       <Image
-        src="/images/berlinJerlin.jpeg"
-        alt="Berlin & Jerlin Ashika"
+        src={MEDIA.heroPhoto}
+        alt={`${COUPLE.groom} & ${COUPLE.bride}`}
         fill
-        priority
+        preload
+        quality={90}
         sizes="100vw"
         style={{ objectFit: "cover", objectPosition: "center top", zIndex: 0 }}
       />
@@ -106,7 +107,7 @@ export default function HeroSection() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.62rem",
             letterSpacing: "0.48em",
-            color: "rgba(201,165,109,0.85)",
+            color: "rgba(217,180,65,0.85)",
             textTransform: "uppercase",
             marginBottom: "1.5rem",
           }}
@@ -122,7 +123,7 @@ export default function HeroSection() {
           style={{
             height: "1px",
             width: "60px",
-            background: "rgba(201,165,109,0.6)",
+            background: "rgba(217,180,65,0.6)",
             marginBottom: "2rem",
           }}
         />
@@ -138,7 +139,7 @@ export default function HeroSection() {
             marginBottom: "0.25rem",
           }}
         >
-          Berlin
+          {COUPLE.groom}
         </motion.h1>
 
         {/* Ampersand */}
@@ -148,7 +149,7 @@ export default function HeroSection() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "clamp(0.85rem, 2.5vw, 1.1rem)",
             letterSpacing: "0.28em",
-            color: "#C9A56D",
+            color: "#D9B441",
             fontStyle: "italic",
             margin: "0.6rem 0",
           }}
@@ -167,7 +168,7 @@ export default function HeroSection() {
             marginBottom: "2.5rem",
           }}
         >
-          Jerlin Ashika
+          {COUPLE.bride}
         </motion.h2>
 
         {/* Divider */}
@@ -179,7 +180,7 @@ export default function HeroSection() {
             height: "1px",
             width: "120px",
             background:
-              "linear-gradient(90deg, transparent, rgba(201,165,109,0.5), transparent)",
+              "linear-gradient(90deg, transparent, rgba(217,180,65,0.5), transparent)",
             marginBottom: "2rem",
           }}
         />
@@ -196,7 +197,7 @@ export default function HeroSection() {
             marginBottom: "0.6rem",
           }}
         >
-          December 10, 2026
+          {WEDDING_DATE.display}
         </motion.p>
 
         {/* Gift us */}
@@ -228,7 +229,7 @@ export default function HeroSection() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.58rem",
             letterSpacing: "0.38em",
-            color: "rgba(255,253,249,0.45)",
+            color: "rgba(255,253,249,0.68)",
             textTransform: "uppercase",
           }}
         >
@@ -241,7 +242,7 @@ export default function HeroSection() {
           <ChevronDown
             size={16}
             strokeWidth={1.5}
-            style={{ color: "rgba(201,165,109,0.6)" }}
+            style={{ color: "rgba(217,180,65,0.85)" }}
           />
         </motion.div>
       </motion.button>

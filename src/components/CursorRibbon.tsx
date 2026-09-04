@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-
-const COLORS = ["#C9A56D", "#E8D5B0", "#FAC2BC", "#F58893", "#EE7863", "#FFFDF9", "#F2772F"];
+import { CELEBRATION_COLORS } from "@/constants/palette";
+import { fitCanvasToViewport } from "@/lib/canvas";
 
 interface TrailPoint { x: number; y: number; life: number; }
 interface Sparkle { x: number; y: number; life: number; size: number; rot: number; color: string; }
@@ -42,7 +42,7 @@ function addCracker(cx: number, cy: number) {
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
       life: 1,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      color: CELEBRATION_COLORS[Math.floor(Math.random() * CELEBRATION_COLORS.length)],
     });
   }
 }
@@ -62,7 +62,7 @@ function startLoop(canvas: HTMLCanvasElement) {
       for (let i = 1; i < trail.length; i++) {
         const a = trail[i - 1];
         const b = trail[i];
-        ctx!.strokeStyle = `rgba(201,165,109,${Math.max(0, b.life) * 0.5})`;
+        ctx!.strokeStyle = `rgba(217,180,65,${Math.max(0, b.life) * 0.5})`;
         ctx!.lineWidth = Math.max(0.5, b.life * 4);
         ctx!.lineCap = "round";
         ctx!.beginPath();
@@ -116,15 +116,7 @@ export default function CursorRibbon() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const resize = () => {
-      const DPR = window.devicePixelRatio || 1;
-      canvas.width = window.innerWidth * DPR;
-      canvas.height = window.innerHeight * DPR;
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
-      const ctx = canvas.getContext("2d");
-      if (ctx) ctx.scale(DPR, DPR);
-    };
+    const resize = () => fitCanvasToViewport(canvas);
     resize();
     window.addEventListener("resize", resize);
 
@@ -141,7 +133,7 @@ export default function CursorRibbon() {
           life: 1,
           size: Math.random() * 4 + 3,
           rot: Math.random() * Math.PI,
-          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+          color: CELEBRATION_COLORS[Math.floor(Math.random() * CELEBRATION_COLORS.length)],
         });
       }
       if (now - lastCrackerAt > 450) {

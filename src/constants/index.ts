@@ -1,4 +1,77 @@
-// Re-exports all wedding constants.
-// Existing code continues to import from "@/lib/config".
-// New code should import from "@/constants" instead.
-export * from "@/lib/config";
+// ─────────────────────────────────────────────
+//  Wedding Config — update all values here.
+//  Single source of truth: every component reads names, dates, map links
+//  and the event schedule from here rather than hardcoding them.
+// ─────────────────────────────────────────────
+
+export const COUPLE = {
+  groom: "Berlin",
+  bride: "Jerlin Ashika",
+  groomShort: "Berlin",
+  brideShort: "Jerlin",
+};
+
+export const WEDDING_DATE = {
+  iso: "2026-12-10T09:00:00+05:30", // IST
+  display: "December 10, 2026",
+  displayShort: "Dec 10, 2026",
+  time: "9:00 AM",
+};
+
+// ─── Map links ────────────────────────────────
+export const MAPS = {
+  brideHouse:    "https://goo.gl/maps/guaUbk5yJWDivrP28?g_st=aw",
+  weddingChurch: "https://maps.app.goo.gl/doWzsv87nDVK18Sc6",
+  groomHouse:    "https://maps.app.goo.gl/ToyHtFCFGUwNSDzM9",
+  receptionHall: "https://maps.app.goo.gl/m1ACjjsAbfHrSUjY8",
+};
+
+// ─── Google Drive albums ──────────────────────
+export const DRIVE = {
+  engagementAlbum: "https://drive.google.com/drive/folders/1w_xCWzBJuUtID3Mq9Qype3kO4TzNONxW?usp=sharing",
+  // Add more album folder links here as you get them:
+  // preWeddingAlbum: "https://drive.google.com/...",
+  // weddingAlbum:    "https://drive.google.com/...",
+  // receptionAlbum:  "https://drive.google.com/...",
+};
+
+// ─── Event schedule ───────────────────────────
+export const EVENTS = {
+  brideSide: {
+    label: "Bride's Side",
+    date: WEDDING_DATE.display,
+    timeRange: "9:00 AM – 2:00 PM",
+    items: [
+      { title: "Bride's Home",   time: "9:00 AM",   mapUrl: MAPS.brideHouse,    icon: "🏡", description: "The celebration begins at the bride's family home with traditional ceremonies." },
+      { title: "Wedding Church", time: "~10:00 AM", mapUrl: MAPS.weddingChurch, icon: "⛪", description: `The holy matrimony ceremony uniting ${COUPLE.groom} & ${COUPLE.bride}.` },
+    ],
+  },
+  groomSide: {
+    label: "Groom's Side",
+    date: WEDDING_DATE.display,
+    timeRange: "5:30 PM – 9:00 PM",
+    items: [
+      { title: "Groom's Home",   time: "5:30 PM",  mapUrl: MAPS.groomHouse,    icon: "🏠", description: "The groom's side celebration begins at the family home with a warm welcome." },
+      { title: "Reception Hall", time: "~6:00 PM", mapUrl: MAPS.receptionHall, icon: "🎊", description: "The evening reception — a grand celebration of love, family, and new beginnings." },
+    ],
+  },
+};
+
+// ─── Gift registry ────────────────────────────
+export const GIFT_URL = "https://giftus.io/events/berlin-jerlin-ashika-7tji";
+
+// ─── Media ────────────────────────────────────
+export const MEDIA = {
+  heroPhoto: "/images/berlinJerlin.jpeg",
+  logo: "/images/logo.svg",
+  cupid: "/images/cupid.png",
+  music: "/music/wedding.mp3",
+  storyVideo: "/videos/school-story.mp4",
+  storyScroll: "/images/story/scroll.png",
+};
+
+// ─── Site metadata ────────────────────────────
+export const SITE = {
+  title: `${COUPLE.groom} & ${COUPLE.bride} — Wedding, ${WEDDING_DATE.display}`,
+  description: `Join us as we celebrate the union of ${COUPLE.groom} & ${COUPLE.bride} on ${WEDDING_DATE.display}.`,
+};

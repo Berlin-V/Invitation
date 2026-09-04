@@ -4,6 +4,10 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { EASE } from "@/constants/motion";
+import { COUPLE, MEDIA } from "@/constants";
+import { useScrollPosition } from "@/hooks";
+import type { NavLink } from "@/types";
 
 // Fixed pill nav floats over content — scrollIntoView alone lands a section's
 // top edge right under it, which on a small mobile screen can look like the
@@ -12,25 +16,19 @@ import { Menu, X } from "lucide-react";
 // scroll to the same, correctly-offset position.
 export const NAV_SCROLL_OFFSET = 90;
 
-const NAV_LINKS = [
-  { label: "Story",    href: "#story"    },
-  { label: "Events",   href: "#events"   },
-  { label: "Gallery",  href: "#gallery"  },
-  { label: "Wishes",   href: "/wishes"   },
-] as const;
+// Hash entries scroll to a home-page section; path entries route to a page.
+const NAV_LINKS: NavLink[] = [
+  { label: "Story",   href: "#story"   },
+  { label: "Events",  href: "#events"  },
+  { label: "Gallery", href: "#gallery" },
+  { label: "Wishes",  href: "/wishes"  },
+];
 
 export default function Navbar() {
   const router = useRouter();
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
-
-  // Scroll state
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const { pastThreshold: scrolled } = useScrollPosition(60);
 
   // Active section tracking
   useEffect(() => {
@@ -81,9 +79,13 @@ export default function Navbar() {
           cursor: "pointer",
         }}
       >
+        {/* Vector logo — plain <img> on purpose: an SVG is already resolution-
+            independent, and next/image will not optimize SVG without
+            dangerouslyAllowSVG. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/images/logo.svg"
-          alt="Berlin & Jerlin Ashika"
+          src={MEDIA.logo}
+          alt={`${COUPLE.groom} & ${COUPLE.bride}`}
           style={{ height: "46px", width: "auto", display: "block" }}
         />
       </button>
@@ -96,7 +98,7 @@ export default function Navbar() {
         className="fixed top-0 left-0 right-0 z-40 flex flex-col items-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+        transition={{ delay: 0.3, duration: 0.8, ease: EASE }}
       >
       {/* Floating glass pill — a fixed dark tint + light text keeps it legible
           over both the dark hero photo and the light sections below, since the
@@ -136,7 +138,7 @@ export default function Navbar() {
                   fontSize: "0.8rem",
                   letterSpacing: "0.1em",
                   whiteSpace: "nowrap",
-                  color: isActive ? "#E8D5B0" : "rgba(255,253,249,0.7)",
+                  color: isActive ? "#F2DCA0" : "rgba(255,253,249,0.7)",
                   transition: "color 0.3s ease",
                 }}
               >
@@ -145,7 +147,7 @@ export default function Navbar() {
                   <motion.span
                     layoutId="nav-indicator"
                     className="absolute -bottom-1 left-1/2 -translate-x-1/2 block rounded-full"
-                    style={{ width: "3px", height: "3px", background: "#C9A56D" }}
+                    style={{ width: "3px", height: "3px", background: "#D9B441" }}
                   />
                 )}
               </button>
@@ -181,7 +183,7 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.3, ease: EASE }}
             style={{
               overflow: "hidden",
               marginTop: "0.5rem",
@@ -209,7 +211,7 @@ export default function Navbar() {
                     fontFamily: "var(--font-cormorant), Georgia, serif",
                     fontSize: "1rem",
                     letterSpacing: "0.1em",
-                    color: activeSection === link.href ? "#E8D5B0" : "rgba(255,253,249,0.8)",
+                    color: activeSection === link.href ? "#F2DCA0" : "rgba(255,253,249,0.8)",
                   }}
                 >
                   {link.label}

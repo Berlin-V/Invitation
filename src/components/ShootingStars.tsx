@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { fitCanvasToViewport } from "@/lib/canvas";
 
 interface Star {
   x: number;
@@ -33,13 +34,7 @@ export default function ShootingStars() {
     let spawnTimer: ReturnType<typeof setTimeout>;
 
     const resize = () => {
-      const DPR = window.devicePixelRatio || 1;
-      canvas.width = window.innerWidth * DPR;
-      canvas.height = window.innerHeight * DPR;
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(DPR, DPR);
+      fitCanvasToViewport(canvas);
 
       const count = Math.round((window.innerWidth * window.innerHeight) / 16000);
       stars = Array.from({ length: count }, () => ({
@@ -77,7 +72,7 @@ export default function ShootingStars() {
       for (const s of stars) {
         const twinkle = 0.35 + Math.sin(t * s.speed + s.phase) * 0.35;
         ctx!.globalAlpha = Math.max(0, twinkle);
-        ctx!.fillStyle = "#C9A56D";
+        ctx!.fillStyle = "#D9B441";
         ctx!.beginPath();
         ctx!.arc(s.x, s.y, s.size, 0, Math.PI * 2);
         ctx!.fill();
@@ -88,8 +83,8 @@ export default function ShootingStars() {
         const tailX = s.x - s.vx * 5;
         const tailY = s.y - s.vy * 5;
         const gradient = ctx!.createLinearGradient(s.x, s.y, tailX, tailY);
-        gradient.addColorStop(0, `rgba(232,213,176,${s.life})`);
-        gradient.addColorStop(1, "rgba(201,165,109,0)");
+        gradient.addColorStop(0, `rgba(242,220,160,${s.life})`);
+        gradient.addColorStop(1, "rgba(217,180,65,0)");
         ctx!.strokeStyle = gradient;
         ctx!.lineWidth = 1.6;
         ctx!.lineCap = "round";

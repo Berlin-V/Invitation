@@ -10,18 +10,18 @@ import HeroSection from "@/components/sections/HeroSection";
 import CountdownSection from "@/components/sections/CountdownSection";
 import StorySection from "@/components/sections/StorySection";
 import EventsSection from "@/components/sections/EventsSection";
-import VideoSection from "@/components/sections/VideoSection";
 import GallerySection from "@/components/sections/GallerySection";
 import WishesTreeSection from "@/components/sections/WishesTreeSection";
 import CoupleCard3D from "@/components/sections/CoupleCard3D";
 import FooterSection from "@/components/sections/FooterSection";
 import ChatBot from "@/components/ChatBot";
-
-type Phase = "loading" | "envelope" | "site";
+import { EASE } from "@/constants/motion";
+import { COUPLE, MEDIA, WEDDING_DATE } from "@/constants";
+import type { AnimationPhase } from "@/types";
 
 export default function HomePage() {
   const [ready, setReady] = useState(false);
-  const [phase, setPhase] = useState<Phase>("loading");
+  const [phase, setPhase] = useState<AnimationPhase>("loading");
 
   useEffect(() => {
     // Runs only on the client, after hydration is complete.
@@ -77,15 +77,34 @@ export default function HomePage() {
         className="fixed inset-0 z-[100] flex flex-col items-center justify-center"
         style={{ backgroundColor: "#0F0C09" }}
       >
+        {/* Mirrors the loading screen's mark and date so the hand-off to the
+            real intro isn't a visible jump. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={MEDIA.logo}
+          alt={`${COUPLE.groom} & ${COUPLE.bride}`}
+          style={{ width: "clamp(160px, 40vw, 240px)", height: "auto" }}
+        />
+        <div
+          style={{
+            height: "1px",
+            width: "80px",
+            background: "rgba(217,180,65,0.4)",
+            marginTop: "1.5rem",
+          }}
+        />
         <p
           style={{
-            fontFamily: "var(--font-allura), cursive",
-            fontSize: "clamp(3rem, 10vw, 4.5rem)",
-            color: "#C9A56D",
-            lineHeight: 1,
+            marginTop: "1.35rem",
+            fontFamily: "var(--font-cormorant), Georgia, serif",
+            fontSize: "clamp(0.82rem, 3vw, 1rem)",
+            letterSpacing: "0.3em",
+            color: "#F2DCA0",
+            textTransform: "uppercase",
+            whiteSpace: "nowrap",
           }}
         >
-          B & J
+          {WEDDING_DATE.display}
         </p>
       </div>
     );
@@ -107,7 +126,7 @@ export default function HomePage() {
           key="site"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+          transition={{ duration: 1.2, ease: EASE }}
         >
           <Navbar />
           <main>
@@ -116,7 +135,6 @@ export default function HomePage() {
             <CountdownSection />
             <StorySection />
             <EventsSection />
-            <VideoSection />
             <GallerySection />
             <WishesTreeSection />
           </main>
