@@ -11,13 +11,13 @@
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
-  background-color: #0F0C09; /* prevents white flash during loading → site transition */
+  background-color: #0f0c09; /* prevents white flash during loading → site transition */
 }
 
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
-  font-family: var(--font-family-body);
+  font-family: var(--font-sans-custom);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -37,55 +37,8 @@ body {
 
 /* ── Selection ────────────────────────────────────────── */
 ::selection {
-  background: rgba(201, 165, 109, 0.18);
+  background: rgba(217,180,65, 0.18);
   color: var(--color-text);
-}
-
-/* ── Font utilities ───────────────────────────────────── */
-.font-heading {
-  font-family: var(--font-family-heading);
-}
-.font-body {
-  font-family: var(--font-family-body);
-}
-.font-names {
-  font-family: var(--font-family-names);
-}
-
-/* ── Tracking utilities ───────────────────────────────── */
-.tracking-editorial {
-  letter-spacing: 0.38em;
-}
-.tracking-widest-xl {
-  letter-spacing: 0.28em;
-}
-
-/* ── Section spacing ──────────────────────────────────── */
-.section-pad {
-  padding-top: var(--spacing-section);
-  padding-bottom: var(--spacing-section);
-}
-
-@media (max-width: 768px) {
-  .section-pad {
-    padding-top: var(--spacing-section-sm);
-    padding-bottom: var(--spacing-section-sm);
-  }
-}
-
-/* ── Glass surfaces ───────────────────────────────────── */
-.glass {
-  background: rgba(255, 253, 249, 0.72);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(201, 165, 109, 0.22);
-}
-
-.glass-dark {
-  background: rgba(74, 64, 58, 0.65);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(201, 165, 109, 0.18);
 }
 
 /* ── Dividers ─────────────────────────────────────────── */
@@ -94,9 +47,9 @@ body {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(201, 165, 109, 0.33),
-    #c9a56d,
-    rgba(201, 165, 109, 0.33),
+    rgba(217,180,65, 0.33),
+    #D9B441,
+    rgba(217,180,65, 0.33),
     transparent
   );
 }
@@ -106,68 +59,53 @@ body {
   background: linear-gradient(90deg, transparent, var(--color-border), transparent);
 }
 
-/* ── Image reveal container ───────────────────────────── */
-.img-reveal {
-  overflow: hidden;
-}
-
-/* ── Shimmer text ─────────────────────────────────────── */
-.shimmer-text {
+/* The warm-accent divider used on the dark /gallery and /story pages. */
+.divider-orange {
+  height: 1px;
   background: linear-gradient(
     90deg,
-    var(--color-gold) 0%,
-    var(--color-gold-light) 40%,
-    var(--color-gold) 60%,
-    var(--color-gold-dark) 100%
+    transparent,
+    color-mix(in srgb, var(--color-orange) 35%, transparent),
+    var(--color-orange),
+    color-mix(in srgb, var(--color-orange) 35%, transparent),
+    transparent
   );
-  background-size: 200% auto;
+}
+
+/* ── Dark-page surfaces ───────────────────────────────── */
+/* Frosted card for the dark subpages. Referenced by /gallery, /story and
+   which rendered as flat unstyled blocks while it was undefined. */
+.glass-card {
+  background: rgba(255, 253, 249, 0.045);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid color-mix(in srgb, var(--color-orange) 18%, transparent);
+  border-radius: 16px;
+  transition:
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+/* ── Gradient headings ────────────────────────────────── */
+.text-orange-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--color-orange-deep),
+    var(--color-orange),
+    var(--color-orange-light)
+  );
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: shimmer 3s linear infinite;
-}
-
-/* ── Keyframe animations ──────────────────────────────── */
-@keyframes petal-fall {
-  0% {
-    transform: translateY(-10px) rotate(0deg) translateX(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(110vh) rotate(720deg) translateX(60px);
-    opacity: 0;
-  }
-}
-
-@keyframes float-gentle {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% center;
-  }
-  100% {
-    background-position: 200% center;
-  }
-}
-
-.animate-float {
-  animation: float-gentle 4s ease-in-out infinite;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 /* framer-motion can't animate a gradient background, so the Gift Us
    button's hover fill is a plain CSS transition instead. */
 .gift-us-button {
-  background: rgba(201, 165, 109, 0.14);
+  background: rgba(217,180,65, 0.14);
   transition: background 0.3s ease;
 }
 .gift-us-button:hover {
-  background: linear-gradient(135deg, #c9a56d, #f2cb8e);
+  background: linear-gradient(135deg, #D9B441, #F7D98F);
 }

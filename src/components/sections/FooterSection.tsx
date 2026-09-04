@@ -1,6 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { EASE } from "@/constants/motion";
+import { COUPLE, WEDDING_DATE } from "@/constants";
 
 export default function FooterSection() {
   const year = new Date().getFullYear();
@@ -17,7 +19,7 @@ export default function FooterSection() {
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] }}
+        transition={{ duration: 0.9, ease: EASE }}
         className="flex flex-col items-center"
       >
         {/* Gold ornament line */}
@@ -25,7 +27,7 @@ export default function FooterSection() {
           style={{
             width: "1px",
             height: "48px",
-            background: "linear-gradient(to bottom, transparent, rgba(201,165,109,0.5))",
+            background: "linear-gradient(to bottom, transparent, rgba(217,180,65,0.5))",
             marginBottom: "1.5rem",
           }}
         />
@@ -35,12 +37,12 @@ export default function FooterSection() {
           style={{
             fontFamily: "var(--font-allura), cursive",
             fontSize: "clamp(2.2rem, 6vw, 3.2rem)",
-            color: "#C9A56D",
+            color: "#D9B441",
             lineHeight: 1.1,
             marginBottom: "0.5rem",
           }}
         >
-          Berlin & Jerlin Ashika
+          {COUPLE.groom} & {COUPLE.bride}
         </p>
 
         {/* Gold divider */}
@@ -48,7 +50,7 @@ export default function FooterSection() {
           style={{
             height: "1px",
             width: "60px",
-            background: "rgba(201,165,109,0.35)",
+            background: "rgba(217,180,65,0.35)",
             margin: "1.25rem auto",
           }}
         />
@@ -59,11 +61,11 @@ export default function FooterSection() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.7rem",
             letterSpacing: "0.3em",
-            color: "rgba(201,165,109,0.5)",
+            color: "rgba(217,180,65,0.75)",
             textTransform: "uppercase",
           }}
         >
-          December 10, 2026
+          {WEDDING_DATE.display}
         </p>
 
         {/* Bottom line */}
@@ -71,7 +73,7 @@ export default function FooterSection() {
           style={{
             height: "1px",
             width: "40px",
-            background: "rgba(201,165,109,0.18)",
+            background: "rgba(217,180,65,0.18)",
             margin: "2.5rem auto 1.5rem",
           }}
         />
@@ -82,10 +84,10 @@ export default function FooterSection() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.6rem",
             letterSpacing: "0.18em",
-            color: "rgba(201,165,109,0.25)",
+            color: "rgba(217,180,65,0.75)",
           }}
         >
-          © {year} Berlin & Jerlin Ashika. With love.
+          © {year} {COUPLE.groom} & {COUPLE.bride}. With love.
         </p>
       </motion.div>
     </footer>

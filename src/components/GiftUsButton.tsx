@@ -3,9 +3,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Gift, X, ExternalLink, Heart } from "lucide-react";
-
-const EASE = [0.25, 0.46, 0.45, 0.94] as const;
-const GIFT_URL = "https://giftus.io/events/berlin-jerlin-ashika-7tji";
+import { EASE } from "@/constants/motion";
+import { GIFT_URL } from "@/constants";
 
 function GiftModal({ onClose }: { onClose: () => void }) {
   return (
@@ -40,7 +39,7 @@ function GiftModal({ onClose }: { onClose: () => void }) {
           className="flex items-center justify-between"
           style={{
             padding: "0.9rem 1.25rem",
-            borderBottom: "1px solid rgba(201,165,109,0.2)",
+            borderBottom: "1px solid rgba(217,180,65,0.2)",
             background: "#FFFDF9",
           }}
         >
@@ -61,14 +60,14 @@ function GiftModal({ onClose }: { onClose: () => void }) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Open in a new tab"
-              style={{ color: "#8A7C73" }}
+              style={{ color: "#796D65" }}
             >
               <ExternalLink size={16} strokeWidth={1.5} />
             </a>
             <button
               onClick={onClose}
               aria-label="Close"
-              style={{ background: "none", border: "none", cursor: "pointer", color: "#8A7C73" }}
+              style={{ background: "none", border: "none", cursor: "pointer", color: "#796D65" }}
             >
               <X size={18} strokeWidth={1.5} />
             </button>
@@ -111,7 +110,7 @@ function ClickBurst() {
             position: "absolute",
             left: "50%",
             top: "50%",
-            color: i % 2 === 0 ? "#F58893" : "#E8D5B0",
+            color: i % 2 === 0 ? "#F58893" : "#F2DCA0",
           }}
         >
           <Heart size={14} fill="currentColor" strokeWidth={0} />
@@ -142,7 +141,7 @@ export default function GiftUsButton({ className, style }: GiftUsButtonProps) {
       <motion.span
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
-        style={{ borderRadius: "999px", border: "1.5px solid rgba(201,165,109,0.6)" }}
+        style={{ borderRadius: "999px", border: "1.5px solid rgba(217,180,65,0.6)" }}
         animate={{ scale: [1, 1.18, 1], opacity: [0.55, 0, 0.55] }}
         transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
       />
@@ -153,7 +152,7 @@ export default function GiftUsButton({ className, style }: GiftUsButtonProps) {
         whileHover="hover"
         whileTap={{ scale: 0.95 }}
         variants={{
-          rest: { scale: 1, color: "#F2CB8E" },
+          rest: { scale: 1, color: "#F7D98F" },
           hover: { scale: 1.06, color: "#2A1F14" },
         }}
         transition={{ duration: 0.3, ease: EASE }}

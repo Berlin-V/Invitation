@@ -3,10 +3,10 @@
 import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Pause, Play, X } from "lucide-react";
-
-const EASE = [0.25, 0.46, 0.45, 0.94] as const;
-
-const STORY_VIDEO_SRC = "/videos/school-story.mp4";
+import Image from "next/image";
+import Link from "next/link";
+import { EASE } from "@/constants/motion";
+import { MEDIA } from "@/constants";
 
 // ── Rolled scroll — the closed state that invites a tap ─────────────────────
 function RolledScroll({ onOpen }: { onOpen: () => void }) {
@@ -26,7 +26,9 @@ function RolledScroll({ onOpen }: { onOpen: () => void }) {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.94 }}
         style={{
-          width: "min(88vw, 380px)",
+          // The source art is 545x458; anything wider than ~272px CSS would
+          // upscale it on a 2x display and lose the crisp edges.
+          width: "min(70vw, 272px)",
           background: "none",
           border: "none",
           cursor: "pointer",
@@ -34,9 +36,13 @@ function RolledScroll({ onOpen }: { onOpen: () => void }) {
           filter: "drop-shadow(0 18px 30px rgba(74,54,26,0.32))",
         }}
       >
-        <img
-          src="/images/story/scroll.png"
+        <Image
+          src={MEDIA.storyScroll}
           alt="A rolled, sealed scroll"
+          width={545}
+          height={458}
+          quality={90}
+          sizes="272px"
           style={{ width: "100%", height: "auto", display: "block" }}
         />
       </motion.button>
@@ -47,7 +53,7 @@ function RolledScroll({ onOpen }: { onOpen: () => void }) {
           fontFamily: "var(--font-cormorant), Georgia, serif",
           fontSize: "0.85rem",
           fontStyle: "italic",
-          color: "rgba(74,64,58,0.6)",
+          color: "#796D65",
         }}
       >
         Tap the seal to unroll our story
@@ -128,7 +134,7 @@ function VideoOverlay({ onClose }: { onClose: () => void }) {
         >
           <video
             ref={videoRef}
-            src={STORY_VIDEO_SRC}
+            src={MEDIA.storyVideo}
             autoPlay
             playsInline
             onEnded={() => setPlaying(false)}
@@ -193,7 +199,7 @@ export default function StorySection() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.62rem",
             letterSpacing: "0.46em",
-            color: "#C9A56D",
+            color: "#8F6410",
             textTransform: "uppercase",
             marginBottom: "1rem",
           }}
@@ -215,6 +221,33 @@ export default function StorySection() {
       </motion.div>
 
       <RolledScroll onOpen={() => setVideoOpen(true)} />
+
+      {/* Deep link to the full timeline page */}
+      <motion.div
+        className="text-center"
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
+        style={{ marginTop: "clamp(2.5rem, 6vw, 3.5rem)" }}
+      >
+        <Link
+          href="/story"
+          style={{
+            display: "inline-block",
+            color: "#B08A2E",
+            fontFamily: "var(--font-cormorant), Georgia, serif",
+            fontSize: "0.66rem",
+            letterSpacing: "0.32em",
+            textTransform: "uppercase",
+            padding: "0.75rem 2.25rem",
+            textDecoration: "none",
+            border: "1px solid rgba(217,180,65,0.45)",
+          }}
+        >
+          Read Our Timeline
+        </Link>
+      </motion.div>
 
       <AnimatePresence>
         {videoOpen && <VideoOverlay onClose={() => setVideoOpen(false)} />}

@@ -2,30 +2,10 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Trash2, RotateCcw, Pencil, Check, X } from "lucide-react";
-
-interface Wish {
-  id: string;
-  name: string;
-  relation: string;
-  message: string;
-  createdAt: string;
-  deleted?: boolean;
-}
+import { wishRelationshipLabel, wishSideLabel } from "@/lib/wish-relation";
+import type { Wish } from "@/types";
 
 const SECRET_KEY = "wed_admin_secret";
-
-function sideLabel(relation: string): string {
-  if (relation.startsWith("Groom's")) return "Groom";
-  if (relation.startsWith("Bride's")) return "Bride";
-  return "Groom & Bride";
-}
-
-function relationshipLabel(relation: string): string {
-  if (relation.startsWith("Groom's")) return relation.slice("Groom's ".length);
-  if (relation.startsWith("Bride's")) return relation.slice("Bride's ".length);
-  if (relation.endsWith(" of the Couple")) return relation.slice(0, -" of the Couple".length);
-  return relation;
-}
 
 async function fetchWishes(secret: string): Promise<Wish[]> {
   const res = await fetch("/api/wishes/admin", { headers: { "x-admin-secret": secret } });
@@ -63,12 +43,15 @@ export default function EditWishesPage() {
     }
   }, []);
 
+  // Restoring the remembered passcode has to happen after hydration: reading
+  // sessionStorage during the first client render would disagree with the
+  // server HTML (which always renders the gate) and break hydration.
   useEffect(() => {
     const stored = sessionStorage.getItem(SECRET_KEY);
-    if (stored) {
-      setSecret(stored);
-      load(stored);
-    }
+    if (!stored) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSecret(stored);
+    load(stored);
   }, [load]);
 
   const handleUnlock = async (e: React.FormEvent) => {
@@ -136,7 +119,7 @@ export default function EditWishesPage() {
     width: "100%",
     padding: "0.4rem 0.6rem",
     borderRadius: "6px",
-    border: "1px solid rgba(201,165,109,0.4)",
+    border: "1px solid rgba(217,180,65,0.4)",
     fontFamily: "var(--font-inter), sans-serif",
     fontSize: "0.85rem",
     background: "#FFFDF9",
@@ -154,7 +137,7 @@ export default function EditWishesPage() {
           style={{
             width: "min(90vw, 340px)",
             background: "#FFFDF9",
-            border: "1px solid rgba(201,165,109,0.3)",
+            border: "1px solid rgba(217,180,65,0.3)",
             borderRadius: "14px",
             padding: "2rem 1.75rem",
             textAlign: "center",
@@ -165,7 +148,7 @@ export default function EditWishesPage() {
               fontFamily: "var(--font-cormorant), Georgia, serif",
               fontSize: "0.62rem",
               letterSpacing: "0.32em",
-              color: "#C9A56D",
+              color: "#8F6410",
               textTransform: "uppercase",
               marginBottom: "0.75rem",
             }}
@@ -192,8 +175,9 @@ export default function EditWishesPage() {
               padding: "0.55rem",
               borderRadius: "8px",
               border: "none",
-              background: "#C9A56D",
-              color: "#FFFDF9",
+              background: "#D9B441",
+              // Cream on the bright gold is only ~2:1; dark ink reads at 8:1.
+              color: "#2A1F14",
               fontSize: "0.8rem",
               letterSpacing: "0.08em",
               cursor: checking ? "default" : "pointer",
@@ -219,7 +203,7 @@ export default function EditWishesPage() {
       >
         Wishes
       </h1>
-      <p style={{ fontFamily: "var(--font-inter), sans-serif", fontSize: "0.8rem", color: "#8A7C73", marginBottom: "1.5rem" }}>
+      <p style={{ fontFamily: "var(--font-inter), sans-serif", fontSize: "0.8rem", color: "#796D65", marginBottom: "1.5rem" }}>
         {wishes ? `${wishes.length} wish${wishes.length === 1 ? "" : "es"}` : "Loading…"}
       </p>
 
@@ -227,10 +211,10 @@ export default function EditWishesPage() {
         <p style={{ color: "#C0392B", fontSize: "0.85rem", marginBottom: "1rem" }}>{loadError}</p>
       )}
 
-      <div style={{ overflowX: "auto", borderRadius: "12px", border: "1px solid rgba(201,165,109,0.25)" }}>
+      <div style={{ overflowX: "auto", borderRadius: "12px", border: "1px solid rgba(217,180,65,0.25)" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", background: "#FFFDF9", minWidth: "720px" }}>
           <thead>
-            <tr style={{ background: "rgba(201,165,109,0.12)" }}>
+            <tr style={{ background: "rgba(217,180,65,0.12)" }}>
               {["Name", "You're Here For", "Relationship", "Message", "Submitted", ""].map((h) => (
                 <th
                   key={h}
@@ -241,7 +225,7 @@ export default function EditWishesPage() {
                     fontSize: "0.68rem",
                     letterSpacing: "0.12em",
                     textTransform: "uppercase",
-                    color: "#8A7C73",
+                    color: "#796D65",
                   }}
                 >
                   {h}
@@ -257,7 +241,7 @@ export default function EditWishesPage() {
                 <tr
                   key={w.id}
                   style={{
-                    borderTop: "1px solid rgba(201,165,109,0.15)",
+                    borderTop: "1px solid rgba(217,180,65,0.15)",
                     opacity: w.deleted ? 0.5 : 1,
                   }}
                 >
@@ -295,12 +279,12 @@ export default function EditWishesPage() {
                         onChange={(e) => setDraft((d) => ({ ...d, relation: e.target.value }))}
                       />
                     ) : (
-                      <span style={{ fontSize: "0.85rem", color: "#8A7C73" }}>{sideLabel(w.relation)}</span>
+                      <span style={{ fontSize: "0.85rem", color: "#796D65" }}>{wishSideLabel(w.relation)}</span>
                     )}
                   </td>
                   <td style={{ padding: "0.75rem 1rem", verticalAlign: "top" }}>
-                    <span style={{ fontSize: "0.85rem", color: "#8A7C73" }}>
-                      {relationshipLabel(isEditing ? draft.relation : w.relation)}
+                    <span style={{ fontSize: "0.85rem", color: "#796D65" }}>
+                      {wishRelationshipLabel(isEditing ? draft.relation : w.relation)}
                     </span>
                   </td>
                   <td style={{ padding: "0.75rem 1rem", verticalAlign: "top", maxWidth: "360px" }}>
@@ -315,7 +299,7 @@ export default function EditWishesPage() {
                     )}
                   </td>
                   <td style={{ padding: "0.75rem 1rem", verticalAlign: "top", whiteSpace: "nowrap" }}>
-                    <span style={{ fontSize: "0.75rem", color: "#8A7C73" }}>
+                    <span style={{ fontSize: "0.75rem", color: "#796D65" }}>
                       {new Date(w.createdAt).toLocaleDateString()}
                     </span>
                   </td>
@@ -378,8 +362,8 @@ const iconBtnStyle: React.CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
   borderRadius: "6px",
-  border: "1px solid rgba(201,165,109,0.35)",
+  border: "1px solid rgba(217,180,65,0.35)",
   background: "#FFFDF9",
-  color: "#8A7C73",
+  color: "#796D65",
   cursor: "pointer",
 };

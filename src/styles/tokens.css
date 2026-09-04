@@ -5,17 +5,14 @@
  */
 
 @theme {
-  /* ── Typography families ─────────────────────────────── */
-  --font-family-heading: var(--font-cormorant), "Georgia", serif;
-  --font-family-body: var(--font-inter), -apple-system, sans-serif;
-  --font-family-names: var(--font-allura), cursive;
-
-  /* Same three families, exposed under the class names some pages already
-     reference (font-serif/font-script/font-sans-custom) — overrides
-     Tailwind's generic default font-serif and defines the other two, so
-     every page renders the same brand fonts instead of a fallback stack. */
-  --font-serif: var(--font-cormorant), "Georgia", serif;
-  --font-script: var(--font-allura), cursive;
+  /* ── Typography ──────────────────────────────────────────
+     next/font injects the raw --font-cormorant / --font-allura / --font-inter
+     variables on <html>; these three names are what Tailwind turns into the
+     font-serif / font-script / font-sans-custom utilities the markup uses.
+     Defining font-serif here also overrides Tailwind's generic default, so a
+     page that reaches for it still gets the brand serif. */
+  --font-serif:       var(--font-cormorant), "Georgia", serif;
+  --font-script:      var(--font-allura), cursive;
   --font-sans-custom: var(--font-inter), -apple-system, sans-serif;
 
   /* ── Palette ─────────────────────────────────────────── */
@@ -23,18 +20,30 @@
   --color-bg-secondary: #F8F4EF;
   --color-surface:      #F2ECE4;
   --color-text:         #4A403A;
-  --color-muted:        #8A7C73;
+  --color-muted:        #796D65;
 
-  --color-gold:       #C9A56D;
-  --color-gold-light: #E8D5B0;
-  --color-gold-dark:  #A8854A;
+  /* A bright metallic gold scale. The previous base was #C9A56D, which at 46%
+     saturation read dusty rather than gold; this one sits at 67% and gains
+     contrast on the dark sections too (9.8:1 vs 8.4:1).
+       --color-gold      decorative only: dividers, borders, strokes, the seal.
+                         Just 1.8:1 on the cream grounds, so never use it for
+                         text there.
+       --color-gold-text the readable counterpart for small text on cream
+                         (5.2:1 on #FFFDF9, 4.8:1 on #F8F4EF). Deliberately
+                         deeper: a gold bright enough to look bright on cream
+                         cannot also be legible on it. */
+  --color-gold:       #D9B441;
+  --color-gold-light: #F2DCA0;
+  --color-gold-dark:  #B08A2E;
+  --color-gold-text:  #8F6410;
 
   --color-border: #E8E0D5;
 
-  /* ── Spacing scale (extends Tailwind's default) ──────── */
-  --spacing-section:    8rem;   /* desktop section padding  */
-  --spacing-section-sm: 5rem;   /* mobile section padding   */
-
-  /* ── Border radii ────────────────────────────────────── */
-  --radius-card: 2px;
+  /* Warm accent for the deeper /gallery and /story pages, which sit
+     on a dark ground and read warmer than the cream home sections. Those
+     pages referenced `--orange` before it was ever defined, so every
+     `text-[var(--orange)]` on them resolved to an invalid color. */
+  --color-orange:       #E9A23B;
+  --color-orange-light: #F7D98F;
+  --color-orange-deep:  #C97F1E;
 }

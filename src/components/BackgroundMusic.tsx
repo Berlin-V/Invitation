@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Volume2, VolumeX } from "lucide-react";
+import { MEDIA } from "@/constants";
 
 export default function BackgroundMusic() {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -64,7 +65,7 @@ export default function BackgroundMusic() {
 
   return (
     <>
-      <audio ref={audioRef} src="/music/wedding.mp3" loop preload="auto" playsInline />
+      <audio ref={audioRef} src={MEDIA.music} loop preload="auto" playsInline />
       <motion.button
         onClick={toggle}
         whileHover={{ scale: 1.08 }}
@@ -86,7 +87,7 @@ export default function BackgroundMusic() {
           backdropFilter: "blur(20px) saturate(180%)",
           WebkitBackdropFilter: "blur(20px) saturate(180%)",
           border: "1px solid rgba(255,253,249,0.15)",
-          color: "#E8D5B0",
+          color: "#F2DCA0",
           cursor: "pointer",
         }}
       >

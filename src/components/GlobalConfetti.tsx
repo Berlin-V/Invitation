@@ -1,11 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-
-const COLORS = [
-  "#C9A56D", "#E8D5B0", "#FAC2BC", "#F58893",
-  "#EE7863", "#FFFDF9", "#F2772F", "#C9A56D",
-];
+import { CELEBRATION_COLORS } from "@/constants/palette";
+import { fitCanvasToViewport } from "@/lib/canvas";
 
 interface Particle {
   x: number; y: number;
@@ -30,7 +27,7 @@ function addBurst(cx: number, cy: number) {
       x: cx, y: cy,
       vx: (Math.random() - 0.5) * 10,
       vy: -(Math.random() * 7 + 3),
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      color: CELEBRATION_COLORS[Math.floor(Math.random() * CELEBRATION_COLORS.length)],
       life: 1,
       decay: 0.018 + Math.random() * 0.012,
       size: Math.random() * 5 + 2,
@@ -91,15 +88,7 @@ export default function GlobalConfetti() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const resize = () => {
-      const DPR = window.devicePixelRatio || 1;
-      canvas.width = window.innerWidth * DPR;
-      canvas.height = window.innerHeight * DPR;
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
-      const ctx = canvas.getContext("2d");
-      if (ctx) ctx.scale(DPR, DPR);
-    };
+    const resize = () => fitCanvasToViewport(canvas);
     resize();
     window.addEventListener("resize", resize);
 
@@ -113,6 +102,9 @@ export default function GlobalConfetti() {
       document.removeEventListener("click", onClick);
       window.removeEventListener("resize", resize);
       cancelAnimationFrame(rafId);
+      // `particles` lives outside the component, so leftovers would be drawn
+      // again on the next mount. CursorRibbon already resets its arrays here.
+      particles = [];
     };
   }, []);
 

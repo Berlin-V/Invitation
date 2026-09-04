@@ -4,8 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, Heart } from "lucide-react";
-
-interface Msg { role: "user" | "assistant"; text: string; }
+import { COUPLE, MEDIA } from "@/constants";
+import type { ChatMessage } from "@/types";
 
 const CUPID_GRADIENT = "linear-gradient(135deg, #C0392B, #E4572E, #F97316, #FBBF24)";
 
@@ -83,8 +83,8 @@ function FloatingHearts() {
 
 export default function ChatBot() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", text: "Hi, I'm Berlin's and Ashi's Cupid 💘 Ask me about them or the events — I'll help you out with that!" },
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    { role: "assistant", text: `Hi, I'm ${COUPLE.groomShort}'s and Ashi's Cupid 💘 Ask me about them or the events — I'll help you out with that!` },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -114,7 +114,7 @@ export default function ChatBot() {
   return (
     <>
       <motion.button
-        className="fixed bottom-5 right-5 z-50 w-16 h-16 rounded-full flex items-center justify-center chatbot-bubble"
+        className="fixed bottom-5 right-5 z-50 w-16 h-16 rounded-full flex items-center justify-center"
         style={
           open
             ? { background: CUPID_GRADIENT, border: "2px solid rgba(255,255,255,0.25)", boxShadow: "0 4px 20px rgba(0,0,0,0.3)" }
@@ -134,7 +134,7 @@ export default function ChatBot() {
             transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
           >
             <Image
-              src="/images/cupid.png"
+              src={MEDIA.cupid}
               alt="Cupid"
               fill
               sizes="64px"
@@ -185,7 +185,7 @@ export default function ChatBot() {
                   transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
                 >
                   <Image
-                    src="/images/cupid.png"
+                    src={MEDIA.cupid}
                     alt="Cupid"
                     fill
                     sizes="48px"
