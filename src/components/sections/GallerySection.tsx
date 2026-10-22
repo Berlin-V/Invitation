@@ -50,7 +50,7 @@ function Lightbox({ images, activeIndex, onClose, onNext, onPrev }: LightboxProp
           top: "1.5rem",
           right: "1.5rem",
           background: "rgba(255,253,249,0.08)",
-          border: "1px solid rgba(217,180,65,0.2)",
+          border: "1px solid rgba(240,188,63,0.2)",
           borderRadius: "50%",
           width: "40px",
           height: "40px",
@@ -75,7 +75,7 @@ function Lightbox({ images, activeIndex, onClose, onNext, onPrev }: LightboxProp
           top: "50%",
           transform: "translateY(-50%)",
           background: "rgba(255,253,249,0.08)",
-          border: "1px solid rgba(217,180,65,0.2)",
+          border: "1px solid rgba(240,188,63,0.2)",
           borderRadius: "50%",
           width: "44px",
           height: "44px",
@@ -100,7 +100,7 @@ function Lightbox({ images, activeIndex, onClose, onNext, onPrev }: LightboxProp
           top: "50%",
           transform: "translateY(-50%)",
           background: "rgba(255,253,249,0.08)",
-          border: "1px solid rgba(217,180,65,0.2)",
+          border: "1px solid rgba(240,188,63,0.2)",
           borderRadius: "50%",
           width: "44px",
           height: "44px",
@@ -162,7 +162,7 @@ function Lightbox({ images, activeIndex, onClose, onNext, onPrev }: LightboxProp
           fontFamily: "var(--font-cormorant), Georgia, serif",
           fontSize: "0.65rem",
           letterSpacing: "0.28em",
-          color: "rgba(217,180,65,0.75)",
+          color: "rgba(240,188,63,0.75)",
         }}
       >
         {activeIndex + 1} / {images.length}
@@ -171,7 +171,7 @@ function Lightbox({ images, activeIndex, onClose, onNext, onPrev }: LightboxProp
   );
 }
 
-const HEART_COLORS = ["#FAC2BC", "#F58893", "#F2DCA0", "#EE7863"];
+const HEART_COLORS = ["#FAC2BC", "#F58893", "#F9DE93", "#EE7863"];
 
 // Deterministic golden-angle spread — an even-looking scatter without
 // Math.random(), which React flags as impure during render and which would
@@ -393,7 +393,7 @@ export default function GallerySection() {
                 width: i === index ? "22px" : "8px",
                 height: "8px",
                 borderRadius: "999px",
-                background: i === index ? "#D9B441" : "rgba(217,180,65,0.3)",
+                background: i === index ? "#F0BC3F" : "rgba(240,188,63,0.3)",
                 border: "none",
                 cursor: "pointer",
                 padding: 0,
@@ -417,14 +417,14 @@ export default function GallerySection() {
           href="/gallery"
           style={{
             display: "inline-block",
-            color: "#B08A2E",
+            color: "#C99A24",
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.66rem",
             letterSpacing: "0.32em",
             textTransform: "uppercase",
             padding: "0.75rem 2.25rem",
             textDecoration: "none",
-            border: "1px solid rgba(217,180,65,0.45)",
+            border: "1px solid rgba(240,188,63,0.45)",
           }}
         >
           View All Albums

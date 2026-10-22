@@ -235,14 +235,14 @@ export default function StorySection() {
           href="/story"
           style={{
             display: "inline-block",
-            color: "#B08A2E",
+            color: "#C99A24",
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.66rem",
             letterSpacing: "0.32em",
             textTransform: "uppercase",
             padding: "0.75rem 2.25rem",
             textDecoration: "none",
-            border: "1px solid rgba(217,180,65,0.45)",
+            border: "1px solid rgba(240,188,63,0.45)",
           }}
         >
           Read Our Timeline

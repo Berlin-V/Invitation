@@ -12,7 +12,6 @@ import StorySection from "@/components/sections/StorySection";
 import EventsSection from "@/components/sections/EventsSection";
 import GallerySection from "@/components/sections/GallerySection";
 import WishesTreeSection from "@/components/sections/WishesTreeSection";
-import CoupleCard3D from "@/components/sections/CoupleCard3D";
 import FooterSection from "@/components/sections/FooterSection";
 import ChatBot from "@/components/ChatBot";
 import { EASE } from "@/constants/motion";
@@ -89,7 +88,7 @@ export default function HomePage() {
           style={{
             height: "1px",
             width: "80px",
-            background: "rgba(217,180,65,0.4)",
+            background: "rgba(240,188,63,0.4)",
             marginTop: "1.5rem",
           }}
         />
@@ -99,7 +98,7 @@ export default function HomePage() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "clamp(0.82rem, 3vw, 1rem)",
             letterSpacing: "0.3em",
-            color: "#F2DCA0",
+            color: "#F9DE93",
             textTransform: "uppercase",
             whiteSpace: "nowrap",
           }}
@@ -131,7 +130,6 @@ export default function HomePage() {
           <Navbar />
           <main>
             <HeroSection />
-            <CoupleCard3D />
             <CountdownSection />
             <StorySection />
             <EventsSection />

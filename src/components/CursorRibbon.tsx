@@ -62,7 +62,7 @@ function startLoop(canvas: HTMLCanvasElement) {
       for (let i = 1; i < trail.length; i++) {
         const a = trail[i - 1];
         const b = trail[i];
-        ctx!.strokeStyle = `rgba(217,180,65,${Math.max(0, b.life) * 0.5})`;
+        ctx!.strokeStyle = `rgba(240,188,63,${Math.max(0, b.life) * 0.5})`;
         ctx!.lineWidth = Math.max(0.5, b.life * 4);
         ctx!.lineCap = "round";
         ctx!.beginPath();

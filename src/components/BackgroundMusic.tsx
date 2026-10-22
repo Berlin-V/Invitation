@@ -87,7 +87,7 @@ export default function BackgroundMusic() {
           backdropFilter: "blur(20px) saturate(180%)",
           WebkitBackdropFilter: "blur(20px) saturate(180%)",
           border: "1px solid rgba(255,253,249,0.15)",
-          color: "#F2DCA0",
+          color: "#F9DE93",
           cursor: "pointer",
         }}
       >

@@ -22,19 +22,20 @@
   --color-text:         #4A403A;
   --color-muted:        #796D65;
 
-  /* A bright metallic gold scale. The previous base was #C9A56D, which at 46%
-     saturation read dusty rather than gold; this one sits at 67% and gains
-     contrast on the dark sections too (9.8:1 vs 8.4:1).
+  /* A warm metallic gold scale, tuned for the dark sections. The previous base
+     (#D9B441) sat at hue 46, 67% saturation, and went olive against black.
+     This one is hue 42 at 86% — warmer, markedly more saturated and a little
+     deeper, so it reads as rich metal on the dark grounds rather than mustard.
        --color-gold      decorative only: dividers, borders, strokes, the seal.
-                         Just 1.8:1 on the cream grounds, so never use it for
+                         Just 1.7:1 on the cream grounds, so never use it for
                          text there.
        --color-gold-text the readable counterpart for small text on cream
                          (5.2:1 on #FFFDF9, 4.8:1 on #F8F4EF). Deliberately
                          deeper: a gold bright enough to look bright on cream
                          cannot also be legible on it. */
-  --color-gold:       #D9B441;
-  --color-gold-light: #F2DCA0;
-  --color-gold-dark:  #B08A2E;
+  --color-gold:       #F0BC3F;
+  --color-gold-light: #F9DE93;
+  --color-gold-dark:  #C99A24;
   --color-gold-text:  #8F6410;
 
   --color-border: #E8E0D5;
@@ -44,6 +45,6 @@
      pages referenced `--orange` before it was ever defined, so every
      `text-[var(--orange)]` on them resolved to an invalid color. */
   --color-orange:       #E9A23B;
-  --color-orange-light: #F7D98F;
+  --color-orange-light: #FBE49C;
   --color-orange-deep:  #C97F1E;
 }

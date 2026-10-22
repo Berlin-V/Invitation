@@ -138,7 +138,7 @@ export default function Navbar() {
                   fontSize: "0.8rem",
                   letterSpacing: "0.1em",
                   whiteSpace: "nowrap",
-                  color: isActive ? "#F2DCA0" : "rgba(255,253,249,0.7)",
+                  color: isActive ? "#F9DE93" : "rgba(255,253,249,0.7)",
                   transition: "color 0.3s ease",
                 }}
               >
@@ -147,7 +147,7 @@ export default function Navbar() {
                   <motion.span
                     layoutId="nav-indicator"
                     className="absolute -bottom-1 left-1/2 -translate-x-1/2 block rounded-full"
-                    style={{ width: "3px", height: "3px", background: "#D9B441" }}
+                    style={{ width: "3px", height: "3px", background: "#F0BC3F" }}
                   />
                 )}
               </button>
@@ -211,7 +211,7 @@ export default function Navbar() {
                     fontFamily: "var(--font-cormorant), Georgia, serif",
                     fontSize: "1rem",
                     letterSpacing: "0.1em",
-                    color: activeSection === link.href ? "#F2DCA0" : "rgba(255,253,249,0.8)",
+                    color: activeSection === link.href ? "#F9DE93" : "rgba(255,253,249,0.8)",
                   }}
                 >
                   {link.label}

@@ -72,7 +72,7 @@ export default function ShootingStars() {
       for (const s of stars) {
         const twinkle = 0.35 + Math.sin(t * s.speed + s.phase) * 0.35;
         ctx!.globalAlpha = Math.max(0, twinkle);
-        ctx!.fillStyle = "#D9B441";
+        ctx!.fillStyle = "#F0BC3F";
         ctx!.beginPath();
         ctx!.arc(s.x, s.y, s.size, 0, Math.PI * 2);
         ctx!.fill();
@@ -83,8 +83,8 @@ export default function ShootingStars() {
         const tailX = s.x - s.vx * 5;
         const tailY = s.y - s.vy * 5;
         const gradient = ctx!.createLinearGradient(s.x, s.y, tailX, tailY);
-        gradient.addColorStop(0, `rgba(242,220,160,${s.life})`);
-        gradient.addColorStop(1, "rgba(217,180,65,0)");
+        gradient.addColorStop(0, `rgba(249,222,147,${s.life})`);
+        gradient.addColorStop(1, "rgba(240,188,63,0)");
         ctx!.strokeStyle = gradient;
         ctx!.lineWidth = 1.6;
         ctx!.lineCap = "round";

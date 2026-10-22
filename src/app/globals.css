@@ -37,7 +37,7 @@ body {
 
 /* ── Selection ────────────────────────────────────────── */
 ::selection {
-  background: rgba(217,180,65, 0.18);
+  background: rgba(240,188,63, 0.18);
   color: var(--color-text);
 }
 
@@ -47,9 +47,9 @@ body {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(217,180,65, 0.33),
-    #D9B441,
-    rgba(217,180,65, 0.33),
+    rgba(240,188,63, 0.33),
+    #F0BC3F,
+    rgba(240,188,63, 0.33),
     transparent
   );
 }
@@ -103,9 +103,59 @@ body {
 /* framer-motion can't animate a gradient background, so the Gift Us
    button's hover fill is a plain CSS transition instead. */
 .gift-us-button {
-  background: rgba(217,180,65, 0.14);
+  background: rgba(240,188,63, 0.14);
   transition: background 0.3s ease;
 }
 .gift-us-button:hover {
-  background: linear-gradient(135deg, #D9B441, #F7D98F);
+  background: linear-gradient(135deg, #F0BC3F, #FBE49C);
+}
+
+/* ── Wishes Wall ──────────────────────────────────────── */
+/* Inline styles can't express :focus or ::placeholder, so the wall's form
+   fields keep their states here. The old fields sat at 4% white on near-black
+   with a 20% placeholder — effectively invisible. */
+.wish-field {
+  background: rgba(255, 253, 249, 0.06);
+  border: 1px solid rgba(240, 188, 63, 0.28);
+  color: #fffdf9;
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.wish-field::placeholder {
+  color: rgba(255, 253, 249, 0.4);
+}
+.wish-field:focus {
+  background: rgba(255, 253, 249, 0.09);
+  border-color: rgba(240, 188, 63, 0.7);
+  box-shadow: 0 0 0 3px rgba(240, 188, 63, 0.16);
+}
+
+/* A note pinned to the wall. Each card passes its own --accent-rgb and the
+   slight --tilt that keeps the grid from looking machine-set; hovering
+   straightens and lifts it. The transform lives here rather than inline so
+   the hover rule can win — and so framer-motion, which writes transforms of
+   its own, is left to animate the wrapper instead. */
+.wish-note {
+  transform: rotate(var(--tilt, 0deg));
+  transition:
+    transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+.wish-note:hover {
+  transform: rotate(0deg) translateY(-5px);
+  border-color: rgba(var(--accent-rgb), 0.62);
+  box-shadow:
+    0 26px 56px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(var(--accent-rgb), 0.22),
+    inset 0 1px 0 rgba(255, 253, 249, 0.14);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wish-note,
+  .wish-note:hover {
+    transform: none;
+  }
 }

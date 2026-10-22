@@ -2,51 +2,14 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ExternalLink } from "lucide-react";
+import { X } from "lucide-react";
 import Image from "next/image";
 
-import { DRIVE, WEDDING_DATE } from "@/constants";
 import { ENGAGEMENT_PHOTOS } from "@/constants/gallery";
 import BackToHome from "@/components/ui/BackToHome";
-import type { GalleryAlbum, GalleryPhoto } from "@/types";
-
-const albums: GalleryAlbum[] = [
-  {
-    id: "engagement",
-    title: "Engagement",
-    subtitle: "The day she said yes",
-    emoji: "💍",
-    photos: ENGAGEMENT_PHOTOS,
-    available: true,
-  },
-  {
-    id: "pre-wedding",
-    title: "Pre-Wedding",
-    subtitle: "Coming soon",
-    emoji: "🌸",
-    photos: [],
-    available: false,
-  },
-  {
-    id: "wedding",
-    title: "Wedding Day",
-    subtitle: WEDDING_DATE.display,
-    emoji: "🕊️",
-    photos: [],
-    available: false,
-  },
-  {
-    id: "reception",
-    title: "Reception",
-    subtitle: "Evening celebrations",
-    emoji: "✨",
-    photos: [],
-    available: false,
-  },
-];
+import type { GalleryPhoto } from "@/types";
 
 export default function GalleryPage() {
-  const [activeAlbum, setActiveAlbum] = useState(albums[0]);
   const [lightboxPhoto, setLightboxPhoto] = useState<GalleryPhoto | null>(null);
 
   return (
@@ -101,50 +64,15 @@ export default function GalleryPage() {
 
       <div className="divider-orange max-w-sm mx-auto mb-12" />
 
-      {/* Album tabs */}
+      {/* Photo grid */}
       <section className="px-6 max-w-6xl mx-auto">
-        <div className="flex gap-3 flex-wrap justify-center mb-12">
-          {albums.map((album) => (
-            <button
-              key={album.id}
-              onClick={() => album.available && setActiveAlbum(album)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-full border font-sans-custom text-xs tracking-widest uppercase transition-all duration-300 ${
-                activeAlbum.id === album.id
-                  ? "border-orange bg-orange/15 text-orange"
-                  : album.available
-                  ? "border-orange/20 text-[#FAF5EE]/52 hover:border-orange/40"
-                  : "border-white/10 text-[#FAF5EE]/52 cursor-not-allowed"
-              }`}
-            >
-              <span>{album.emoji}</span>
-              <span>{album.title}</span>
-              {!album.available && <span className="text-[9px] text-[#FAF5EE]/52 normal-case">soon</span>}
-            </button>
-          ))}
-        </div>
-
-        {/* Drive link */}
-        <div className="text-center mb-8">
-          <a
-            href={DRIVE.engagementAlbum}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 font-sans-custom text-xs tracking-widest uppercase text-orange border border-orange/30 px-5 py-2.5 rounded-full hover:bg-orange/10 transition-all"
-          >
-            <ExternalLink size={12} />
-            View Full Album on Google Drive
-          </a>
-        </div>
-
-        {/* Photo grid */}
-        {activeAlbum.available && activeAlbum.photos.length > 0 ? (
+        {ENGAGEMENT_PHOTOS.length > 0 ? (
           <motion.div
-            key={activeAlbum.id}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="columns-2 md:columns-3 gap-3 space-y-3 pb-24"
           >
-            {activeAlbum.photos.map((photo, i) => (
+            {ENGAGEMENT_PHOTOS.map((photo, i) => (
               <motion.div
                 key={photo.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -176,9 +104,9 @@ export default function GalleryPage() {
             animate={{ opacity: 1 }}
             className="text-center py-20 glass-card max-w-md mx-auto mb-24"
           >
-            <div className="text-5xl mb-4">{activeAlbum.emoji}</div>
-            <h3 className="font-script text-4xl text-orange-gradient mb-3">{activeAlbum.title}</h3>
-            <p className="font-sans-custom text-sm text-[#FAF5EE]/52">{activeAlbum.subtitle}</p>
+            <div className="text-5xl mb-4">💍</div>
+            <h3 className="font-script text-4xl text-orange-gradient mb-3">Engagement</h3>
+            <p className="font-sans-custom text-sm text-[#FAF5EE]/52">The day she said yes</p>
             <p className="font-sans-custom text-xs text-[#FAF5EE]/52 mt-3">Photos will be added soon</p>
           </motion.div>
         )}

@@ -16,7 +16,7 @@ function SubEvent({ item, index }: { item: EventItem; index: number }) {
       viewport={{ once: true }}
       transition={{ duration: 0.7, delay: index * 0.1, ease: EASE }}
       style={{
-        borderTop: index > 0 ? "1px solid rgba(217,180,65,0.18)" : "none",
+        borderTop: index > 0 ? "1px solid rgba(240,188,63,0.18)" : "none",
         paddingTop: index > 0 ? "1.4rem" : 0,
         marginTop: index > 0 ? "1.4rem" : 0,
       }}
@@ -80,19 +80,19 @@ function SubEvent({ item, index }: { item: EventItem; index: number }) {
           textTransform: "uppercase",
           color: "#8F6410",
           textDecoration: "none",
-          borderBottom: "1px solid rgba(217,180,65,0.35)",
+          borderBottom: "1px solid rgba(240,188,63,0.35)",
           paddingBottom: "2px",
           transition: "color 0.25s ease, border-color 0.25s ease",
         }}
         onMouseEnter={(e) => {
           const el = e.currentTarget as HTMLAnchorElement;
-          el.style.color = "#B08A2E";
-          el.style.borderColor = "#B08A2E";
+          el.style.color = "#C99A24";
+          el.style.borderColor = "#C99A24";
         }}
         onMouseLeave={(e) => {
           const el = e.currentTarget as HTMLAnchorElement;
-          el.style.color = "#D9B441";
-          el.style.borderColor = "rgba(217,180,65,0.35)";
+          el.style.color = "#F0BC3F";
+          el.style.borderColor = "rgba(240,188,63,0.35)";
         }}
       >
         <MapPin size={10} strokeWidth={1.5} />
@@ -113,7 +113,7 @@ function GroupPanel({ group, index }: { group: EventGroup; index: number }) {
         flex: "1 1 320px",
         maxWidth: "480px",
         background: "#FFFDF9",
-        border: "1px solid rgba(217,180,65,0.22)",
+        border: "1px solid rgba(240,188,63,0.22)",
         padding: "clamp(1.75rem, 5vw, 2.75rem)",
         position: "relative",
       }}
@@ -126,7 +126,7 @@ function GroupPanel({ group, index }: { group: EventGroup; index: number }) {
           left: "2rem",
           right: "2rem",
           height: "1px",
-          background: "linear-gradient(90deg, transparent, #D9B441, transparent)",
+          background: "linear-gradient(90deg, transparent, #F0BC3F, transparent)",
         }}
       />
 
@@ -176,7 +176,7 @@ function GroupPanel({ group, index }: { group: EventGroup; index: number }) {
         style={{
           height: "1px",
           width: "28px",
-          background: "rgba(217,180,65,0.4)",
+          background: "rgba(240,188,63,0.4)",
           marginBottom: "1.75rem",
         }}
       />
