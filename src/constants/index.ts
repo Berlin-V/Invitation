@@ -66,7 +66,7 @@ export const HIGHLIGHTS = [
     id: "engagement",
     title: "Engagement Highlights",
     caption: "The day we said yes, surrounded by both our families.",
-    driveFileId: "1dgJDa94PXioN1LPjftl5hSrRKnL-x7Qb",
+    driveFileId: "1tQ7Dg52REb4agGsn5fMfPCBXyzMEwJyp",
   },
 ] as const;
 

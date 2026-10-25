@@ -4,16 +4,25 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Volume2, VolumeX } from "lucide-react";
 import { MEDIA } from "@/constants";
+import {
+  isBackgroundAudioSuspended,
+  onBackgroundAudioSuspendedChange,
+} from "@/lib/background-audio";
 
 export default function BackgroundMusic() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
+  // Whether the music was audible when something else claimed the speakers,
+  // so a visitor who had deliberately muted it doesn't get it back afterwards.
+  const resumeAfterSuspend = useRef(false);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     const tryPlay = () => {
+      // A highlights film is playing — the site music stays out of its way.
+      if (isBackgroundAudioSuspended()) return;
       audio.play().catch(() => {
         // Autoplay blocked until the visitor interacts with the page —
         // the toggle button below always works since it's a direct click.
@@ -44,6 +53,16 @@ export default function BackgroundMusic() {
     audio.addEventListener("play", onPlay);
     audio.addEventListener("pause", onPause);
 
+    const unsubscribe = onBackgroundAudioSuspendedChange((isSuspended) => {
+      if (isSuspended) {
+        resumeAfterSuspend.current = !audio.paused;
+        audio.pause();
+      } else if (resumeAfterSuspend.current) {
+        resumeAfterSuspend.current = false;
+        tryPlay();
+      }
+    });
+
     return () => {
       window.removeEventListener("click", onFirstInteraction);
       window.removeEventListener("touchstart", onFirstInteraction);
@@ -51,12 +70,22 @@ export default function BackgroundMusic() {
       document.removeEventListener("visibilitychange", onVisibilityChange);
       audio.removeEventListener("play", onPlay);
       audio.removeEventListener("pause", onPause);
+      unsubscribe();
     };
   }, []);
 
   const toggle = () => {
     const audio = audioRef.current;
     if (!audio) return;
+
+    // A film has the speakers. Starting the music here would play it over the
+    // film, so the toggle instead records whether the visitor wants it back
+    // once the film ends — otherwise an explicit mute mid-film would be undone.
+    if (isBackgroundAudioSuspended()) {
+      resumeAfterSuspend.current = !resumeAfterSuspend.current;
+      return;
+    }
+
     // Called directly from a click handler, so this always satisfies the
     // browser's autoplay gesture requirement even if earlier attempts failed.
     if (audio.paused) audio.play().catch(() => {});
