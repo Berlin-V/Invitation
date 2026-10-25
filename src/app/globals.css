@@ -159,3 +159,11 @@ body {
     transform: none;
   }
 }
+
+/* Background-music toggle inset. The mobile nav pill sits in the top-right
+   corner, so the toggle shifts left of it; from md up the pill is centred and
+   the toggle reclaims the corner. */
+:root { --music-right-offset: 4.5rem; }
+@media (min-width: 768px) {
+  :root { --music-right-offset: 0.85rem; }
+}

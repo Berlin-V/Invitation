@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Pause, Play, X } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { EASE } from "@/constants/motion";
 import { MEDIA } from "@/constants";
 
@@ -221,33 +220,6 @@ export default function StorySection() {
       </motion.div>
 
       <RolledScroll onOpen={() => setVideoOpen(true)} />
-
-      {/* Deep link to the full timeline page */}
-      <motion.div
-        className="text-center"
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
-        style={{ marginTop: "clamp(2.5rem, 6vw, 3.5rem)" }}
-      >
-        <Link
-          href="/story"
-          style={{
-            display: "inline-block",
-            color: "#C99A24",
-            fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.66rem",
-            letterSpacing: "0.32em",
-            textTransform: "uppercase",
-            padding: "0.75rem 2.25rem",
-            textDecoration: "none",
-            border: "1px solid rgba(240,188,63,0.45)",
-          }}
-        >
-          Read Our Timeline
-        </Link>
-      </motion.div>
 
       <AnimatePresence>
         {videoOpen && <VideoOverlay onClose={() => setVideoOpen(false)} />}

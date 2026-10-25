@@ -11,6 +11,7 @@ import CountdownSection from "@/components/sections/CountdownSection";
 import StorySection from "@/components/sections/StorySection";
 import EventsSection from "@/components/sections/EventsSection";
 import GallerySection from "@/components/sections/GallerySection";
+import HighlightsSection from "@/components/sections/HighlightsSection";
 import WishesTreeSection from "@/components/sections/WishesTreeSection";
 import FooterSection from "@/components/sections/FooterSection";
 import ChatBot from "@/components/ChatBot";
@@ -134,6 +135,7 @@ export default function HomePage() {
             <StorySection />
             <EventsSection />
             <GallerySection />
+            <HighlightsSection />
             <WishesTreeSection />
           </main>
           <FooterSection />

@@ -75,7 +75,10 @@ export default function BackgroundMusic() {
         style={{
           position: "fixed",
           top: "calc(env(safe-area-inset-top, 0px) + 0.85rem)",
-          right: "calc(env(safe-area-inset-right, 0px) + 0.85rem)",
+          // The mobile nav pill now owns the top-right corner, so the toggle
+          // steps aside for it; on desktop the pill is centred and the corner
+          // is free again. See --music-right-offset in globals.css.
+          right: "calc(env(safe-area-inset-right, 0px) + var(--music-right-offset))",
           zIndex: 60,
           width: "2.5rem",
           height: "2.5rem",

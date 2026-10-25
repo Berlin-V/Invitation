@@ -57,6 +57,23 @@ export const EVENTS = {
   },
 };
 
+// ─── Event highlight films ────────────────────
+// Each entry is a Google Drive video. The file id drives both the inline
+// preview iframe and the "open in Drive" fallback, so adding a new film only
+// means pasting its id here.
+export const HIGHLIGHTS = [
+  {
+    id: "engagement",
+    title: "Engagement Highlights",
+    caption: "The day we said yes, surrounded by both our families.",
+    driveFileId: "1dgJDa94PXioN1LPjftl5hSrRKnL-x7Qb",
+  },
+] as const;
+
+export const driveFileUrl = (fileId: string) => `https://drive.google.com/file/d/${fileId}/view`;
+export const drivePreviewUrl = (fileId: string) => `https://drive.google.com/file/d/${fileId}/preview`;
+export const driveThumbUrl = (fileId: string) => `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`;
+
 // ─── Gift registry ────────────────────────────
 export const GIFT_URL = "https://giftus.io/events/berlin-jerlin-ashika-7tji";
 
