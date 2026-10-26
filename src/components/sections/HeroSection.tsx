@@ -107,7 +107,7 @@ export default function HeroSection() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.62rem",
             letterSpacing: "0.48em",
-            color: "rgba(217,180,65,0.85)",
+            color: "rgba(240,188,63,0.85)",
             textTransform: "uppercase",
             marginBottom: "1.5rem",
           }}
@@ -123,7 +123,7 @@ export default function HeroSection() {
           style={{
             height: "1px",
             width: "60px",
-            background: "rgba(217,180,65,0.6)",
+            background: "rgba(240,188,63,0.6)",
             marginBottom: "2rem",
           }}
         />
@@ -149,7 +149,7 @@ export default function HeroSection() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "clamp(0.85rem, 2.5vw, 1.1rem)",
             letterSpacing: "0.28em",
-            color: "#D9B441",
+            color: "#F0BC3F",
             fontStyle: "italic",
             margin: "0.6rem 0",
           }}
@@ -180,7 +180,7 @@ export default function HeroSection() {
             height: "1px",
             width: "120px",
             background:
-              "linear-gradient(90deg, transparent, rgba(217,180,65,0.5), transparent)",
+              "linear-gradient(90deg, transparent, rgba(240,188,63,0.5), transparent)",
             marginBottom: "2rem",
           }}
         />
@@ -242,7 +242,7 @@ export default function HeroSection() {
           <ChevronDown
             size={16}
             strokeWidth={1.5}
-            style={{ color: "rgba(217,180,65,0.85)" }}
+            style={{ color: "rgba(240,188,63,0.85)" }}
           />
         </motion.div>
       </motion.button>

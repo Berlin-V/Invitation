@@ -39,7 +39,7 @@ function GiftModal({ onClose }: { onClose: () => void }) {
           className="flex items-center justify-between"
           style={{
             padding: "0.9rem 1.25rem",
-            borderBottom: "1px solid rgba(217,180,65,0.2)",
+            borderBottom: "1px solid rgba(240,188,63,0.2)",
             background: "#FFFDF9",
           }}
         >
@@ -110,7 +110,7 @@ function ClickBurst() {
             position: "absolute",
             left: "50%",
             top: "50%",
-            color: i % 2 === 0 ? "#F58893" : "#F2DCA0",
+            color: i % 2 === 0 ? "#F58893" : "#F9DE93",
           }}
         >
           <Heart size={14} fill="currentColor" strokeWidth={0} />
@@ -141,7 +141,7 @@ export default function GiftUsButton({ className, style }: GiftUsButtonProps) {
       <motion.span
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
-        style={{ borderRadius: "999px", border: "1.5px solid rgba(217,180,65,0.6)" }}
+        style={{ borderRadius: "999px", border: "1.5px solid rgba(240,188,63,0.6)" }}
         animate={{ scale: [1, 1.18, 1], opacity: [0.55, 0, 0.55] }}
         transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
       />
@@ -152,7 +152,7 @@ export default function GiftUsButton({ className, style }: GiftUsButtonProps) {
         whileHover="hover"
         whileTap={{ scale: 0.95 }}
         variants={{
-          rest: { scale: 1, color: "#F7D98F" },
+          rest: { scale: 1, color: "#FBE49C" },
           hover: { scale: 1.06, color: "#2A1F14" },
         }}
         transition={{ duration: 0.3, ease: EASE }}

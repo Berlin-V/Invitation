@@ -112,7 +112,7 @@ export default function CountdownSection() {
               style={{
                 height: "1px",
                 width: "32px",
-                background: "rgba(217,180,65,0.45)",
+                background: "rgba(240,188,63,0.45)",
                 margin: "0.75rem auto",
               }}
             />

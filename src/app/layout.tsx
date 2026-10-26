@@ -6,6 +6,7 @@ import GlobalConfetti from "@/components/GlobalConfetti";
 import CursorRibbon from "@/components/CursorRibbon";
 import BackgroundMusic from "@/components/BackgroundMusic";
 import ShootingStars from "@/components/ShootingStars";
+import PreloadExternal from "@/components/PreloadExternal";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${cormorant.variable} ${inter.variable} ${allura.variable}`}
     >
       <body className="bg-bg text-text antialiased">
+        <PreloadExternal />
         <GlobalConfetti />
         <CursorRibbon />
         <BackgroundMusic />

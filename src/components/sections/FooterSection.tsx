@@ -27,7 +27,7 @@ export default function FooterSection() {
           style={{
             width: "1px",
             height: "48px",
-            background: "linear-gradient(to bottom, transparent, rgba(217,180,65,0.5))",
+            background: "linear-gradient(to bottom, transparent, rgba(240,188,63,0.5))",
             marginBottom: "1.5rem",
           }}
         />
@@ -37,7 +37,7 @@ export default function FooterSection() {
           style={{
             fontFamily: "var(--font-allura), cursive",
             fontSize: "clamp(2.2rem, 6vw, 3.2rem)",
-            color: "#D9B441",
+            color: "#F0BC3F",
             lineHeight: 1.1,
             marginBottom: "0.5rem",
           }}
@@ -50,7 +50,7 @@ export default function FooterSection() {
           style={{
             height: "1px",
             width: "60px",
-            background: "rgba(217,180,65,0.35)",
+            background: "rgba(240,188,63,0.35)",
             margin: "1.25rem auto",
           }}
         />
@@ -61,7 +61,7 @@ export default function FooterSection() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.7rem",
             letterSpacing: "0.3em",
-            color: "rgba(217,180,65,0.75)",
+            color: "rgba(240,188,63,0.75)",
             textTransform: "uppercase",
           }}
         >
@@ -73,7 +73,7 @@ export default function FooterSection() {
           style={{
             height: "1px",
             width: "40px",
-            background: "rgba(217,180,65,0.18)",
+            background: "rgba(240,188,63,0.18)",
             margin: "2.5rem auto 1.5rem",
           }}
         />
@@ -84,7 +84,7 @@ export default function FooterSection() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.6rem",
             letterSpacing: "0.18em",
-            color: "rgba(217,180,65,0.75)",
+            color: "rgba(240,188,63,0.75)",
           }}
         >
           © {year} {COUPLE.groom} & {COUPLE.bride}. With love.

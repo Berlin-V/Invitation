@@ -54,17 +54,17 @@ function LeafIcon({ side, hovered }: { side: WishSide | null; hovered: boolean }
       <motion.path
         d="M13 1 C20 1 25 7 25 15 C25 23 19 31 13 32 C7 31 1 23 1 15 C1 7 6 1 13 1 Z"
         fill={active ? `url(#${gradientId})` : "rgba(30,40,22,0.55)"}
-        stroke={active ? "rgba(217,180,65,0.35)" : "rgba(30,40,22,0.3)"}
+        stroke={active ? "rgba(240,188,63,0.35)" : "rgba(30,40,22,0.3)"}
         strokeWidth="0.5"
         animate={{
           filter: hovered && active
-            ? "drop-shadow(0 0 7px rgba(217,180,65,0.65))"
+            ? "drop-shadow(0 0 7px rgba(240,188,63,0.65))"
             : "none",
         }}
         transition={{ duration: 0.2 }}
       />
       {active && (
-        <line x1="13" y1="3" x2="13" y2="30" stroke="rgba(217,180,65,0.22)" strokeWidth="0.6" />
+        <line x1="13" y1="3" x2="13" y2="30" stroke="rgba(240,188,63,0.22)" strokeWidth="0.6" />
       )}
     </svg>
   );
@@ -140,7 +140,7 @@ function Leaf({ wish, pos, idx }: LeafProps) {
                 zIndex: 20,
                 width: "210px",
                 background: "rgba(10,8,5,0.97)",
-                border: "1px solid rgba(217,180,65,0.28)",
+                border: "1px solid rgba(240,188,63,0.28)",
                 padding: "0.9rem 1.05rem",
                 pointerEvents: "none",
                 boxShadow: "0 12px 40px rgba(0,0,0,0.6)",
@@ -157,14 +157,14 @@ function Leaf({ wish, pos, idx }: LeafProps) {
                   height: 0,
                   borderLeft: "5px solid transparent",
                   borderRight: "5px solid transparent",
-                  borderTop: "5px solid rgba(217,180,65,0.28)",
+                  borderTop: "5px solid rgba(240,188,63,0.28)",
                 }}
               />
               <p
                 style={{
                   fontFamily: "var(--font-allura), cursive",
                   fontSize: "1.1rem",
-                  color: "#D9B441",
+                  color: "#F0BC3F",
                   lineHeight: 1.15,
                   marginBottom: "0.25rem",
                 }}
@@ -176,7 +176,7 @@ function Leaf({ wish, pos, idx }: LeafProps) {
                   fontFamily: "var(--font-cormorant), Georgia, serif",
                   fontSize: "0.58rem",
                   letterSpacing: "0.22em",
-                  color: "rgba(217,180,65,0.75)",
+                  color: "rgba(240,188,63,0.75)",
                   textTransform: "uppercase",
                   marginBottom: "0.55rem",
                 }}
@@ -238,7 +238,7 @@ export default function WishesTreeSection() {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.62rem",
             letterSpacing: "0.46em",
-            color: "rgba(217,180,65,0.75)",
+            color: "rgba(240,188,63,0.75)",
             textTransform: "uppercase",
             marginBottom: "1rem",
           }}
@@ -249,7 +249,7 @@ export default function WishesTreeSection() {
           style={{
             fontFamily: "var(--font-allura), cursive",
             fontSize: "clamp(2.5rem, 7vw, 4.5rem)",
-            color: "#D9B441",
+            color: "#F0BC3F",
             lineHeight: 1.1,
             marginBottom: "1.25rem",
           }}
@@ -260,7 +260,7 @@ export default function WishesTreeSection() {
           style={{
             height: "1px",
             width: "80px",
-            background: "linear-gradient(90deg, transparent, rgba(217,180,65,0.45), transparent)",
+            background: "linear-gradient(90deg, transparent, rgba(240,188,63,0.45), transparent)",
             margin: "0 auto 1.25rem",
           }}
         />
@@ -345,18 +345,18 @@ export default function WishesTreeSection() {
           style={{
             display: "inline-block",
             background: "none",
-            color: "#D9B441",
+            color: "#F0BC3F",
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.7rem",
             letterSpacing: "0.35em",
             textTransform: "uppercase",
             padding: "0.8rem 2.5rem",
             textDecoration: "none",
-            border: "1px solid rgba(217,180,65,0.4)",
+            border: "1px solid rgba(240,188,63,0.4)",
             transition: "background 0.3s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(217,180,65,0.1)";
+            e.currentTarget.style.background = "rgba(240,188,63,0.1)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = "none";

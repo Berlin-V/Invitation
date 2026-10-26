@@ -31,7 +31,7 @@ export default function BackToHome({
         className="flex items-center gap-2 rounded-full px-4 py-2 font-sans-custom text-xs tracking-wide backdrop-blur-md transition-colors hover:bg-white/10"
         style={{
           background: "rgba(15,12,9,0.55)",
-          border: "1px solid rgba(217,180,65,0.25)",
+          border: "1px solid rgba(240,188,63,0.25)",
           color: "rgba(255,255,255,0.75)",
         }}
       >

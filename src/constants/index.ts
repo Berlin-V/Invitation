@@ -12,16 +12,16 @@ export const COUPLE = {
 };
 
 export const WEDDING_DATE = {
-  iso: "2026-12-10T09:00:00+05:30", // IST
+  iso: "2026-12-10T09:30:00+05:30", // IST
   display: "December 10, 2026",
   displayShort: "Dec 10, 2026",
-  time: "9:00 AM",
+  time: "9:30 AM",
 };
 
 // ─── Map links ────────────────────────────────
 export const MAPS = {
-  brideHouse:    "https://goo.gl/maps/guaUbk5yJWDivrP28?g_st=aw",
-  weddingChurch: "https://maps.app.goo.gl/doWzsv87nDVK18Sc6",
+  weddingChurch: "https://maps.app.goo.gl/dQSV2rJV6DMk89bDA",
+  communityHall: "https://maps.app.goo.gl/NVhzs836jVU2kaXz7",
   groomHouse:    "https://maps.app.goo.gl/ToyHtFCFGUwNSDzM9",
   receptionHall: "https://maps.app.goo.gl/m1ACjjsAbfHrSUjY8",
 };
@@ -40,10 +40,10 @@ export const EVENTS = {
   brideSide: {
     label: "Bride's Side",
     date: WEDDING_DATE.display,
-    timeRange: "9:00 AM – 2:00 PM",
+    timeRange: "9:30 AM – 2:00 PM",
     items: [
-      { title: "Bride's Home",   time: "9:00 AM",   mapUrl: MAPS.brideHouse,    icon: "🏡", description: "The celebration begins at the bride's family home with traditional ceremonies." },
-      { title: "Wedding Church", time: "~10:00 AM", mapUrl: MAPS.weddingChurch, icon: "⛪", description: `The holy matrimony ceremony uniting ${COUPLE.groom} & ${COUPLE.bride}.` },
+      { title: "Wedding Church", time: "9:30 AM",  mapUrl: MAPS.weddingChurch, icon: "⛪", description: `The holy matrimony ceremony uniting ${COUPLE.groom} & ${COUPLE.bride}.` },
+      { title: "CSI Community Hall, Kodiyoor", time: "11:00 AM", mapUrl: MAPS.communityHall, icon: "🤝", description: "The bride's side gathers with family and the church community to celebrate the newly married couple." },
     ],
   },
   groomSide: {
@@ -56,6 +56,23 @@ export const EVENTS = {
     ],
   },
 };
+
+// ─── Event highlight films ────────────────────
+// Each entry is a Google Drive video. The file id drives both the inline
+// preview iframe and the "open in Drive" fallback, so adding a new film only
+// means pasting its id here.
+export const HIGHLIGHTS = [
+  {
+    id: "engagement",
+    title: "Engagement Highlights",
+    caption: "The day we said yes, surrounded by both our families.",
+    driveFileId: "1tQ7Dg52REb4agGsn5fMfPCBXyzMEwJyp",
+  },
+] as const;
+
+export const driveFileUrl = (fileId: string) => `https://drive.google.com/file/d/${fileId}/view`;
+export const drivePreviewUrl = (fileId: string) => `https://drive.google.com/file/d/${fileId}/preview`;
+export const driveThumbUrl = (fileId: string) => `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`;
 
 // ─── Gift registry ────────────────────────────
 export const GIFT_URL = "https://giftus.io/events/berlin-jerlin-ashika-7tji";

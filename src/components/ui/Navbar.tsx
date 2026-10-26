@@ -21,6 +21,7 @@ const NAV_LINKS: NavLink[] = [
   { label: "Story",   href: "#story"   },
   { label: "Events",  href: "#events"  },
   { label: "Gallery", href: "#gallery" },
+  { label: "Films",   href: "#highlights" },
   { label: "Wishes",  href: "/wishes"  },
 ];
 
@@ -95,7 +96,7 @@ export default function Navbar() {
           Chrome bug that leaves the pill's blur permanently mis-rasterized,
           making its text look soft/blurry even after the animation finishes. */}
       <motion.header
-        className="fixed top-0 left-0 right-0 z-40 flex flex-col items-center"
+        className="fixed top-0 left-0 right-0 z-40 flex flex-col items-end px-4 md:items-center md:px-0"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.8, ease: EASE }}
@@ -105,11 +106,10 @@ export default function Navbar() {
           bar shows whatever is behind it blurred through rather than painting
           a solid color over it. */}
       <div
-        className="flex items-center justify-end gap-6"
+        className="flex items-center justify-end gap-6 p-2 md:py-[0.6rem] md:pr-2 md:pl-5"
         style={{
           marginTop: "0.9rem",
           borderRadius: "999px",
-          padding: "0.6rem 0.5rem 0.6rem 1.25rem",
           maxWidth: "min(94vw, 720px)",
           transition: "background 0.45s ease, box-shadow 0.45s ease, padding 0.45s ease",
           background: scrolled ? "rgba(20,16,12,0.45)" : "rgba(20,16,12,0.22)",
@@ -138,7 +138,7 @@ export default function Navbar() {
                   fontSize: "0.8rem",
                   letterSpacing: "0.1em",
                   whiteSpace: "nowrap",
-                  color: isActive ? "#F2DCA0" : "rgba(255,253,249,0.7)",
+                  color: isActive ? "#F9DE93" : "rgba(255,253,249,0.7)",
                   transition: "color 0.3s ease",
                 }}
               >
@@ -147,7 +147,7 @@ export default function Navbar() {
                   <motion.span
                     layoutId="nav-indicator"
                     className="absolute -bottom-1 left-1/2 -translate-x-1/2 block rounded-full"
-                    style={{ width: "3px", height: "3px", background: "#D9B441" }}
+                    style={{ width: "3px", height: "3px", background: "#F0BC3F" }}
                   />
                 )}
               </button>
@@ -211,7 +211,7 @@ export default function Navbar() {
                     fontFamily: "var(--font-cormorant), Georgia, serif",
                     fontSize: "1rem",
                     letterSpacing: "0.1em",
-                    color: activeSection === link.href ? "#F2DCA0" : "rgba(255,253,249,0.8)",
+                    color: activeSection === link.href ? "#F9DE93" : "rgba(255,253,249,0.8)",
                   }}
                 >
                   {link.label}

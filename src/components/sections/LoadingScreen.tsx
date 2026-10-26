@@ -38,9 +38,9 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             opacity: 1,
             scale: 1,
             filter: [
-              "drop-shadow(0 4px 14px rgba(217,180,65,0.25))",
-              "drop-shadow(0 4px 22px rgba(217,180,65,0.5))",
-              "drop-shadow(0 4px 14px rgba(217,180,65,0.25))",
+              "drop-shadow(0 4px 14px rgba(240,188,63,0.25))",
+              "drop-shadow(0 4px 22px rgba(240,188,63,0.5))",
+              "drop-shadow(0 4px 14px rgba(240,188,63,0.25))",
             ],
           }}
           transition={{
@@ -52,7 +52,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         />
 
         <motion.div
-          style={{ height: "1px", background: "rgba(217,180,65,0.4)", marginTop: "1.5rem" }}
+          style={{ height: "1px", background: "rgba(240,188,63,0.4)", marginTop: "1.5rem" }}
           initial={{ width: 0, opacity: 0 }}
           animate={{ width: 80, opacity: 1 }}
           transition={{ duration: 1.0, delay: 0.6, ease: "easeOut" }}
@@ -65,7 +65,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "clamp(0.82rem, 3vw, 1rem)",
             letterSpacing: "0.3em",
-            color: "#F2DCA0",
+            color: "#F9DE93",
             textTransform: "uppercase",
             whiteSpace: "nowrap",
           }}
@@ -85,7 +85,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             fontFamily: "var(--font-cormorant), Georgia, serif",
             fontSize: "0.95rem",
             fontStyle: "italic",
-            color: "rgba(242,220,160,0.7)",
+            color: "rgba(249,222,147,0.7)",
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -122,7 +122,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
               fontFamily: "var(--font-cormorant), Georgia, serif",
               fontSize: "0.6rem",
               letterSpacing: "0.5em",
-              color: "rgba(217,180,65,0.75)",
+              color: "rgba(240,188,63,0.75)",
               textTransform: "uppercase",
               textAlign: "center",
             }}
@@ -130,9 +130,9 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             Preparing your invitation
           </p>
 
-          <div style={{ width: "120px", height: "1px", background: "rgba(217,180,65,0.14)" }}>
+          <div style={{ width: "120px", height: "1px", background: "rgba(240,188,63,0.14)" }}>
             <motion.div
-              style={{ height: "100%", background: "#D9B441" }}
+              style={{ height: "100%", background: "#F0BC3F" }}
               initial={{ width: "0%" }}
               animate={{ width: "100%" }}
               transition={{ duration: 2.4, delay: 0.3, ease: "easeInOut" }}
@@ -149,7 +149,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             fontSize: "0.68rem",
             letterSpacing: "0.12em",
             lineHeight: 1.5,
-            color: "rgba(242,220,160,0.7)",
+            color: "rgba(249,222,147,0.7)",
             maxWidth: "22rem",
           }}
           initial={{ opacity: 0 }}

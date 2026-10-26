@@ -119,7 +119,7 @@ export default function EditWishesPage() {
     width: "100%",
     padding: "0.4rem 0.6rem",
     borderRadius: "6px",
-    border: "1px solid rgba(217,180,65,0.4)",
+    border: "1px solid rgba(240,188,63,0.4)",
     fontFamily: "var(--font-inter), sans-serif",
     fontSize: "0.85rem",
     background: "#FFFDF9",
@@ -137,7 +137,7 @@ export default function EditWishesPage() {
           style={{
             width: "min(90vw, 340px)",
             background: "#FFFDF9",
-            border: "1px solid rgba(217,180,65,0.3)",
+            border: "1px solid rgba(240,188,63,0.3)",
             borderRadius: "14px",
             padding: "2rem 1.75rem",
             textAlign: "center",
@@ -175,7 +175,7 @@ export default function EditWishesPage() {
               padding: "0.55rem",
               borderRadius: "8px",
               border: "none",
-              background: "#D9B441",
+              background: "#F0BC3F",
               // Cream on the bright gold is only ~2:1; dark ink reads at 8:1.
               color: "#2A1F14",
               fontSize: "0.8rem",
@@ -211,10 +211,10 @@ export default function EditWishesPage() {
         <p style={{ color: "#C0392B", fontSize: "0.85rem", marginBottom: "1rem" }}>{loadError}</p>
       )}
 
-      <div style={{ overflowX: "auto", borderRadius: "12px", border: "1px solid rgba(217,180,65,0.25)" }}>
+      <div style={{ overflowX: "auto", borderRadius: "12px", border: "1px solid rgba(240,188,63,0.25)" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", background: "#FFFDF9", minWidth: "720px" }}>
           <thead>
-            <tr style={{ background: "rgba(217,180,65,0.12)" }}>
+            <tr style={{ background: "rgba(240,188,63,0.12)" }}>
               {["Name", "You're Here For", "Relationship", "Message", "Submitted", ""].map((h) => (
                 <th
                   key={h}
@@ -241,7 +241,7 @@ export default function EditWishesPage() {
                 <tr
                   key={w.id}
                   style={{
-                    borderTop: "1px solid rgba(217,180,65,0.15)",
+                    borderTop: "1px solid rgba(240,188,63,0.15)",
                     opacity: w.deleted ? 0.5 : 1,
                   }}
                 >
@@ -362,7 +362,7 @@ const iconBtnStyle: React.CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
   borderRadius: "6px",
-  border: "1px solid rgba(217,180,65,0.35)",
+  border: "1px solid rgba(240,188,63,0.35)",
   background: "#FFFDF9",
   color: "#796D65",
   cursor: "pointer",

@@ -4,6 +4,6 @@
  * carried their own copy of this list.
  */
 export const CELEBRATION_COLORS = [
-  "#D9B441", "#F2DCA0", "#FAC2BC", "#F58893",
+  "#F0BC3F", "#F9DE93", "#FAC2BC", "#F58893",
   "#EE7863", "#FFFDF9", "#F2772F",
 ] as const;
