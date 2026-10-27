@@ -109,6 +109,9 @@ function FilmPlayer({ film }: { film: Highlight }) {
           onPlay={onPlay}
           onPause={onPause}
           onEnded={onPause}
+          // Without this a failed or stalled-out load would keep the claim on
+          // the speakers forever, leaving the site silent with nothing playing.
+          onError={onPause}
           onTimeUpdate={(e) => setCurrent(e.currentTarget.currentTime)}
           onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
           onClick={started ? toggle : undefined}
