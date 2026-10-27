@@ -103,7 +103,6 @@ const RELATION_TYPES = [
   { key: "office", label: "Office Colleague", emoji: "💼" },
   { key: "family", label: "Family", emoji: "❤️" },
   { key: "wellwisher", label: "Well-wisher", emoji: "🌟" },
-  { key: "other", label: "Other", emoji: "✨" },
 ] as const;
 
 type SideKey = (typeof SIDES)[number]["key"];
@@ -146,7 +145,7 @@ function RelationPicker({ onChange }: { onChange: (relation: string) => void }) 
   return (
     <div className="space-y-3">
       <div>
-        <p className="font-sans-custom text-[10px] tracking-widest uppercase text-[#F0BC3F] mb-2">
+        <p className="font-sans-custom text-[13px] tracking-widest uppercase text-[#F0BC3F] mb-2">
           You&rsquo;re here for the…
         </p>
         <div className="flex gap-2 flex-wrap">
@@ -157,7 +156,7 @@ function RelationPicker({ onChange }: { onChange: (relation: string) => void }) 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => selectSide(s.key)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full font-sans-custom text-xs transition-colors"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full font-sans-custom text-sm transition-colors"
               style={pillStyle(side === s.key)}
             >
               <span>{s.emoji}</span> {s.label}
@@ -174,7 +173,7 @@ function RelationPicker({ onChange }: { onChange: (relation: string) => void }) 
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <p className="font-sans-custom text-[10px] tracking-widest uppercase text-[#F0BC3F] mb-2 mt-1">
+            <p className="font-sans-custom text-[13px] tracking-widest uppercase text-[#F0BC3F] mb-2 mt-1">
               And your relation is…
             </p>
             <div className="flex gap-2 flex-wrap">
@@ -185,7 +184,7 @@ function RelationPicker({ onChange }: { onChange: (relation: string) => void }) 
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => selectType(t.key)}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-full font-sans-custom text-xs transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-full font-sans-custom text-sm transition-colors"
                   style={pillStyle(type === t.key)}
                 >
                   <span>{t.emoji}</span> {t.label}
@@ -206,7 +205,7 @@ function RelationPicker({ onChange }: { onChange: (relation: string) => void }) 
             style={{ background: "rgba(240,188,63,0.16)", border: "1px solid rgba(240,188,63,0.42)" }}
           >
             <span className="text-sm">{sideMeta?.emoji} {typeMeta?.emoji}</span>
-            <span className="font-sans-custom text-xs text-[#F9DE93]">{composed}</span>
+            <span className="font-sans-custom text-sm text-[#F9DE93]">{composed}</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -283,7 +282,7 @@ function WishNote({ wish, index }: { wish: Wish; index: number }) {
             <p className="font-sans-custom text-sm font-medium truncate" style={{ color: "#FFFDF9" }}>
               {wish.name}
             </p>
-            <p className="font-sans-custom text-[10px] truncate" style={{ color: accent.hex }}>
+            <p className="font-sans-custom text-[13px] truncate" style={{ color: accent.hex }}>
               {wish.relation}
             </p>
           </div>
@@ -304,11 +303,11 @@ function WishNote({ wish, index }: { wish: Wish; index: number }) {
         >
           <span className="flex items-center gap-1.5">
             <Heart size={11} fill={accent.hex} style={{ color: accent.hex }} />
-            <span className="font-sans-custom text-[9px] tracking-wider uppercase" style={{ color: `rgba(${accent.rgb},0.95)` }}>
+            <span className="font-sans-custom text-[13px] tracking-wider uppercase" style={{ color: `rgba(${accent.rgb},0.95)` }}>
               wishes for the couple
             </span>
           </span>
-          <span className="font-sans-custom text-[9px]" style={{ color: "rgba(255,253,249,0.6)" }}>
+          <span className="font-sans-custom text-[13px]" style={{ color: "rgba(255,253,249,0.6)" }}>
             {new Date(wish.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
           </span>
         </div>
@@ -366,7 +365,7 @@ export default function WishesPage() {
       {/* Header */}
       <section className="py-16 sm:py-20 px-4 sm:px-6 text-center relative overflow-hidden">
         <motion.div initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-          <p className="font-sans-custom text-[10px] tracking-[0.45em] uppercase text-[#F0BC3F] mb-3">Messages of Love</p>
+          <p className="font-sans-custom text-[13px] tracking-[0.45em] uppercase text-[#F0BC3F] mb-3">Messages of Love</p>
           <h1
             className="font-script mb-4"
             style={{
@@ -440,7 +439,7 @@ export default function WishesPage() {
                 className="wish-field w-full rounded-xl px-4 py-3 font-serif text-base outline-none resize-none leading-relaxed"
               />
               <div className="flex items-center justify-between">
-                <span className="font-sans-custom text-[9px]" style={{ color: "rgba(255,253,249,0.6)" }}>
+                <span className="font-sans-custom text-[13px]" style={{ color: "rgba(255,253,249,0.6)" }}>
                   {message.length}/500
                 </span>
               </div>
@@ -452,7 +451,7 @@ export default function WishesPage() {
 
               <motion.button type="submit" disabled={submitting || !name.trim() || !relation || !message.trim()}
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                className="w-full py-3.5 rounded-xl font-sans-custom text-[11px] tracking-widest uppercase disabled:opacity-45 flex items-center justify-center gap-2 transition-opacity"
+                className="w-full py-3.5 rounded-xl font-sans-custom text-[13px] tracking-widest uppercase disabled:opacity-45 flex items-center justify-center gap-2 transition-opacity"
                 style={{ background: "linear-gradient(135deg,#F0BC3F,#F8D977)", color: "#2A1F14",
                   boxShadow: "0 10px 26px rgba(240,188,63,0.3)" }}>
                 {submitting ? (
@@ -475,7 +474,7 @@ export default function WishesPage() {
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
             Messages of Love
           </p>
-          <p className="font-sans-custom text-[10px] tracking-widest uppercase" style={{ color: "rgba(255,253,249,0.64)" }}>
+          <p className="font-sans-custom text-[13px] tracking-widest uppercase" style={{ color: "rgba(255,253,249,0.64)" }}>
             {wishes.length} wish{wishes.length !== 1 ? "es" : ""} · pinned by friends and family
           </p>
         </motion.div>

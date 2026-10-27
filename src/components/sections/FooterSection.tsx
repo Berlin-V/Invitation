@@ -59,7 +59,7 @@ export default function FooterSection() {
         <p
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.7rem",
+            fontSize: "0.85rem",
             letterSpacing: "0.3em",
             color: "rgba(240,188,63,0.75)",
             textTransform: "uppercase",
@@ -82,7 +82,7 @@ export default function FooterSection() {
         <p
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.6rem",
+            fontSize: "0.88rem",
             letterSpacing: "0.18em",
             color: "rgba(240,188,63,0.75)",
           }}

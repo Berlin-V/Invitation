@@ -56,7 +56,7 @@ export default function GalleryPage() {
       {/* Header */}
       <section className="py-20 px-6 text-center">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-          <p className="font-sans-custom text-[11px] tracking-[0.5em] uppercase text-orange mb-4">Captured Moments</p>
+          <p className="font-sans-custom text-[13px] tracking-[0.5em] uppercase text-orange mb-4">Captured Moments</p>
           <h1 className="font-script text-6xl md:text-7xl text-orange-gradient mb-4">Our Gallery</h1>
           <p className="font-serif text-lg text-[#FAF5EE]/60 italic">A collection of beautiful memories</p>
         </motion.div>
@@ -92,7 +92,7 @@ export default function GalleryPage() {
                     className="h-auto w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
-                    <span className="font-sans-custom text-[10px] tracking-widest uppercase text-white/80">View</span>
+                    <span className="font-sans-custom text-[13px] tracking-widest uppercase text-white/80">View</span>
                   </div>
                 </div>
               </motion.div>
@@ -107,7 +107,7 @@ export default function GalleryPage() {
             <div className="text-5xl mb-4">💍</div>
             <h3 className="font-script text-4xl text-orange-gradient mb-3">Engagement</h3>
             <p className="font-sans-custom text-sm text-[#FAF5EE]/52">The day she said yes</p>
-            <p className="font-sans-custom text-xs text-[#FAF5EE]/52 mt-3">Photos will be added soon</p>
+            <p className="font-sans-custom text-sm text-[#FAF5EE]/52 mt-3">Photos will be added soon</p>
           </motion.div>
         )}
       </section>

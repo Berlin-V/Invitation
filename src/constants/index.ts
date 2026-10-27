@@ -49,10 +49,16 @@ export const EVENTS = {
 };
 
 // ─── Event highlight films ────────────────────
-// Served from the site itself rather than framed from Drive: Drive's player
-// brings its own fullscreen, subtitle and quality controls that can't be
-// turned off from a cross-origin frame. `aspect` matches each encode exactly,
-// so the frame never letterboxes the picture.
+// Films are served from the site itself rather than framed from Drive, whose
+// player brings its own fullscreen, subtitle and quality controls that a
+// cross-origin frame gives us no way to turn off.
+//
+// To add the next film: encode it into public/videos (H.264, +faststart so it
+// streams rather than buffering whole), pull a poster frame beside it, and
+// append an entry here — the section's grid reflows on its own, so nothing
+// else needs touching. `aspect` must match the encode's real pixel dimensions,
+// since the frame is built from it; if the master has black bars padded into
+// the picture, crop them out first rather than encoding them in.
 export const HIGHLIGHTS = [
   {
     id: "engagement",
@@ -60,7 +66,7 @@ export const HIGHLIGHTS = [
     caption: "The day we said yes, surrounded by both our families.",
     src: "/videos/engagement-highlights.mp4",
     poster: "/images/story/engagement-poster.jpg",
-    aspect: "960 / 718",
+    aspect: "1280 / 958",
   },
 ] as const;
 

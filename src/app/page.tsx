@@ -96,7 +96,7 @@ export default function HomePage() {
           style={{
             marginTop: "1.35rem",
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "clamp(0.82rem, 3vw, 1rem)",
+            fontSize: "clamp(0.92rem, 3vw, 1.08rem)",
             letterSpacing: "0.3em",
             color: "#F9DE93",
             textTransform: "uppercase",

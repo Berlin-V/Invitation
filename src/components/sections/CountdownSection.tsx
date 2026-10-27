@@ -54,7 +54,7 @@ export default function CountdownSection() {
         transition={{ duration: 0.8, ease: EASE }}
         style={{
           fontFamily: "var(--font-cormorant), Georgia, serif",
-          fontSize: "0.62rem",
+          fontSize: "0.9rem",
           letterSpacing: "0.46em",
           color: "#8F6410",
           textTransform: "uppercase",
@@ -121,7 +121,7 @@ export default function CountdownSection() {
             <p
               style={{
                 fontFamily: "var(--font-cormorant), Georgia, serif",
-                fontSize: "0.6rem",
+                fontSize: "0.88rem",
                 letterSpacing: "0.36em",
                 color: "#796D65",
                 textTransform: "uppercase",

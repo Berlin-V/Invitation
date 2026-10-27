@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { EASE } from "@/constants/motion";
 import { wishSide } from "@/lib/wish-relation";
 import type { Wish, WishSide } from "@/types";
 
-// Leaf anchor positions (%) relative to the tree container
-const LEAF_POSITIONS = [
+// Hand-placed leaf anchors (%) relative to the tree container. These shape the
+// canopy; once the wishes outgrow them, more are generated to match (see
+// leafPositions below), so a wish is never left without a leaf.
+const BASE_LEAF_POSITIONS = [
   { x: 50, y: 9 },
   { x: 42, y: 15 }, { x: 58, y: 15 },
   { x: 35, y: 23 }, { x: 50, y: 21 }, { x: 65, y: 23 },
@@ -18,6 +20,32 @@ const LEAF_POSITIONS = [
   { x: 24, y: 59 }, { x: 38, y: 57 }, { x: 50, y: 55 }, { x: 62, y: 57 }, { x: 76, y: 59 },
   { x: 32, y: 67 }, { x: 50, y: 65 }, { x: 68, y: 67 },
 ];
+
+/**
+ * Enough leaf anchors for `count` wishes.
+ *
+ * Up to the hand-placed canopy nothing changes. Past it, extra leaves are laid
+ * out on a golden-angle spiral inside the same ellipse, which fills the canopy
+ * evenly however many are needed and keeps new leaves away from the ones
+ * already there. Deterministic on purpose: Math.random() would place them
+ * differently on the server and the client and break hydration.
+ */
+function leafPositions(count: number) {
+  if (count <= BASE_LEAF_POSITIONS.length) return BASE_LEAF_POSITIONS;
+
+  const extra = count - BASE_LEAF_POSITIONS.length;
+  const grown = [...BASE_LEAF_POSITIONS];
+  for (let i = 0; i < extra; i++) {
+    const angle = (i * 137.508 * Math.PI) / 180;
+    // sqrt keeps the spiral evenly dense rather than crowding the middle.
+    const radius = Math.sqrt((i + 0.5) / extra);
+    grown.push({
+      x: 50 + Math.cos(angle) * radius * 32,
+      y: 38 + Math.sin(angle) * radius * 26,
+    });
+  }
+  return grown;
+}
 
 function timeAgo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
@@ -174,7 +202,7 @@ function Leaf({ wish, pos, idx }: LeafProps) {
               <p
                 style={{
                   fontFamily: "var(--font-cormorant), Georgia, serif",
-                  fontSize: "0.58rem",
+                  fontSize: "0.74rem",
                   letterSpacing: "0.22em",
                   color: "rgba(240,188,63,0.75)",
                   textTransform: "uppercase",
@@ -206,6 +234,8 @@ function Leaf({ wish, pos, idx }: LeafProps) {
 
 export default function WishesTreeSection() {
   const [wishes, setWishes] = useState<Wish[]>([]);
+  // Recomputed only when the wish count crosses the canopy, not on every render.
+  const leaves = useMemo(() => leafPositions(wishes.length), [wishes.length]);
 
   useEffect(() => {
     fetch("/api/wishes")
@@ -236,7 +266,7 @@ export default function WishesTreeSection() {
         <p
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.62rem",
+            fontSize: "0.9rem",
             letterSpacing: "0.46em",
             color: "rgba(240,188,63,0.75)",
             textTransform: "uppercase",
@@ -321,7 +351,7 @@ export default function WishesTreeSection() {
         </svg>
 
         {/* Leaves */}
-        {LEAF_POSITIONS.map((pos, i) => (
+        {leaves.map((pos, i) => (
           <Leaf
             key={i}
             wish={wishes[i] ?? null}
@@ -347,7 +377,7 @@ export default function WishesTreeSection() {
             background: "none",
             color: "#F0BC3F",
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.7rem",
+            fontSize: "0.85rem",
             letterSpacing: "0.35em",
             textTransform: "uppercase",
             padding: "0.8rem 2.5rem",

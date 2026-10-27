@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
@@ -27,6 +28,20 @@ const STARS = Array.from({ length: 30 }, (_, i) => {
 });
 
 export default function HeroSection() {
+  // Small threshold so the hint clears as soon as the page actually moves.
+  // The hint has served its purpose the moment the visitor scrolls, so this
+  // latches once and never comes back: returning to the top shouldn't nag
+  // about something they've already done, nor re-run its entrance delay.
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    if (scrolled) return;
+    const onScroll = () => {
+      if (window.scrollY > 24) setScrolled(true);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [scrolled]);
+
   const scrollDown = () => {
     const el = document.getElementById("countdown");
     el?.scrollIntoView({ behavior: "smooth" });
@@ -105,7 +120,7 @@ export default function HeroSection() {
           {...fadeUp(0.4)}
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.62rem",
+            fontSize: "0.9rem",
             letterSpacing: "0.48em",
             color: "rgba(240,188,63,0.85)",
             textTransform: "uppercase",
@@ -147,7 +162,7 @@ export default function HeroSection() {
           {...fadeUp(0.8)}
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "clamp(0.85rem, 2.5vw, 1.1rem)",
+            fontSize: "clamp(0.95rem, 2.5vw, 1.15rem)",
             letterSpacing: "0.28em",
             color: "#F0BC3F",
             fontStyle: "italic",
@@ -190,9 +205,10 @@ export default function HeroSection() {
           {...fadeUp(1.15)}
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "clamp(0.75rem, 2vw, 0.9rem)",
-            letterSpacing: "0.3em",
-            color: "rgba(255,253,249,0.75)",
+            fontSize: "clamp(0.95rem, 2.6vw, 1.15rem)",
+            letterSpacing: "0.26em",
+            color: "rgba(255,253,249,0.95)",
+            textShadow: "0 1px 10px rgba(0,0,0,0.55)",
             textTransform: "uppercase",
             marginBottom: "0.6rem",
           }}
@@ -218,16 +234,19 @@ export default function HeroSection() {
           border: "none",
           cursor: "pointer",
           zIndex: 3,
+          // Once faded it must not keep swallowing taps at the hero's foot.
+          pointerEvents: scrolled ? "none" : "auto",
         }}
         initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.6, duration: 0.8 }}
+        animate={{ opacity: scrolled ? 0 : 1, y: 0 }}
+        transition={{ delay: scrolled ? 0 : 1.6, duration: scrolled ? 0.35 : 0.8 }}
+        aria-hidden={scrolled}
         aria-label="Scroll down"
       >
         <p
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.58rem",
+            fontSize: "0.74rem",
             letterSpacing: "0.38em",
             color: "rgba(255,253,249,0.68)",
             textTransform: "uppercase",
