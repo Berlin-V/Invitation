@@ -26,15 +26,6 @@ export const MAPS = {
   receptionHall: "https://maps.app.goo.gl/m1ACjjsAbfHrSUjY8",
 };
 
-// ─── Google Drive albums ──────────────────────
-export const DRIVE = {
-  engagementAlbum: "https://drive.google.com/drive/folders/1w_xCWzBJuUtID3Mq9Qype3kO4TzNONxW?usp=sharing",
-  // Add more album folder links here as you get them:
-  // preWeddingAlbum: "https://drive.google.com/...",
-  // weddingAlbum:    "https://drive.google.com/...",
-  // receptionAlbum:  "https://drive.google.com/...",
-};
-
 // ─── Event schedule ───────────────────────────
 export const EVENTS = {
   brideSide: {
@@ -60,20 +51,18 @@ export const EVENTS = {
 // ─── Event highlight films ────────────────────
 // Served from the site itself rather than framed from Drive: Drive's player
 // brings its own fullscreen, subtitle and quality controls that can't be
-// turned off from a cross-origin frame. The Drive link stays alongside each
-// film so guests can still open or save the original.
+// turned off from a cross-origin frame. `aspect` matches each encode exactly,
+// so the frame never letterboxes the picture.
 export const HIGHLIGHTS = [
   {
-    id: "our-story",
-    title: "Our Story",
-    caption: "How the two of us got here, in a couple of minutes.",
-    src: "/videos/our-story.mp4",
-    poster: "/images/story/our-story-poster.jpg",
-    driveFileId: "15oFvrXPI8Lkcvu9NCiWTNxI_DemuPdfZ",
+    id: "engagement",
+    title: "Engagement Highlights",
+    caption: "The day we said yes, surrounded by both our families.",
+    src: "/videos/engagement-highlights.mp4",
+    poster: "/images/story/engagement-poster.jpg",
+    aspect: "960 / 718",
   },
 ] as const;
-
-export const driveFileUrl = (fileId: string) => `https://drive.google.com/file/d/${fileId}/view`;
 
 // ─── Gift registry ────────────────────────────
 export const GIFT_URL = "https://giftus.io/events/berlin-jerlin-ashika-7tji";
@@ -83,7 +72,7 @@ export const MEDIA = {
   heroPhoto: "/images/berlinJerlin.jpeg",
   logo: "/images/logo.svg",
   music: "/music/wedding.mp3",
-  storyVideo: "/videos/school-story.mp4",
+  storyVideo: "/videos/our-story.mp4",
   storyScroll: "/images/story/scroll.png",
 };
 

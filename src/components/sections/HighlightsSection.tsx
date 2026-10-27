@@ -2,9 +2,9 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Play, Pause, RotateCcw, FastForward, ExternalLink } from "lucide-react";
+import { Play, Pause, RotateCcw, FastForward } from "lucide-react";
 import { EASE } from "@/constants/motion";
-import { HIGHLIGHTS, driveFileUrl } from "@/constants";
+import { HIGHLIGHTS } from "@/constants";
 import { suspendBackgroundAudio } from "@/lib/background-audio";
 
 type Highlight = (typeof HIGHLIGHTS)[number];
@@ -89,10 +89,8 @@ function FilmPlayer({ film }: { film: Highlight }) {
         style={{
           position: "relative",
           width: "100%",
-          // Matches the film exactly (720x404). The master was a 16:9 picture
-          // padded into a square canvas; those baked-in black bars are cropped
-          // out of the encode, so the frame must not re-introduce them.
-          aspectRatio: "720 / 404",
+          // Matches the encode exactly, so the frame never letterboxes it.
+          aspectRatio: film.aspect,
           background: "#000",
         }}
       >
@@ -256,7 +254,7 @@ function FilmCard({ film }: { film: Highlight }) {
     >
       <FilmPlayer film={film} />
 
-      <div className="flex items-end justify-between" style={{ gap: "1.25rem", marginTop: "1.1rem" }}>
+      <div style={{ marginTop: "1.1rem" }}>
         <div>
           <h3
             style={{
@@ -281,26 +279,6 @@ function FilmCard({ film }: { film: Highlight }) {
           </p>
         </div>
 
-        <a
-          href={driveFileUrl(film.driveFileId)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center"
-          style={{
-            gap: "0.45rem",
-            flexShrink: 0,
-            fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.62rem",
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
-            color: "rgba(255,253,249,0.5)",
-            textDecoration: "none",
-            whiteSpace: "nowrap",
-            paddingBottom: "0.2rem",
-          }}
-        >
-          Drive <ExternalLink size={12} strokeWidth={1.5} />
-        </a>
       </div>
     </motion.div>
   );
