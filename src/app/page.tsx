@@ -14,7 +14,6 @@ import GallerySection from "@/components/sections/GallerySection";
 import HighlightsSection from "@/components/sections/HighlightsSection";
 import WishesTreeSection from "@/components/sections/WishesTreeSection";
 import FooterSection from "@/components/sections/FooterSection";
-import ChatBot from "@/components/ChatBot";
 import { EASE } from "@/constants/motion";
 import { COUPLE, MEDIA, WEDDING_DATE } from "@/constants";
 import type { AnimationPhase } from "@/types";
@@ -139,7 +138,6 @@ export default function HomePage() {
             <WishesTreeSection />
           </main>
           <FooterSection />
-          <ChatBot />
         </motion.div>
       )}
     </AnimatePresence>

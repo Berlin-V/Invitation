@@ -58,21 +58,22 @@ export const EVENTS = {
 };
 
 // ─── Event highlight films ────────────────────
-// Each entry is a Google Drive video. The file id drives both the inline
-// preview iframe and the "open in Drive" fallback, so adding a new film only
-// means pasting its id here.
+// Served from the site itself rather than framed from Drive: Drive's player
+// brings its own fullscreen, subtitle and quality controls that can't be
+// turned off from a cross-origin frame. The Drive link stays alongside each
+// film so guests can still open or save the original.
 export const HIGHLIGHTS = [
   {
-    id: "engagement",
-    title: "Engagement Highlights",
-    caption: "The day we said yes, surrounded by both our families.",
-    driveFileId: "1tQ7Dg52REb4agGsn5fMfPCBXyzMEwJyp",
+    id: "our-story",
+    title: "Our Story",
+    caption: "How the two of us got here, in a couple of minutes.",
+    src: "/videos/our-story.mp4",
+    poster: "/images/story/our-story-poster.jpg",
+    driveFileId: "15oFvrXPI8Lkcvu9NCiWTNxI_DemuPdfZ",
   },
 ] as const;
 
 export const driveFileUrl = (fileId: string) => `https://drive.google.com/file/d/${fileId}/view`;
-export const drivePreviewUrl = (fileId: string) => `https://drive.google.com/file/d/${fileId}/preview`;
-export const driveThumbUrl = (fileId: string) => `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`;
 
 // ─── Gift registry ────────────────────────────
 export const GIFT_URL = "https://giftus.io/events/berlin-jerlin-ashika-7tji";
@@ -81,7 +82,6 @@ export const GIFT_URL = "https://giftus.io/events/berlin-jerlin-ashika-7tji";
 export const MEDIA = {
   heroPhoto: "/images/berlinJerlin.jpeg",
   logo: "/images/logo.svg",
-  cupid: "/images/cupid.png",
   music: "/music/wedding.mp3",
   storyVideo: "/videos/school-story.mp4",
   storyScroll: "/images/story/scroll.png",

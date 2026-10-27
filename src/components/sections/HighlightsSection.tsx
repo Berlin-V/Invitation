@@ -1,30 +1,249 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Play, ExternalLink, X } from "lucide-react";
+import { Play, Pause, RotateCcw, FastForward, ExternalLink } from "lucide-react";
 import { EASE } from "@/constants/motion";
-import {
-  HIGHLIGHTS,
-  driveFileUrl,
-  drivePreviewUrl,
-  driveThumbUrl,
-} from "@/constants";
+import { HIGHLIGHTS, driveFileUrl } from "@/constants";
 import { suspendBackgroundAudio } from "@/lib/background-audio";
 
 type Highlight = (typeof HIGHLIGHTS)[number];
 
-function FilmCard({ film }: { film: Highlight }) {
+const SKIP_SECONDS = 10;
+
+function formatTime(seconds: number) {
+  if (!Number.isFinite(seconds)) return "0:00";
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+function FilmPlayer({ film }: { film: Highlight }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const releaseAudio = useRef<(() => void) | null>(null);
+
+  const [started, setStarted] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [thumbFailed, setThumbFailed] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [duration, setDuration] = useState(0);
 
-  // The film takes over the speakers while it's on screen, and hands them back
-  // when it's closed or the visitor navigates away mid-play.
+  // The film holds the speakers only while it is actually playing, so pausing
+  // hands the site music straight back.
   useEffect(() => {
-    if (!playing) return;
-    return suspendBackgroundAudio();
-  }, [playing]);
+    return () => {
+      releaseAudio.current?.();
+      releaseAudio.current = null;
+    };
+  }, []);
 
+  const onPlay = useCallback(() => {
+    setPlaying(true);
+    releaseAudio.current ??= suspendBackgroundAudio();
+  }, []);
+
+  const onPause = useCallback(() => {
+    setPlaying(false);
+    releaseAudio.current?.();
+    releaseAudio.current = null;
+  }, []);
+
+  const start = () => {
+    setStarted(true);
+    // The click itself is the gesture, so this satisfies autoplay policy.
+    videoRef.current?.play().catch(() => {});
+  };
+
+  const toggle = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) v.play().catch(() => {});
+    else v.pause();
+  };
+
+  const skip = (delta: number) => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.currentTime = Math.min(Math.max(0, v.currentTime + delta), v.duration || 0);
+  };
+
+  const seekTo = (value: number) => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.currentTime = value;
+    setCurrent(value);
+  };
+
+  const progress = duration > 0 ? (current / duration) * 100 : 0;
+
+  return (
+    <div
+      style={{
+        borderRadius: "18px",
+        overflow: "hidden",
+        border: "1px solid rgba(240,188,63,0.22)",
+        background: "rgba(8,6,4,0.6)",
+        boxShadow: "0 24px 60px rgba(0,0,0,0.5)",
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          // Matches the film exactly (720x404). The master was a 16:9 picture
+          // padded into a square canvas; those baked-in black bars are cropped
+          // out of the encode, so the frame must not re-introduce them.
+          aspectRatio: "720 / 404",
+          background: "#000",
+        }}
+      >
+        <video
+          ref={videoRef}
+          src={film.src}
+          poster={film.poster}
+          playsInline
+          preload="metadata"
+          // Only the controls below exist: no native chrome, so no fullscreen,
+          // no subtitle or quality menus, no picture-in-picture, no download.
+          disablePictureInPicture
+          controlsList="nodownload nofullscreen noremoteplayback"
+          onPlay={onPlay}
+          onPause={onPause}
+          onEnded={onPause}
+          onTimeUpdate={(e) => setCurrent(e.currentTarget.currentTime)}
+          onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+          onClick={started ? toggle : undefined}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            cursor: started ? "pointer" : "default",
+          }}
+        />
+
+        {!started && (
+          <button
+            onClick={start}
+            aria-label={`Play ${film.title}`}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background:
+                "linear-gradient(180deg, rgba(10,8,5,0.15) 0%, rgba(10,8,5,0.5) 100%)",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+            }}
+          >
+            <span
+              aria-hidden="true"
+              style={{
+                width: "68px",
+                height: "68px",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "rgba(240,188,63,0.18)",
+                border: "1px solid rgba(240,188,63,0.6)",
+                backdropFilter: "blur(6px)",
+                WebkitBackdropFilter: "blur(6px)",
+                color: "#F9DE93",
+                boxShadow: "0 8px 30px rgba(0,0,0,0.45)",
+              }}
+            >
+              {/* Nudged right so the triangle's visual centre sits on the circle's. */}
+              <Play size={24} strokeWidth={1.25} fill="currentColor" style={{ marginLeft: "3px" }} />
+            </span>
+          </button>
+        )}
+      </div>
+
+      {/* Control bar — play/pause, scrub, and a jump either way. That's the lot. */}
+      <div
+        className="flex items-center"
+        style={{
+          gap: "0.7rem",
+          padding: "0.75rem 0.9rem",
+          background: "rgba(10,8,5,0.85)",
+          borderTop: "1px solid rgba(240,188,63,0.14)",
+        }}
+      >
+        <button
+          onClick={started ? toggle : start}
+          aria-label={playing ? "Pause" : "Play"}
+          style={{
+            flexShrink: 0,
+            width: "34px",
+            height: "34px",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "rgba(240,188,63,0.14)",
+            border: "1px solid rgba(240,188,63,0.45)",
+            color: "#F9DE93",
+            cursor: "pointer",
+            padding: 0,
+          }}
+        >
+          {playing
+            ? <Pause size={15} strokeWidth={1.5} fill="currentColor" />
+            : <Play size={15} strokeWidth={1.5} fill="currentColor" style={{ marginLeft: "2px" }} />}
+        </button>
+
+        <button
+          onClick={() => skip(-SKIP_SECONDS)}
+          aria-label={`Back ${SKIP_SECONDS} seconds`}
+          className="film-ctl"
+        >
+          <RotateCcw size={15} strokeWidth={1.5} />
+        </button>
+
+        <input
+          type="range"
+          className="film-seek"
+          min={0}
+          max={duration || 0}
+          step={0.1}
+          value={current}
+          onChange={(e) => seekTo(Number(e.target.value))}
+          aria-label="Seek"
+          style={{ ["--played" as string]: `${progress}%` }}
+        />
+
+        <button
+          onClick={() => skip(SKIP_SECONDS)}
+          aria-label={`Forward ${SKIP_SECONDS} seconds`}
+          className="film-ctl"
+        >
+          <FastForward size={15} strokeWidth={1.5} />
+        </button>
+
+        <span
+          style={{
+            flexShrink: 0,
+            fontFamily: "var(--font-cormorant), Georgia, serif",
+            fontSize: "0.7rem",
+            letterSpacing: "0.06em",
+            color: "rgba(255,253,249,0.6)",
+            fontVariantNumeric: "tabular-nums",
+          }}
+        >
+          {formatTime(current)} / {formatTime(duration)}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function FilmCard({ film }: { film: Highlight }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -32,136 +251,9 @@ function FilmCard({ film }: { film: Highlight }) {
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.8, ease: EASE }}
     >
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          aspectRatio: "16 / 9",
-          borderRadius: "16px",
-          overflow: "hidden",
-          border: "1px solid rgba(240,188,63,0.22)",
-          background: playing
-            ? "#000"
-            : "linear-gradient(135deg, #1C150E 0%, #0E0A06 100%)",
-          boxShadow: "0 20px 50px rgba(0,0,0,0.45)",
-        }}
-      >
-        {playing ? (
-          <>
-            {/* Drive's own player, which carries the scrub bar, volume,
-                playback speed and fullscreen — a cross-origin frame gives us
-                no way to drive those ourselves. */}
-            <iframe
-              src={drivePreviewUrl(film.driveFileId)}
-              title={film.title}
-              allow="autoplay; fullscreen"
-              allowFullScreen
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: "none" }}
-            />
-            {/* Without this the film can only be ended by reloading, and the
-                site music would never be handed back. Sits clear of Drive's
-                own top-right "open in new window" control. */}
-            <button
-              onClick={() => setPlaying(false)}
-              aria-label={`Stop ${film.title}`}
-              style={{
-                position: "absolute",
-                top: "0.5rem",
-                left: "0.5rem",
-                width: "30px",
-                height: "30px",
-                borderRadius: "50%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "rgba(10,8,5,0.6)",
-                border: "1px solid rgba(240,188,63,0.4)",
-                color: "#F9DE93",
-                cursor: "pointer",
-                padding: 0,
-                zIndex: 2,
-              }}
-            >
-              <X size={14} strokeWidth={1.5} />
-            </button>
-          </>
-        ) : (
-          <button
-            onClick={() => setPlaying(true)}
-            aria-label={`Play ${film.title}`}
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              background: "none",
-              border: "none",
-              padding: 0,
-              cursor: "pointer",
-            }}
-          >
-            {!thumbFailed && (
-              /* Drive's thumbnail endpoint, not next/image: it needs no
-                 remotePatterns entry and degrades to the gradient on failure. */
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
-                src={driveThumbUrl(film.driveFileId)}
-                alt=""
-                aria-hidden="true"
-                loading="lazy"
-                onError={() => setThumbFailed(true)}
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  opacity: 0.55,
-                }}
-              />
-            )}
+      <FilmPlayer film={film} />
 
-            <span
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(180deg, rgba(10,8,5,0.1) 0%, rgba(10,8,5,0.55) 60%, rgba(10,8,5,0.9) 100%)",
-              }}
-            />
-
-            <span
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: "62px",
-                height: "62px",
-                borderRadius: "50%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "rgba(240,188,63,0.16)",
-                border: "1px solid rgba(240,188,63,0.55)",
-                backdropFilter: "blur(6px)",
-                WebkitBackdropFilter: "blur(6px)",
-                color: "#F9DE93",
-              }}
-            >
-              {/* Nudged right so the triangle's visual centre sits on the circle's. */}
-              <Play size={22} strokeWidth={1.25} fill="currentColor" style={{ marginLeft: "3px" }} />
-            </span>
-          </button>
-        )}
-      </div>
-
-      <div
-        className="flex items-end justify-between"
-        style={{ gap: "1.25rem", marginTop: "1.1rem" }}
-      >
+      <div className="flex items-end justify-between" style={{ gap: "1.25rem", marginTop: "1.1rem" }}>
         <div>
           <h3
             style={{
@@ -186,9 +278,6 @@ function FilmCard({ film }: { film: Highlight }) {
           </p>
         </div>
 
-        {/* Drive refuses to frame a file that isn't shared publicly, and the
-            iframe gives the page no error to detect — so the direct link sits
-            in the widget permanently rather than behind an error state. */}
         <a
           href={driveFileUrl(film.driveFileId)}
           target="_blank"
@@ -201,7 +290,7 @@ function FilmCard({ film }: { film: Highlight }) {
             fontSize: "0.62rem",
             letterSpacing: "0.22em",
             textTransform: "uppercase",
-            color: "rgba(255,253,249,0.55)",
+            color: "rgba(255,253,249,0.5)",
             textDecoration: "none",
             whiteSpace: "nowrap",
             paddingBottom: "0.2rem",
@@ -269,8 +358,7 @@ export default function HighlightsSection() {
       <div
         className="grid gap-10 sm:grid-cols-2"
         style={{
-          // One film shouldn't stretch the full width of a desktop grid.
-          maxWidth: HIGHLIGHTS.length === 1 ? "720px" : "1000px",
+          maxWidth: HIGHLIGHTS.length === 1 ? "640px" : "1000px",
           margin: "0 auto",
           gridTemplateColumns: HIGHLIGHTS.length === 1 ? "1fr" : undefined,
         }}
