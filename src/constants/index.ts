@@ -56,9 +56,11 @@ export const EVENTS = {
 // To add the next film: encode it into public/videos (H.264, +faststart so it
 // streams rather than buffering whole), pull a poster frame beside it, and
 // append an entry here — the section's grid reflows on its own, so nothing
-// else needs touching. `aspect` must match the encode's real pixel dimensions,
-// since the frame is built from it; if the master has black bars padded into
-// the picture, crop them out first rather than encoding them in.
+// else needs touching. `aspect` records the encode's real pixel dimensions;
+// the section presents films in an ultra-wide frame that crops to it, so this
+// stays the source of truth for what was actually encoded. If a master has
+// black bars padded into the picture, crop them out of the encode rather than
+// shipping them.
 export const HIGHLIGHTS = [
   {
     id: "engagement",

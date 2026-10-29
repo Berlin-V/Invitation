@@ -10,6 +10,11 @@ import { suspendBackgroundAudio } from "@/lib/background-audio";
 type Highlight = (typeof HIGHLIGHTS)[number];
 
 const SKIP_SECONDS = 10;
+/* The films are shot 4:3; this presents them as an ultra-wide strip. The
+   `objectFit: cover` below crops to it rather than squashing, so roughly the
+   top and bottom fifth of each frame sits outside the view. Nothing is baked
+   in — the encodes are untouched, so changing this number changes the look. */
+const FRAME_ASPECT = "21 / 9";
 // How long the chrome lingers after the last interaction while a film plays.
 const CHROME_LINGER_MS = 2600;
 
@@ -106,10 +111,11 @@ function FilmCard({ film }: { film: Highlight }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.8, ease: EASE }}
-      /* A 4:3 film spanning the whole section ran ~950px tall; capped here it
-         stays a comfortable card with nothing cropped. With several films the
-         grid cell is already narrower, so this only bites on its own. */
-      style={{ width: "min(100%, 920px)", margin: "0 auto" }}
+      /* Wider than the 4:3 card was, yet shorter: at 21:9 a 1180px strip is
+         ~506px tall against the 689px the 920px card needed. With several
+         films the grid cell is already narrower, so this only bites on its
+         own. */
+      style={{ width: "min(100%, 1180px)", margin: "0 auto" }}
     >
       <div
         onPointerMove={() => revealChrome(playing)}
@@ -118,8 +124,7 @@ function FilmCard({ film }: { film: Highlight }) {
         style={{
           position: "relative",
           width: "100%",
-          // Matches the encode exactly, so the frame never letterboxes it.
-          aspectRatio: film.aspect,
+          aspectRatio: FRAME_ASPECT,
           borderRadius: "18px",
           overflow: "hidden",
           background: "#000",
