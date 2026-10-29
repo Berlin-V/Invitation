@@ -196,7 +196,7 @@ export default function StorySection() {
         <p
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.62rem",
+            fontSize: "0.9rem",
             letterSpacing: "0.46em",
             color: "#8F6410",
             textTransform: "uppercase",

@@ -27,7 +27,7 @@ function SubEvent({ item, index }: { item: EventItem; index: number }) {
         <span
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.65rem",
+            fontSize: "0.8rem",
             letterSpacing: "0.24em",
             color: "#8F6410",
             textTransform: "uppercase",
@@ -75,7 +75,7 @@ function SubEvent({ item, index }: { item: EventItem; index: number }) {
         className="inline-flex items-center gap-1.5"
         style={{
           fontFamily: "var(--font-cormorant), Georgia, serif",
-          fontSize: "0.62rem",
+          fontSize: "0.9rem",
           letterSpacing: "0.28em",
           textTransform: "uppercase",
           color: "#8F6410",
@@ -134,7 +134,7 @@ function GroupPanel({ group, index }: { group: EventGroup; index: number }) {
       <p
         style={{
           fontFamily: "var(--font-cormorant), Georgia, serif",
-          fontSize: "0.6rem",
+          fontSize: "0.88rem",
           letterSpacing: "0.42em",
           color: "#8F6410",
           textTransform: "uppercase",
@@ -162,7 +162,7 @@ function GroupPanel({ group, index }: { group: EventGroup; index: number }) {
       <p
         style={{
           fontFamily: "var(--font-cormorant), Georgia, serif",
-          fontSize: "0.76rem",
+          fontSize: "0.88rem",
           letterSpacing: "0.14em",
           color: "#796D65",
           marginBottom: "1.75rem",
@@ -212,7 +212,7 @@ export default function EventsSection() {
         <p
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.62rem",
+            fontSize: "0.9rem",
             letterSpacing: "0.46em",
             color: "#8F6410",
             textTransform: "uppercase",

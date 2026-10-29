@@ -14,7 +14,6 @@ import GallerySection from "@/components/sections/GallerySection";
 import HighlightsSection from "@/components/sections/HighlightsSection";
 import WishesTreeSection from "@/components/sections/WishesTreeSection";
 import FooterSection from "@/components/sections/FooterSection";
-import ChatBot from "@/components/ChatBot";
 import { EASE } from "@/constants/motion";
 import { COUPLE, MEDIA, WEDDING_DATE } from "@/constants";
 import type { AnimationPhase } from "@/types";
@@ -97,7 +96,7 @@ export default function HomePage() {
           style={{
             marginTop: "1.35rem",
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "clamp(0.82rem, 3vw, 1rem)",
+            fontSize: "clamp(0.92rem, 3vw, 1.08rem)",
             letterSpacing: "0.3em",
             color: "#F9DE93",
             textTransform: "uppercase",
@@ -139,7 +138,6 @@ export default function HomePage() {
             <WishesTreeSection />
           </main>
           <FooterSection />
-          <ChatBot />
         </motion.div>
       )}
     </AnimatePresence>

@@ -26,15 +26,6 @@ export const MAPS = {
   receptionHall: "https://maps.app.goo.gl/m1ACjjsAbfHrSUjY8",
 };
 
-// ─── Google Drive albums ──────────────────────
-export const DRIVE = {
-  engagementAlbum: "https://drive.google.com/drive/folders/1w_xCWzBJuUtID3Mq9Qype3kO4TzNONxW?usp=sharing",
-  // Add more album folder links here as you get them:
-  // preWeddingAlbum: "https://drive.google.com/...",
-  // weddingAlbum:    "https://drive.google.com/...",
-  // receptionAlbum:  "https://drive.google.com/...",
-};
-
 // ─── Event schedule ───────────────────────────
 export const EVENTS = {
   brideSide: {
@@ -58,21 +49,28 @@ export const EVENTS = {
 };
 
 // ─── Event highlight films ────────────────────
-// Each entry is a Google Drive video. The file id drives both the inline
-// preview iframe and the "open in Drive" fallback, so adding a new film only
-// means pasting its id here.
+// Films are served from the site itself rather than framed from Drive, whose
+// player brings its own fullscreen, subtitle and quality controls that a
+// cross-origin frame gives us no way to turn off.
+//
+// To add the next film: encode it into public/videos (H.264, +faststart so it
+// streams rather than buffering whole), pull a poster frame beside it, and
+// append an entry here — the section's grid reflows on its own, so nothing
+// else needs touching. `aspect` records the encode's real pixel dimensions;
+// the section presents films in an ultra-wide frame that crops to it, so this
+// stays the source of truth for what was actually encoded. If a master has
+// black bars padded into the picture, crop them out of the encode rather than
+// shipping them.
 export const HIGHLIGHTS = [
   {
     id: "engagement",
     title: "Engagement Highlights",
     caption: "The day we said yes, surrounded by both our families.",
-    driveFileId: "1tQ7Dg52REb4agGsn5fMfPCBXyzMEwJyp",
+    src: "/videos/engagement-highlights.mp4",
+    poster: "/images/story/engagement-poster.jpg",
+    aspect: "1280 / 958",
   },
 ] as const;
-
-export const driveFileUrl = (fileId: string) => `https://drive.google.com/file/d/${fileId}/view`;
-export const drivePreviewUrl = (fileId: string) => `https://drive.google.com/file/d/${fileId}/preview`;
-export const driveThumbUrl = (fileId: string) => `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`;
 
 // ─── Gift registry ────────────────────────────
 export const GIFT_URL = "https://giftus.io/events/berlin-jerlin-ashika-7tji";
@@ -81,9 +79,8 @@ export const GIFT_URL = "https://giftus.io/events/berlin-jerlin-ashika-7tji";
 export const MEDIA = {
   heroPhoto: "/images/berlinJerlin.jpeg",
   logo: "/images/logo.svg",
-  cupid: "/images/cupid.png",
   music: "/music/wedding.mp3",
-  storyVideo: "/videos/school-story.mp4",
+  storyVideo: "/videos/our-story.mp4",
   storyScroll: "/images/story/scroll.png",
 };
 
