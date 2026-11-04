@@ -58,8 +58,22 @@ export default function Navbar() {
     }
     const el = document.querySelector(href);
     if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - NAV_SCROLL_OFFSET;
-    window.scrollTo({ top, behavior: "smooth" });
+
+    // Deferred by two frames, and that is load-bearing on mobile.
+    //
+    // Closing the menu animates its height away from `auto`, which Framer
+    // Motion can only measure by laying the element out at its natural size.
+    // It does that by saving the scroll position, moving the page and putting
+    // it back with `window.scrollTo(0, 0)` — and a smooth scroll started in
+    // the same frame is simply overwritten by that restore. Every link in the
+    // mobile menu did nothing at all, while the desktop links, with no menu
+    // to close, worked. Two frames puts this after the measurement.
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const top = el.getBoundingClientRect().top + window.scrollY - NAV_SCROLL_OFFSET;
+        window.scrollTo({ top, behavior: "smooth" });
+      })
+    );
   }, [router]);
 
   return (
