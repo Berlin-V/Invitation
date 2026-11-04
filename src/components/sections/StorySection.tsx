@@ -14,6 +14,7 @@ function RolledScroll({ onOpen }: { onOpen: () => void }) {
       className="flex flex-col items-center"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -12, scale: 0.96 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.8, ease: EASE }}
     >
@@ -61,7 +62,10 @@ function RolledScroll({ onOpen }: { onOpen: () => void }) {
   );
 }
 
-function VideoOverlay({ onClose }: { onClose: () => void }) {
+/* The film unrolls where the scroll was: no portal, no fixed layer, no new
+   container over the page. The section simply swaps one child for the other,
+   so the reader never leaves the scroll position they tapped from. */
+function UnrolledFilm({ onClose }: { onClose: () => void }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [playing, setPlaying] = useState(true);
 
@@ -69,7 +73,7 @@ function VideoOverlay({ onClose }: { onClose: () => void }) {
     const video = videoRef.current;
     if (!video) return;
     if (video.paused) {
-      video.play();
+      video.play().catch(() => {});
       setPlaying(true);
     } else {
       video.pause();
@@ -79,44 +83,41 @@ function VideoOverlay({ onClose }: { onClose: () => void }) {
 
   return (
     <motion.div
-      className="fixed inset-0 flex items-center justify-center p-4"
-      style={{ zIndex: 250, background: "rgba(0,0,0,0.95)" }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
-      onClick={onClose}
+      // Height 0 -> auto is the unrolling itself: the panel grows downward out
+      // of where the seal sat, rather than fading in on top of the page.
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: "auto", opacity: 1 }}
+      exit={{ height: 0, opacity: 0 }}
+      transition={{
+        height: { duration: 0.7, ease: EASE },
+        opacity: { duration: 0.4, ease: EASE },
+      }}
+      style={{ overflow: "hidden", width: "100%" }}
     >
-      <motion.div
-        initial={{ opacity: 0, scale: 0.94 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.96 }}
-        transition={{ duration: 0.35, ease: EASE }}
-        onClick={(e) => e.stopPropagation()}
-        style={{ position: "relative", width: "min(92vw, 620px)" }}
-      >
-        <button
-          onClick={onClose}
-          aria-label="Close video"
-          style={{
-            position: "absolute",
-            top: "-2.75rem",
-            right: 0,
-            background: "rgba(255,255,255,0.1)",
-            border: "none",
-            borderRadius: "50%",
-            width: "36px",
-            height: "36px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            color: "#FFF6E5",
-            zIndex: 1,
-          }}
-        >
-          <X size={18} strokeWidth={1.5} />
-        </button>
+      <div style={{ width: "min(92vw, 620px)", margin: "0 auto", paddingTop: "0.5rem" }}>
+        <div className="flex justify-end" style={{ marginBottom: "0.6rem" }}>
+          <button
+            onClick={onClose}
+            aria-label="Roll the scroll back up"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.4rem",
+              background: "rgba(143,100,16,0.08)",
+              border: "1px solid rgba(143,100,16,0.28)",
+              borderRadius: "999px",
+              padding: "0.35rem 0.85rem",
+              cursor: "pointer",
+              fontFamily: "var(--font-cormorant), Georgia, serif",
+              fontSize: "0.8rem",
+              letterSpacing: "0.08em",
+              color: "#796D65",
+            }}
+          >
+            <X size={14} strokeWidth={1.5} />
+            Roll back up
+          </button>
+        </div>
 
         <div
           onClick={togglePlay}
@@ -127,7 +128,7 @@ function VideoOverlay({ onClose }: { onClose: () => void }) {
             borderRadius: "10px",
             overflow: "hidden",
             background: "#000",
-            boxShadow: "0 30px 90px rgba(0,0,0,0.6)",
+            boxShadow: "0 24px 60px rgba(74,54,26,0.28)",
             cursor: "pointer",
           }}
         >
@@ -136,7 +137,16 @@ function VideoOverlay({ onClose }: { onClose: () => void }) {
             src={MEDIA.storyVideo}
             autoPlay
             playsInline
+            // The overlay play/pause is the only control, so none of the
+            // native affordances should be reachable: no picture-in-picture
+            // (neither a button nor the right-click menu item), no download,
+            // no fullscreen, no casting.
+            disablePictureInPicture
+            controlsList="nodownload nofullscreen noremoteplayback"
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
             onEnded={() => setPlaying(false)}
+            onError={() => setPlaying(false)}
             style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           />
 
@@ -168,7 +178,7 @@ function VideoOverlay({ onClose }: { onClose: () => void }) {
             </div>
           </motion.div>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
@@ -196,7 +206,7 @@ export default function StorySection() {
         <p
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.62rem",
+            fontSize: "0.9rem",
             letterSpacing: "0.46em",
             color: "#8F6410",
             textTransform: "uppercase",
@@ -219,10 +229,14 @@ export default function StorySection() {
         <div className="divider-gold" style={{ maxWidth: "100px", margin: "0 auto" }} />
       </motion.div>
 
-      <RolledScroll onOpen={() => setVideoOpen(true)} />
-
-      <AnimatePresence>
-        {videoOpen && <VideoOverlay onClose={() => setVideoOpen(false)} />}
+      {/* `mode="wait"` lets the seal finish rolling away before the film
+          unrolls, so the two never overlap in the same spot. */}
+      <AnimatePresence mode="wait" initial={false}>
+        {videoOpen ? (
+          <UnrolledFilm key="film" onClose={() => setVideoOpen(false)} />
+        ) : (
+          <RolledScroll key="scroll" onOpen={() => setVideoOpen(true)} />
+        )}
       </AnimatePresence>
     </section>
   );

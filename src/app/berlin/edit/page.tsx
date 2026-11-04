@@ -146,7 +146,7 @@ export default function EditWishesPage() {
           <p
             style={{
               fontFamily: "var(--font-cormorant), Georgia, serif",
-              fontSize: "0.62rem",
+              fontSize: "0.9rem",
               letterSpacing: "0.32em",
               color: "#8F6410",
               textTransform: "uppercase",
@@ -165,7 +165,7 @@ export default function EditWishesPage() {
             style={{ ...inputStyle, textAlign: "center", marginBottom: "0.85rem" }}
           />
           {gateError && (
-            <p style={{ color: "#C0392B", fontSize: "0.78rem", marginBottom: "0.75rem" }}>{gateError}</p>
+            <p style={{ color: "#C0392B", fontSize: "0.9rem", marginBottom: "0.75rem" }}>{gateError}</p>
           )}
           <button
             type="submit"
@@ -222,7 +222,7 @@ export default function EditWishesPage() {
                     textAlign: "left",
                     padding: "0.75rem 1rem",
                     fontFamily: "var(--font-inter), sans-serif",
-                    fontSize: "0.68rem",
+                    fontSize: "0.84rem",
                     letterSpacing: "0.12em",
                     textTransform: "uppercase",
                     color: "#796D65",
@@ -259,7 +259,7 @@ export default function EditWishesPage() {
                           <span
                             style={{
                               marginLeft: "0.5rem",
-                              fontSize: "0.62rem",
+                              fontSize: "0.9rem",
                               letterSpacing: "0.08em",
                               textTransform: "uppercase",
                               color: "#C0392B",
@@ -299,7 +299,7 @@ export default function EditWishesPage() {
                     )}
                   </td>
                   <td style={{ padding: "0.75rem 1rem", verticalAlign: "top", whiteSpace: "nowrap" }}>
-                    <span style={{ fontSize: "0.75rem", color: "#796D65" }}>
+                    <span style={{ fontSize: "0.88rem", color: "#796D65" }}>
                       {new Date(w.createdAt).toLocaleDateString()}
                     </span>
                   </td>

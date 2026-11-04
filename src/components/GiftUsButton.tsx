@@ -46,7 +46,7 @@ function GiftModal({ onClose }: { onClose: () => void }) {
           <p
             style={{
               fontFamily: "var(--font-cormorant), Georgia, serif",
-              fontSize: "0.75rem",
+              fontSize: "0.88rem",
               letterSpacing: "0.2em",
               color: "#4A403A",
               textTransform: "uppercase",
@@ -165,7 +165,7 @@ export default function GiftUsButton({ className, style }: GiftUsButtonProps) {
           border: "1.5px solid rgba(233,197,131,0.75)",
           borderRadius: "999px",
           fontFamily: "var(--font-cormorant), Georgia, serif",
-          fontSize: "0.78rem",
+          fontSize: "0.9rem",
           fontWeight: 700,
           letterSpacing: "0.3em",
           textTransform: "uppercase",

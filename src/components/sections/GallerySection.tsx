@@ -160,7 +160,7 @@ function Lightbox({ images, activeIndex, onClose, onNext, onPrev }: LightboxProp
           left: "50%",
           transform: "translateX(-50%)",
           fontFamily: "var(--font-cormorant), Georgia, serif",
-          fontSize: "0.65rem",
+          fontSize: "0.8rem",
           letterSpacing: "0.28em",
           color: "rgba(240,188,63,0.75)",
         }}
@@ -269,7 +269,7 @@ export default function GallerySection() {
         <p
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.62rem",
+            fontSize: "0.9rem",
             letterSpacing: "0.46em",
             color: "#8F6410",
             textTransform: "uppercase",
@@ -419,7 +419,7 @@ export default function GallerySection() {
             display: "inline-block",
             color: "#C99A24",
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.66rem",
+            fontSize: "0.82rem",
             letterSpacing: "0.32em",
             textTransform: "uppercase",
             padding: "0.75rem 2.25rem",

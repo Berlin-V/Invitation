@@ -45,7 +45,7 @@ export default function StoryPage() {
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(139,26,74,0.1) 0%, transparent 60%)" }} />
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
-          <p className="font-sans-custom text-[11px] tracking-[0.5em] uppercase text-orange mb-4">A Love Story</p>
+          <p className="font-sans-custom text-[13px] tracking-[0.5em] uppercase text-orange mb-4">A Love Story</p>
           <h1 className="font-script text-6xl md:text-8xl text-orange-gradient mb-6">Our Story</h1>
           <p className="font-serif text-xl text-[#FAF5EE]/60 italic max-w-lg mx-auto leading-relaxed">
             &ldquo;In all the world, there is no heart for me like yours.&rdquo;
@@ -75,7 +75,7 @@ export default function StoryPage() {
                 {/* Content */}
                 <div className="flex-1">
                   <div className={`glass-card p-8 ${m.side === "right" ? "md:text-right" : ""}`}>
-                    <p className="font-sans-custom text-[10px] tracking-[0.4em] uppercase text-orange mb-2">{m.year}</p>
+                    <p className="font-sans-custom text-[13px] tracking-[0.4em] uppercase text-orange mb-2">{m.year}</p>
                     <h3 className="font-script text-4xl text-[#FAF5EE] mb-3">{m.title}</h3>
                     <p className="font-serif text-base text-[#FAF5EE]/65 leading-relaxed">{m.text}</p>
                   </div>

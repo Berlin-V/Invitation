@@ -63,7 +63,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           style={{
             marginTop: "1.35rem",
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "clamp(0.82rem, 3vw, 1rem)",
+            fontSize: "clamp(0.92rem, 3vw, 1.08rem)",
             letterSpacing: "0.3em",
             color: "#F9DE93",
             textTransform: "uppercase",
@@ -120,7 +120,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           <p
             style={{
               fontFamily: "var(--font-cormorant), Georgia, serif",
-              fontSize: "0.6rem",
+              fontSize: "0.88rem",
               letterSpacing: "0.5em",
               color: "rgba(240,188,63,0.75)",
               textTransform: "uppercase",
@@ -146,7 +146,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           className="md:hidden flex items-center justify-center gap-2 text-center"
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.68rem",
+            fontSize: "0.84rem",
             letterSpacing: "0.12em",
             lineHeight: 1.5,
             color: "rgba(249,222,147,0.7)",

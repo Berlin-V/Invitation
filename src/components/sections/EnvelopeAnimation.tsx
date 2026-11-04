@@ -347,7 +347,7 @@ export default function EnvelopeAnimation({ onEnter }: EnvelopeAnimationProps) {
             lineHeight: 1.5,
           }}
         >
-          With love and blessings,
+          With love,
           <br />
           we invite you to the wedding of
         </p>
@@ -364,7 +364,7 @@ export default function EnvelopeAnimation({ onEnter }: EnvelopeAnimationProps) {
         <p
           style={{
             fontFamily: "var(--font-cormorant), Georgia, serif",
-            fontSize: "0.62rem",
+            fontSize: "0.9rem",
             letterSpacing: "0.34em",
             textTransform: "uppercase",
             color: "rgba(242,226,207,0.72)",
