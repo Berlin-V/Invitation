@@ -347,7 +347,7 @@ export default function EnvelopeAnimation({ onEnter }: EnvelopeAnimationProps) {
             lineHeight: 1.5,
           }}
         >
-          With love and blessings,
+          With love,
           <br />
           we invite you to the wedding of
         </p>

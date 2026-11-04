@@ -67,7 +67,7 @@ export const HIGHLIGHTS = [
     title: "Engagement Highlights",
     caption: "The day we said yes, surrounded by both our families.",
     src: "/videos/engagement-highlights.mp4",
-    poster: "/images/story/engagement-poster.jpg",
+    poster: "/images/ringMoment.jpeg",
     aspect: "1280 / 958",
   },
 ] as const;

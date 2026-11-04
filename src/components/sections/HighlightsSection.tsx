@@ -14,7 +14,13 @@ const SKIP_SECONDS = 10;
    `objectFit: cover` below crops to it rather than squashing, so roughly the
    top and bottom fifth of each frame sits outside the view. Nothing is baked
    in — the encodes are untouched, so changing this number changes the look. */
-const FRAME_ASPECT = "21 / 9";
+const FRAME_RATIO_W = 21;
+const FRAME_RATIO_H = 9;
+/* Two inches taller than that strip would be on its own. CSS `in` is a fixed
+   96px, so this is a real 2in on a 96dpi screen and stays put across widths
+   instead of scaling with them. Because the frame is `cover`, the extra
+   height uncrops the 4:3 source rather than letterboxing it. */
+const FRAME_EXTRA_HEIGHT = "2in";
 // How long the chrome lingers after the last interaction while a film plays.
 const CHROME_LINGER_MS = 2600;
 
@@ -115,7 +121,9 @@ function FilmCard({ film }: { film: Highlight }) {
          ~506px tall against the 689px the 920px card needed. With several
          films the grid cell is already narrower, so this only bites on its
          own. */
-      style={{ width: "min(100%, 1180px)", margin: "0 auto" }}
+      // `inline-size` makes 100cqw below mean this card's own width, which is
+      // what lets the frame be "its aspect ratio, plus a fixed 2in".
+      style={{ width: "min(100%, 1180px)", margin: "0 auto", containerType: "inline-size" }}
     >
       <div
         onPointerMove={() => revealChrome(playing)}
@@ -124,7 +132,7 @@ function FilmCard({ film }: { film: Highlight }) {
         style={{
           position: "relative",
           width: "100%",
-          aspectRatio: FRAME_ASPECT,
+          height: `calc(100cqw * ${FRAME_RATIO_H} / ${FRAME_RATIO_W} + ${FRAME_EXTRA_HEIGHT})`,
           borderRadius: "18px",
           overflow: "hidden",
           background: "#000",
