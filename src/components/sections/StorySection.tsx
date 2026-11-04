@@ -6,6 +6,7 @@ import { Pause, Play, X } from "lucide-react";
 import Image from "next/image";
 import { EASE } from "@/constants/motion";
 import { MEDIA } from "@/constants";
+import { useFilmPlayback } from "@/hooks";
 
 // ── Rolled scroll — the closed state that invites a tap ─────────────────────
 function RolledScroll({ onOpen }: { onOpen: () => void }) {
@@ -68,6 +69,7 @@ function RolledScroll({ onOpen }: { onOpen: () => void }) {
 function UnrolledFilm({ onClose }: { onClose: () => void }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [playing, setPlaying] = useState(true);
+  const { claimPlayback, releaseAudio } = useFilmPlayback(videoRef);
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -92,28 +94,12 @@ function UnrolledFilm({ onClose }: { onClose: () => void }) {
         height: { duration: 0.7, ease: EASE },
         opacity: { duration: 0.4, ease: EASE },
       }}
-      style={{ overflow: "hidden", width: "100%" }}
+      className="story-film-panel"
+      style={{ overflow: "hidden" }}
     >
-      <div style={{ width: "min(92vw, 620px)", margin: "0 auto", paddingTop: "0.5rem" }}>
-        <div className="flex justify-end" style={{ marginBottom: "0.6rem" }}>
-          <button
-            onClick={onClose}
-            aria-label="Roll the scroll back up"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.4rem",
-              background: "rgba(143,100,16,0.08)",
-              border: "1px solid rgba(143,100,16,0.28)",
-              borderRadius: "999px",
-              padding: "0.35rem 0.85rem",
-              cursor: "pointer",
-              fontFamily: "var(--font-cormorant), Georgia, serif",
-              fontSize: "0.8rem",
-              letterSpacing: "0.08em",
-              color: "#796D65",
-            }}
-          >
+      <div className="story-film-inner">
+        <div className="story-film-bar">
+          <button onClick={onClose} aria-label="Roll the scroll back up" className="story-film-close">
             <X size={14} strokeWidth={1.5} />
             Roll back up
           </button>
@@ -121,11 +107,11 @@ function UnrolledFilm({ onClose }: { onClose: () => void }) {
 
         <div
           onClick={togglePlay}
+          className="story-film-frame"
           style={{
             position: "relative",
             width: "100%",
             aspectRatio: "16 / 9",
-            borderRadius: "10px",
             overflow: "hidden",
             background: "#000",
             boxShadow: "0 24px 60px rgba(74,54,26,0.28)",
@@ -143,10 +129,24 @@ function UnrolledFilm({ onClose }: { onClose: () => void }) {
             // no fullscreen, no casting.
             disablePictureInPicture
             controlsList="nodownload nofullscreen noremoteplayback"
-            onPlay={() => setPlaying(true)}
-            onPause={() => setPlaying(false)}
-            onEnded={() => setPlaying(false)}
-            onError={() => setPlaying(false)}
+            onPlay={() => {
+              setPlaying(true);
+              // Stops any highlights film still running, and silences the
+              // site music for as long as this one plays.
+              claimPlayback();
+            }}
+            onPause={() => {
+              setPlaying(false);
+              releaseAudio();
+            }}
+            onEnded={() => {
+              setPlaying(false);
+              releaseAudio();
+            }}
+            onError={() => {
+              setPlaying(false);
+              releaseAudio();
+            }}
             style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           />
 
