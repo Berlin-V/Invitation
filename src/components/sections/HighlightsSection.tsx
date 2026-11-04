@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Play, Pause, RotateCcw, FastForward } from "lucide-react";
 import { EASE } from "@/constants/motion";
 import { HIGHLIGHTS } from "@/constants";
-import { suspendBackgroundAudio } from "@/lib/background-audio";
+import { useFilmPlayback } from "@/hooks";
 
 type Highlight = (typeof HIGHLIGHTS)[number];
 
@@ -33,8 +33,8 @@ function formatTime(seconds: number) {
 
 function FilmCard({ film }: { film: Highlight }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const releaseAudio = useRef<(() => void) | null>(null);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { claimPlayback, releaseAudio } = useFilmPlayback(videoRef);
 
   const [started, setStarted] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -44,8 +44,6 @@ function FilmCard({ film }: { film: Highlight }) {
 
   useEffect(() => {
     return () => {
-      releaseAudio.current?.();
-      releaseAudio.current = null;
       if (hideTimer.current) clearTimeout(hideTimer.current);
     };
   }, []);
@@ -60,23 +58,18 @@ function FilmCard({ film }: { film: Highlight }) {
   }, []);
 
   const onPlay = useCallback(() => {
-    // One film at a time: starting this one stops any other that's running,
-    // so a grid of them can never play over each other.
-    document.querySelectorAll<HTMLVideoElement>("#highlights video").forEach((other) => {
-      if (other !== videoRef.current && !other.paused) other.pause();
-    });
     setPlaying(true);
-    releaseAudio.current ??= suspendBackgroundAudio();
+    // Stops any other film on the page and silences the site music.
+    claimPlayback();
     revealChrome(true);
-  }, [revealChrome]);
+  }, [claimPlayback, revealChrome]);
 
   const onPause = useCallback(() => {
     setPlaying(false);
-    releaseAudio.current?.();
-    releaseAudio.current = null;
+    releaseAudio();
     // Paused is a resting state — the controls stay up rather than vanishing.
     revealChrome(false);
-  }, [revealChrome]);
+  }, [releaseAudio, revealChrome]);
 
   const start = () => {
     setStarted(true);
