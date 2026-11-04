@@ -28,6 +28,17 @@ export const MAPS = {
 
 // ─── Event schedule ───────────────────────────
 export const EVENTS = {
+  // The eve of the wedding. Chronologically first, so it is rendered first —
+  // which is also why each group carries its own `date` rather than borrowing
+  // WEDDING_DATE: the events no longer all fall on the one day.
+  brideSideReception: {
+    label: "Bride's Side",
+    date: "December 9, 2026",
+    timeRange: "6:00 PM \u2013 9:00 PM",
+    items: [
+      { title: "CSI Community Hall, Kodiyoor", time: "6:00 PM", mapUrl: MAPS.communityHall, icon: "\u2728", description: `The bride's family hosts a reception on the eve of the wedding, in the same hall the bride's side gathers in the next day.` },
+    ],
+  },
   brideSide: {
     label: "Bride's Side",
     date: WEDDING_DATE.display,
