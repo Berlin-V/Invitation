@@ -59,6 +59,16 @@ export const EVENTS = {
   },
 };
 
+/**
+ * The code that unrolls the story film.
+ *
+ * A gate, not a secret. The bundle ships this string and the film sits at a
+ * public URL, so anyone who looks will find both — it keeps the story for the
+ * guests who were given the code, and nothing stronger than that. Gating it
+ * for real would mean serving the film from a route that checks a session.
+ */
+export const STORY_PIN = "8056";
+
 // ─── Event highlight films ────────────────────
 // Films are served from the site itself rather than framed from Drive, whose
 // player brings its own fullscreen, subtitle and quality controls that a
