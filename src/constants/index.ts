@@ -28,6 +28,17 @@ export const MAPS = {
 
 // ─── Event schedule ───────────────────────────
 export const EVENTS = {
+  // The eve of the wedding. Chronologically first, so it is rendered first —
+  // which is also why each group carries its own `date` rather than borrowing
+  // WEDDING_DATE: the events no longer all fall on the one day.
+  brideSideReception: {
+    label: "Bride's Side",
+    date: "December 9, 2026",
+    timeRange: "6:00 PM \u2013 9:00 PM",
+    items: [
+      { title: "CSI Community Hall, Kodiyoor", time: "6:00 PM", mapUrl: MAPS.communityHall, icon: "\u2728", description: `The bride's family hosts a reception on the eve of the wedding, in the same hall the bride's side gathers in the next day.` },
+    ],
+  },
   brideSide: {
     label: "Bride's Side",
     date: WEDDING_DATE.display,
@@ -47,6 +58,16 @@ export const EVENTS = {
     ],
   },
 };
+
+/**
+ * The code that unrolls the story film.
+ *
+ * A gate, not a secret. The bundle ships this string and the film sits at a
+ * public URL, so anyone who looks will find both — it keeps the story for the
+ * guests who were given the code, and nothing stronger than that. Gating it
+ * for real would mean serving the film from a route that checks a session.
+ */
+export const STORY_PIN = "8056";
 
 // ─── Event highlight films ────────────────────
 // Films are served from the site itself rather than framed from Drive, whose

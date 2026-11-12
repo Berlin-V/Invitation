@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Pause, Play, X } from "lucide-react";
+import { Lock, Pause, Play, X } from "lucide-react";
 import Image from "next/image";
 import { EASE } from "@/constants/motion";
-import { MEDIA } from "@/constants";
+import { MEDIA, STORY_PIN } from "@/constants";
 import { useFilmPlayback } from "@/hooks";
 
 // ── Rolled scroll — the closed state that invites a tap ─────────────────────
@@ -59,6 +59,153 @@ function RolledScroll({ onOpen }: { onOpen: () => void }) {
       >
         Tap the seal to unroll our story
       </p>
+    </motion.div>
+  );
+}
+
+
+/* Once the code is given it stays given for the visit, so rolling the scroll
+   back up and opening it again doesn't ask a second time. sessionStorage
+   rather than state because the subpages unmount this whole section. */
+const UNLOCK_KEY = "wed_story_unlocked";
+
+function readUnlocked() {
+  try {
+    return sessionStorage.getItem(UNLOCK_KEY) === "1";
+  } catch {
+    return false; // Private mode, blocked storage — just ask again.
+  }
+}
+
+/* The seal asks for the code before the film exists. The <video> is not
+   mounted until this clears, so the film isn't even fetched before then. */
+function SealLock({ onUnlock, onClose }: { onUnlock: () => void; onClose: () => void }) {
+  const [code, setCode] = useState("");
+  const [wrong, setWrong] = useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const submit = (value: string) => {
+    if (value === STORY_PIN) {
+      try {
+        sessionStorage.setItem(UNLOCK_KEY, "1");
+      } catch {
+        // Not being able to remember it is survivable; opening it is not.
+      }
+      onUnlock();
+      return;
+    }
+    setWrong(true);
+    setCode("");
+    inputRef.current?.focus();
+  };
+
+  const onChange = (raw: string) => {
+    const digits = raw.replace(/\D/g, "").slice(0, STORY_PIN.length);
+    setCode(digits);
+    if (wrong) setWrong(false);
+    // Four digits is the whole code, so there is nothing to press afterwards.
+    if (digits.length === STORY_PIN.length) submit(digits);
+  };
+
+  return (
+    <motion.div
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: "auto", opacity: 1 }}
+      exit={{ height: 0, opacity: 0 }}
+      transition={{ height: { duration: 0.5, ease: EASE }, opacity: { duration: 0.35, ease: EASE } }}
+      style={{ overflow: "hidden", width: "100%" }}
+    >
+      <div className="flex flex-col items-center" style={{ paddingTop: "0.5rem" }}>
+        <motion.div
+          animate={wrong ? { x: [0, -9, 9, -6, 6, 0] } : { x: 0 }}
+          transition={{ duration: 0.45 }}
+          className="flex flex-col items-center"
+          style={{
+            width: "min(100%, 360px)",
+            background: "#FFFDF9",
+            border: "1px solid rgba(240,188,63,0.3)",
+            borderRadius: "14px",
+            padding: "1.75rem 1.5rem",
+            boxShadow: "0 18px 44px rgba(74,54,26,0.12)",
+          }}
+        >
+          <Lock size={18} strokeWidth={1.5} style={{ color: "#8F6410" }} />
+
+          <p
+            style={{
+              marginTop: "0.85rem",
+              textAlign: "center",
+              fontFamily: "var(--font-cormorant), Georgia, serif",
+              fontSize: "0.95rem",
+              fontStyle: "italic",
+              lineHeight: 1.6,
+              color: "#796D65",
+            }}
+          >
+            Our story is sealed.
+            <br />
+            Enter the code to unroll it.
+          </p>
+
+          <label htmlFor="story-code" className="sr-only">
+            Four-digit code to unroll the story
+          </label>
+          <input
+            ref={inputRef}
+            id="story-code"
+            value={code}
+            onChange={(e) => onChange(e.target.value)}
+            // A numeric keypad on phones, without the spinner a number input
+            // would bring, and no autofill offering a one-time code.
+            inputMode="numeric"
+            autoComplete="off"
+            type="password"
+            maxLength={STORY_PIN.length}
+            aria-invalid={wrong}
+            aria-describedby={wrong ? "story-code-error" : undefined}
+            style={{
+              marginTop: "1.1rem",
+              width: "9rem",
+              textAlign: "center",
+              background: "#F8F4EF",
+              border: `1px solid ${wrong ? "rgba(185,76,56,0.6)" : "rgba(143,100,16,0.3)"}`,
+              borderRadius: "999px",
+              padding: "0.7rem 1rem",
+              fontFamily: "var(--font-cormorant), Georgia, serif",
+              fontSize: "1.35rem",
+              letterSpacing: "0.55em",
+              textIndent: "0.55em",
+              color: "#4A403A",
+              outline: "none",
+            }}
+          />
+
+          <p
+            id="story-code-error"
+            role="status"
+            aria-live="polite"
+            style={{
+              marginTop: "0.7rem",
+              minHeight: "1.1rem",
+              fontFamily: "var(--font-cormorant), Georgia, serif",
+              fontSize: "0.82rem",
+              letterSpacing: "0.06em",
+              color: wrong ? "#B94C38" : "transparent",
+            }}
+          >
+            {wrong ? "That isn't the code — try again." : "\u00A0"}
+          </p>
+
+          <button onClick={onClose} className="story-film-close" style={{ marginTop: "0.5rem" }}>
+            <X size={14} strokeWidth={1.5} />
+            Never mind
+          </button>
+        </motion.div>
+      </div>
     </motion.div>
   );
 }
@@ -185,6 +332,16 @@ function UnrolledFilm({ onClose }: { onClose: () => void }) {
 
 export default function StorySection() {
   const [videoOpen, setVideoOpen] = useState(false);
+  // Read after mount, never during render: the server has no sessionStorage,
+  // so reading it inline would be a hydration mismatch waiting to happen.
+  const [unlocked, setUnlocked] = useState(false);
+
+  useEffect(() => {
+    // Client-only read of sessionStorage; must run post-hydration so the
+    // server and client first paint agree.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (readUnlocked()) setUnlocked(true);
+  }, []);
 
   return (
     <section
@@ -229,13 +386,19 @@ export default function StorySection() {
         <div className="divider-gold" style={{ maxWidth: "100px", margin: "0 auto" }} />
       </motion.div>
 
-      {/* `mode="wait"` lets the seal finish rolling away before the film
-          unrolls, so the two never overlap in the same spot. */}
+      {/* `mode="wait"` lets each panel finish leaving before the next
+          arrives, so the seal, the lock and the film never overlap. */}
       <AnimatePresence mode="wait" initial={false}>
-        {videoOpen ? (
+        {!videoOpen ? (
+          <RolledScroll key="scroll" onOpen={() => setVideoOpen(true)} />
+        ) : unlocked ? (
           <UnrolledFilm key="film" onClose={() => setVideoOpen(false)} />
         ) : (
-          <RolledScroll key="scroll" onOpen={() => setVideoOpen(true)} />
+          <SealLock
+            key="lock"
+            onUnlock={() => setUnlocked(true)}
+            onClose={() => setVideoOpen(false)}
+          />
         )}
       </AnimatePresence>
     </section>

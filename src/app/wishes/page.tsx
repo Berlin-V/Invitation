@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { COUPLE } from "@/constants";
 import BackToHome from "@/components/ui/BackToHome";
 import { composeRelation } from "@/lib/wish-relation";
@@ -297,16 +297,13 @@ function WishNote({ wish, index }: { wish: Wish; index: number }) {
         </p>
 
         {/* Footer */}
+        {/* The "wishes for the couple" line said the same thing on every card
+            on a page already titled Messages of Love, so the footer is just
+            the date now. */}
         <div
-          className="flex items-center justify-between mt-4 pt-3"
+          className="flex items-center justify-end mt-4 pt-3"
           style={{ borderTop: `1px solid rgba(${accent.rgb},0.2)` }}
         >
-          <span className="flex items-center gap-1.5">
-            <Heart size={11} fill={accent.hex} style={{ color: accent.hex }} />
-            <span className="font-sans-custom text-[13px] tracking-wider uppercase" style={{ color: `rgba(${accent.rgb},0.95)` }}>
-              wishes for the couple
-            </span>
-          </span>
           <span className="font-sans-custom text-[13px]" style={{ color: "rgba(255,253,249,0.6)" }}>
             {new Date(wish.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
           </span>

@@ -2,7 +2,10 @@
 
 import { motion } from "framer-motion";
 import { MapPin, Clock } from "lucide-react";
-import { EVENTS, WEDDING_DATE } from "@/constants";
+import { EVENTS } from "@/constants";
+
+// The celebrations open the evening before the wedding day itself.
+const EVENT_DATE_RANGE = "December 9 \u2013 10, 2026";
 import { EASE } from "@/constants/motion";
 
 type EventItem = (typeof EVENTS.brideSide.items)[0];
@@ -219,7 +222,7 @@ export default function EventsSection() {
             marginBottom: "1rem",
           }}
         >
-          {WEDDING_DATE.display}
+          {EVENT_DATE_RANGE}
         </p>
         <h2
           style={{
@@ -238,10 +241,11 @@ export default function EventsSection() {
       {/* Two group panels */}
       <div
         className="flex flex-wrap justify-center"
-        style={{ gap: "clamp(1.25rem, 4vw, 2rem)", maxWidth: "1020px", margin: "0 auto" }}
+        style={{ gap: "clamp(1.25rem, 4vw, 2rem)", maxWidth: "1320px", margin: "0 auto" }}
       >
-        <GroupPanel group={EVENTS.brideSide} index={0} />
-        <GroupPanel group={EVENTS.groomSide} index={1} />
+        <GroupPanel group={EVENTS.brideSideReception} index={0} />
+        <GroupPanel group={EVENTS.brideSide} index={1} />
+        <GroupPanel group={EVENTS.groomSide} index={2} />
       </div>
     </section>
   );
