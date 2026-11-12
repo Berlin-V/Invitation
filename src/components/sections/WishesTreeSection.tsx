@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import GiftUsButton from "@/components/GiftUsButton";
 import { EASE } from "@/constants/motion";
 import { wishSide } from "@/lib/wish-relation";
 import type { Wish, WishSide } from "@/types";
@@ -394,6 +395,11 @@ export default function WishesTreeSection() {
         >
           Leave Your Wish
         </Link>
+
+        {/* …and, for anyone moved to do more than write, the registry. */}
+        <div style={{ marginTop: "1.75rem" }}>
+          <GiftUsButton />
+        </div>
       </motion.div>
     </section>
   );
