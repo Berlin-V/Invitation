@@ -1,13 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Gift, X, ExternalLink, Heart } from "lucide-react";
+import { Gift, X, ExternalLink } from "lucide-react";
 import { EASE } from "@/constants/motion";
 import { GIFT_URL } from "@/constants";
+import {
+  ClickBurst,
+  GOLD_PILL_STYLE,
+  GOLD_PILL_TRANSITION,
+  GOLD_PILL_VARIANTS,
+  PulseRing,
+} from "@/components/ui/GoldPill";
 
+/**
+ * Rendered through a portal to document.body. Several of the pages that host
+ * this button sit inside an ancestor with its own z-index — a stacking context
+ * that would trap the overlay beneath fixed chrome like the "Back to Home"
+ * chip, however high its own z-index. Only ever mounted after a click, so
+ * document.body is always there.
+ */
 function GiftModal({ onClose }: { onClose: () => void }) {
-  return (
+  return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -81,51 +96,20 @@ function GiftModal({ onClose }: { onClose: () => void }) {
           style={{ flex: 1, border: "none", width: "100%" }}
         />
       </motion.div>
-    </motion.div>
-  );
-}
-
-// A little burst of hearts right where the button was clicked — the
-// "celebration" before the gift registry opens.
-function ClickBurst() {
-  const hearts = [
-    { x: -34, y: -18, delay: 0 },
-    { x: -8, y: -34, delay: 0.05 },
-    { x: 18, y: -30, delay: 0.03 },
-    { x: 36, y: -12, delay: 0.08 },
-    { x: 0, y: -42, delay: 0.02 },
-  ];
-  return (
-    <div
-      aria-hidden="true"
-      style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "visible" }}
-    >
-      {hearts.map((h, i) => (
-        <motion.span
-          key={i}
-          initial={{ opacity: 0, x: 0, y: 0, scale: 0.4 }}
-          animate={{ opacity: [0, 1, 0], x: h.x, y: h.y, scale: 1 }}
-          transition={{ duration: 0.7, delay: h.delay, ease: "easeOut" }}
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            color: i % 2 === 0 ? "#F58893" : "#F9DE93",
-          }}
-        >
-          <Heart size={14} fill="currentColor" strokeWidth={0} />
-        </motion.span>
-      ))}
-    </div>
+    </motion.div>,
+    document.body,
   );
 }
 
 interface GiftUsButtonProps {
   className?: string;
   style?: React.CSSProperties;
+  /** Ambient ring around the pill. Off by default — Gift Us is never the
+   *  loudest thing on a page now; Wish Us leads and this sits beside it. */
+  pulse?: boolean;
 }
 
-export default function GiftUsButton({ className, style }: GiftUsButtonProps) {
+export default function GiftUsButton({ className, style, pulse = false }: GiftUsButtonProps) {
   const [open, setOpen] = useState(false);
   const [bursting, setBursting] = useState(false);
 
@@ -137,40 +121,17 @@ export default function GiftUsButton({ className, style }: GiftUsButtonProps) {
 
   return (
     <div className="relative inline-block" style={style}>
-      {/* Ambient pulse ring — draws the eye even before anyone hovers */}
-      <motion.span
-        aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
-        style={{ borderRadius: "999px", border: "1.5px solid rgba(240,188,63,0.6)" }}
-        animate={{ scale: [1, 1.18, 1], opacity: [0.55, 0, 0.55] }}
-        transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
-      />
+      {pulse && <PulseRing />}
 
       <motion.button
         onClick={handleClick}
         initial="rest"
         whileHover="hover"
         whileTap={{ scale: 0.95 }}
-        variants={{
-          rest: { scale: 1, color: "#FBE49C" },
-          hover: { scale: 1.06, color: "#2A1F14" },
-        }}
-        transition={{ duration: 0.3, ease: EASE }}
-        className={`gift-us-button relative ${className ?? ""}`}
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "0.55rem",
-          padding: "0.8rem 2rem",
-          border: "1.5px solid rgba(233,197,131,0.75)",
-          borderRadius: "999px",
-          fontFamily: "var(--font-cormorant), Georgia, serif",
-          fontSize: "0.9rem",
-          fontWeight: 700,
-          letterSpacing: "0.3em",
-          textTransform: "uppercase",
-          cursor: "pointer",
-        }}
+        variants={GOLD_PILL_VARIANTS}
+        transition={GOLD_PILL_TRANSITION}
+        className={`gold-pill relative ${className ?? ""}`}
+        style={GOLD_PILL_STYLE}
       >
         <Gift size={15} strokeWidth={2} /> Gift Us
         <AnimatePresence>{bursting && <ClickBurst />}</AnimatePresence>

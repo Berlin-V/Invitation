@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import GiftUsButton from "@/components/GiftUsButton";
+import WishUsButton from "@/components/WishUsButton";
 import { EASE } from "@/constants/motion";
 import { COUPLE, MEDIA, WEDDING_DATE } from "@/constants";
 
@@ -216,9 +216,10 @@ export default function HeroSection() {
           {WEDDING_DATE.display}
         </motion.p>
 
-        {/* Gift us */}
+        {/* Wish us — the hero's one call to action. The registry lives on the
+            Wishes Wall this leads to, rather than competing with it here. */}
         <motion.div {...fadeUp(1.3)} style={{ marginTop: "1.75rem" }}>
-          <GiftUsButton />
+          <WishUsButton pulse />
         </motion.div>
       </div>
 

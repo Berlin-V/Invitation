@@ -100,13 +100,13 @@ body {
   color: transparent;
 }
 
-/* framer-motion can't animate a gradient background, so the Gift Us
-   button's hover fill is a plain CSS transition instead. */
-.gift-us-button {
+/* The pill shared by "Gift Us" and "Wish Us". framer-motion can't animate a
+   gradient background, so their hover fill is a plain CSS transition here. */
+.gold-pill {
   background: rgba(240,188,63, 0.14);
   transition: background 0.3s ease;
 }
-.gift-us-button:hover {
+.gold-pill:hover {
   background: linear-gradient(135deg, #F0BC3F, #FBE49C);
 }
 

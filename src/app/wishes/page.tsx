@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Send } from "lucide-react";
 import { COUPLE } from "@/constants";
 import BackToHome from "@/components/ui/BackToHome";
+import GiftUsButton from "@/components/GiftUsButton";
 import { composeRelation } from "@/lib/wish-relation";
 import type { Wish } from "@/types";
 
@@ -460,6 +461,24 @@ export default function WishesPage() {
               </motion.button>
             </form>
           )}
+
+          {/* Outside the submitted/form branch on purpose: the registry is
+              offered either way, and after a wish lands it reads as the
+              natural next thing rather than vanishing with the form. */}
+          <div className="mt-6 flex items-center gap-3" aria-hidden="true">
+            <span className="h-px flex-1" style={{ background: "rgba(240,188,63,0.22)" }} />
+            <span
+              className="font-sans-custom text-[12px] uppercase tracking-[0.3em]"
+              style={{ color: "rgba(255,253,249,0.5)" }}
+            >
+              or
+            </span>
+            <span className="h-px flex-1" style={{ background: "rgba(240,188,63,0.22)" }} />
+          </div>
+
+          <div className="mt-5 flex justify-center">
+            <GiftUsButton />
+          </div>
         </motion.div>
       </section>
 
